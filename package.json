@@ -1,0 +1,83 @@
+{
+  "name": "Crop-growth-app",
+  "version": "0.0.1",
+  "description": "Ola ola kinder cola.",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "NODE_ENV=production webpack --config webpack.production.config.js -p && cp index.html dist/",
+    "precommit": "lint-staged",
+    "release": "buck-trap -a",
+    "start": "node server.js",
+    "staging-deploy": "read -p 'Version? (see above) ' V && test $V && ansible-playbook -i deploy/hosts -K deploy/deploy.yml --limit=staging --extra-vars=\"sitename=staging.nxt.lizard.net version=v$V\""
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.jsx": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "devDependencies": {
+    "babel": "",
+    "babel-cli": "",
+    "babel-core": "",
+    "babel-eslint": "",
+    "babel-loader": "",
+    "babel-plugin-add-module-exports": "",
+    "babel-plugin-transform-object-rest-spread": "",
+    "babel-plugin-transform-react-jsx": "",
+    "babel-polyfill": "",
+    "babel-preset-es2015": "",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "",
+    "buck-trap": "^1.0.14",
+    "css-loader": "",
+    "express": "",
+    "husky": "",
+    "lint-staged": "^3.4.0",
+    "postcss-cssnext": "",
+    "postcss-import": "",
+    "postcss-loader": "",
+    "prettier": "1.5.0",
+    "react-hot-loader": "next",
+    "style-loader": "",
+    "url-loader": "^0.5.8",
+    "webpack": "",
+    "webpack-dev-middleware": "",
+    "webpack-dev-server": "",
+    "webpack-hot-middleware": "",
+    "yargs": ""
+  },
+  "repository": {
+    "type": "git",
+    "name": "TODO",
+    "url": "TODO"
+  },
+  "keywords": [
+    "lizard",
+    "api",
+    "water"
+  ],
+  "author": "Dirk",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "TODO"
+  },
+  "homepage": "TODO",
+  "dependencies": {
+    "es6-promise": "^4.0.5",
+    "lodash": "^4.17.3",
+    "moment": "^2.18.1",
+    "prop-types": "^15.5.9",
+    "react": "",
+    "react-dom": "",
+    "react-ink": "^6.2.0",
+    "react-md-spinner": "^0.2.4",
+    "react-router-dom": "^4.2.2",
+    "react-transition-group": "1.x",
+    "recharts": "^0.22.4"
+  }
+}

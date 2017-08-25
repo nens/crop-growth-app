@@ -1,0 +1,12 @@
+## Linking the virtual NPM package 'lizard-api-client'.
+##
+## Although imports from the lizard-api-client succeed, Sublime sees it as
+## an empty folder in it's filebrowser; this is odd, mostly because Sublime
+## sees it as a normal, filled folder when when using its filebrowser for our
+## G4AW app. The way the linking now (25-08-2017) took place:
+
+$ npm link lizard-api-client
+
+/home/dirk/Projects/crop-growth-project/crop-growth-app/node_modules/lizard-api-client ->
+/home/dirk/.node_modules_global/lib/node_modules/lizard-api-client ->
+/home/dirk/Projects/crop-growth-project/lizard-api-client

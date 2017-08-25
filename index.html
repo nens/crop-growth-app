@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Crop Growth App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,400i,500,700,900&amp;subset=vietnamese" rel="stylesheet">
+  <style>
+    html, body {
+      background-color: #F1F1F2;
+      font-family: 'Roboto', sans-serif;
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="root" />
+  <script src="https://cdn.ravenjs.com/3.16.0/raven.min.js"
+      crossorigin="anonymous"></script>
+  <script>
+  // TODO: ask Reinout whether we need to make new Raven project
+  if (!window.location.origin.indexOf("localhost") > 0) {
+    Raven.config('https://e9316322d6ae4256a0de0cce5427fc22@sentry.io/180392').install()
+  }
+  </script>
+  <script src="scripts/CropGrowthApp.js"></script>
+</body>
+</html>
