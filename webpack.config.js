@@ -35,9 +35,15 @@ const config = {
   },
   module: {
     loaders: [
+
+      // {
+      //   test: /\.css$/,
+      //   use: ["style-loader", "css-loader?modules", "postcss-loader"]
+      // },
+
       {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader?modules", "postcss-loader"]
+        test: /\.(less|css)$/,
+        loader: 'style!css!less'
       },
       {
         test: /(\.jsx|\.js)$/,
