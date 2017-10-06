@@ -1,3 +1,18 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const path = require("path");
 const webpack = require("webpack");
 
@@ -35,15 +50,9 @@ const config = {
   },
   module: {
     loaders: [
-
-      // {
-      //   test: /\.css$/,
-      //   use: ["style-loader", "css-loader?modules", "postcss-loader"]
-      // },
-
       {
-        test: /\.(less|css)$/,
-        loader: 'style!css!less'
+        test: /\.css$/,
+        use: ["style-loader", "css-loader?modules", "postcss-loader"]
       },
       {
         test: /(\.jsx|\.js)$/,

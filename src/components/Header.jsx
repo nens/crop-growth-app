@@ -9,8 +9,14 @@ class Header extends Component {
   constructor () {
     super();
     this.state = {
-      currentDate: this.getDate()
+      currentDate: this.getDate(),
+      selectedRegionValue: ""
     }
+  }
+  componentWillMount () {
+    // bind-related boilerplate:
+    this.handleSelect = this.handleSelect.bind(this);
+    this.dbg = this.dbg.bind(this);
   }
   getDate () {
     const d = new Date();
@@ -24,8 +30,32 @@ class Header extends Component {
 
     return date + "/" + month + "/" + year;
   }
+  handleSelect (event) {
+
+    const regionId = parseInt(event.target.value);
+    console.log("[F] handleSelect; new regionId =", regionId);
+
+    function cb () {
+      var promise = this.props.fetchDataForRegion(regionId);
+
+      promise.then(
+        (response) => {
+          console.log("OK, PROMISE RESOLVED:", response);
+        },
+        (error) => {
+          console.log("Fail! PROMISE RESOLVED W/ERROR:", error);
+        }
+      );
+    }
+
+    this.setState({ selectedRegionValue: regionId }, cb );
+  }
+  dbg () {
+    console.log("[F] Header.dbg");
+    console.log("*** STATE LOOKS LIKE:", this.state);
+  }
   render () {
-    const { firstName } = this.props;
+    const { firstName, regions } = this.props;
 
     return (
       <div className={`${styles.Header}`}>
@@ -40,10 +70,19 @@ class Header extends Component {
         </div>
 
         <div className={`${styles.ContentWrapper}`}>
-
           <div className={`${styles.KeyValuePair} ${styles.FirstRow}`}>
             <div className={`${styles.KeyWrapper}`}>Area:</div>
-            <div className={`${styles.ValueWrapper}`}>Charlie Chui</div>
+            <select onChange={this.handleSelect}>
+              {
+                regions.map((region) => {
+                  return (
+                    <option key={region.id} value={region.id}>
+                      {region.properties.name}
+                    </option>
+                  )
+                })
+              }
+            </select>
           </div>
 
           <div className={`${styles.KeyValuePair}`}>

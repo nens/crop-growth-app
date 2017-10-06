@@ -17,10 +17,11 @@ var headers;
 
 if (process.env.sso_user) {
   console.log("[*] Got SSO credentials via environment variables:");
-  proxy_server = "https://nxt.staging.lizard.net";
+  // proxy_server = "https://nxt.staging.lizard.net";
+  proxy_server = "https://sat4rice.lizard.net";
   headers = {
     username: process.env.sso_user,
-    password: process.env.sso_pass
+    password: process.env.sso_pass,
   };
 } else {
   console.log("[*] Did not get SSO credentials...");

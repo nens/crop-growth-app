@@ -18,7 +18,7 @@
 .GroeneBalk {
   height: 100px;
   width: 800px;
-  background: linear-gradient(left, #00A55D, #00A55D, #fff);
+  background: linear-gradient(to right, #00A55D, #00A55D, #fff);
 }
 
 .GroeneBalkText {
