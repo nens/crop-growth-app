@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 
+import { getCurrentDate } from "../tools/string-formatting.js";
+
 import LogoAci from './images/logo-aci.png';
 import styles from './Header.css';
 
@@ -9,41 +11,24 @@ class Header extends Component {
   constructor () {
     super();
     this.state = {
-      currentDate: this.getDate(),
       selectedRegionValue: ""
     }
   }
   componentWillMount () {
-    // bind-related boilerplate:
     this.handleSelect = this.handleSelect.bind(this);
     this.dbg = this.dbg.bind(this);
   }
-  getDate () {
-    const d = new Date();
-    const year = d.getFullYear();
-
-    let month = d.getMonth() + 1; // Starts at: 0
-    let date = d.getDate();       // Starts at: 1
-
-    if (month < 10) { month = '0' + month }
-    if ( date < 10) {  date = '0' +  date }
-
-    return date + "/" + month + "/" + year;
-  }
   handleSelect (event) {
-
     const regionId = parseInt(event.target.value);
     console.log("[F] handleSelect; new regionId =", regionId);
-
     function cb () {
       var promise = this.props.fetchDataForRegion(regionId);
-
       promise.then(
         (response) => {
-          console.log("OK, PROMISE RESOLVED:", response);
+          console.log("[+] PROMISE RESOLVED:", response);
         },
         (error) => {
-          console.log("Fail! PROMISE RESOLVED W/ERROR:", error);
+          console.log("[E] PROMISE RESOLVED W/ERROR:", error);
         }
       );
     }
@@ -87,7 +72,7 @@ class Header extends Component {
 
           <div className={`${styles.KeyValuePair}`}>
             <span className={`${styles.KeyWrapper}`}>Date generated:</span>
-            <span className={`${styles.ValueWrapper}`}>{this.state.currentDate}</span>
+            <span className={`${styles.ValueWrapper}`}>{getCurrentDate()}</span>
           </div>
 
         </div>
