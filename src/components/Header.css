@@ -18,7 +18,7 @@
 .GroeneBalk {
   height: 100px;
   width: 800px;
-  background: linear-gradient(to right, #00A55D, #00A55D, #fff);
+  background-color: #00A55D;
 }
 
 .GroeneBalkText {
@@ -29,6 +29,7 @@
 
   color: white;
   font-size: 34px;
+  font-weight: bold;
 }
 
 .LogoAci {
@@ -40,8 +41,6 @@
 
 .ContentWrapper {
   width: 800px;
-  /*min-height: 100px;*/
-
   background-color: #fff;
 }
 
@@ -51,24 +50,21 @@
 
   height: 30px;
   line-height: 30px;
-  font-size: 14px;
+  font-size: 12px;
+  color: #666;
 }
 
 .KeyValuePair.FirstRow {
   margin-top: 10px;
-  /*background-color: #ddf;*/
 }
 
 .KeyWrapper {
   height: 100%;
   float: left;
   width: 16%;
-
-  /*background-color: red;*/
 }
 
 .ValueWrapper {
   height: 100%;
   float: left;
-  /*background-color: blue;*/
 }

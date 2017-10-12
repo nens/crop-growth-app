@@ -20,10 +20,6 @@ function buildUrls (regionId, year) {
 }
 
 export function fetchMonthDataForRegion (regionId, year) {
-  // console.log("[F] fetchMonthDataForRegion");
-  // console.log("*** regionId....:", regionId);
-  // console.log("*** year........:", year);
-
   const urls = buildUrls(regionId, year);
   const promises = [];
 
