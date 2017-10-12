@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 
 import { userIsLoggedIn } from "../session.js";
+import { AppPrivate } from "./AppPrivate.jsx";
 
 class Main extends Component {
   constructor () {
@@ -17,6 +18,7 @@ class Main extends Component {
     };
   }
   componentWillMount() {
+    // console.log("REGION_DATA:", REGION_DATA);
     userIsLoggedIn().then(
       bootstrap => {
         if (bootstrap.authenticated) {
@@ -46,25 +48,17 @@ class Main extends Component {
     );
   }
   render () {
-
-
     if (this.state.isfetchingBootstrapData) {
       return null;
     } else {
-
       if (this.state.error) {
         return (<div>There was an error</div>);
 
       } else if (this.state.isLoggedIn) {
-        return (
-          <div>Hello
-            <b>{this.state.bootstrapData.first_name}</b>
-            , you are logged in!
-          </div>
-        );
+        return <AppPrivate firstName={this.state.bootstrapData.first_name} />
 
       } else {
-        setTimeout(this.state.login, 2000);
+        // TODO: auto-redirect to SSO when not logged in......
         return (<div>Your will be redirected to the SSO soon...</div>);
       }
     }

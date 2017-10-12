@@ -1,0 +1,70 @@
+/*
+
+  DIMENSIONS:
+  ===========
+  max-width = min-width = width = 800px
+
+  COLORS used in the crop-growth-app:
+  ===================================
+
+  #00A55D - ACI green
+
+*/
+
+.Header {
+  margin-bottom: 10px;
+}
+
+.GroeneBalk {
+  height: 100px;
+  width: 800px;
+  background-color: #00A55D;
+}
+
+.GroeneBalkText {
+  position: relative;
+  top: 30px;
+  left: 20px;
+  width: 50%;
+
+  color: white;
+  font-size: 34px;
+  font-weight: bold;
+}
+
+.LogoAci {
+  position: relative;
+  top: -30px;
+  right: 10px;
+  float: right;
+}
+
+.ContentWrapper {
+  width: 800px;
+  background-color: #fff;
+}
+
+.KeyValuePair {
+  width: 780px;
+  margin-left: 20px;
+
+  height: 30px;
+  line-height: 30px;
+  font-size: 12px;
+  color: #666;
+}
+
+.KeyValuePair.FirstRow {
+  margin-top: 10px;
+}
+
+.KeyWrapper {
+  height: 100%;
+  float: left;
+  width: 16%;
+}
+
+.ValueWrapper {
+  height: 100%;
+  float: left;
+}
