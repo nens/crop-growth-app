@@ -9,28 +9,6 @@ import LogoAci from './images/logo-aci.png';
 import styles from './Header.css';
 
 class Header extends Component {
-  // constructor () {
-  //   super();
-  //   this.handleSelect = this.handleSelect.bind(this);
-  // }
-  // handleSelect (event) {
-  //   console.log("[F] handleSelect");
-  //   const regionId = parseInt(event.target.value);
-  //   this.props.onRegionSelected(regionId);
-  //   function cb () {
-  //     var promise = fetchDataForRegion(regionId);
-  //     promise.then(
-  //       (response) => {
-  //         console.log("[+] PROMISE RESOLVED:", response);
-  //       },
-  //       (error) => {
-  //         console.log("[E] PROMISE RESOLVED W/ERROR:", error);
-  //       }
-  //     );
-  //   }
-
-  //   this.setState({ selectedRegionValue: regionId }, cb);
-  // }
   render () {
     const {
       firstName,

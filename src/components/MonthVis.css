@@ -24,7 +24,7 @@
 
 .LineOpacityDefault {
   opacity: 1;
-  -webkit-transition: opacity 3s;
+  -webkit-transition: opacity 1s;
 }
 
 .LineOpacityDefault.LineOpacityInactive {
@@ -38,4 +38,61 @@
   left: 50px;
   font-size: 12px;
   color: #666;
+}
+
+.LegendContainer {
+  position: relative;
+  display: inline-block;
+
+  margin-left: 55px;
+  margin-top: 10px;
+  margin-bottom: -30px;
+  width: 620px;
+  height: 40px;
+  min-height: 40px;
+  /*background-color: #aaf;*/
+}
+
+.LegendLeftHalf {
+  display: inline-block;
+  float: left;
+
+  width: 15%;
+  height: 40px;
+
+  /*background-color: rgba(255, 0, 0, 0.1);*/
+}
+
+.LegendRightHalf {
+  display: inline-block;
+  float: left;
+
+  width: 85%;
+  height: 40px;
+
+  /*background-color: rgba(0, 0, 255, 0.1);*/
+}
+
+.LegendColorIndicator {
+  display: inline-block;
+  float: left;
+
+  width: 40px;
+  height: 3px;
+
+  margin-top: 18px;
+  margin-bottom: 18px;
+
+  background-color: #123456;
+}
+
+.LegendText {
+  display: inline-block;
+  float: left;
+
+  font-size: 11px;
+  color: #666;
+
+  margin-left: 5px;
+  line-height: 40px;
 }

@@ -1,6 +1,9 @@
+import { THE_YEAR } from "../constants";
+
 // const URL_BASE = "https://sat4rice.lizard.net/api/v3/raster-aggregates/?agg=counts&boundary_type=MUNICIPALITY&rasters=fc8065b&srs=EPSG:4326&styles=GrowthStage_Rice_D";
 
 const URL_BASE = "http://localhost:9000/api/v3/raster-aggregates/?agg=counts&rasters=fc8065b&srs=EPSG:4326&styles=GrowthStage_Rice_D";
+
 
 function buildUrls (regionId, year) {
   let urls = [];
@@ -19,11 +22,27 @@ function buildUrls (regionId, year) {
   return urls;
 }
 
-export function fetchMonthDataForRegion (regionId, year) {
-  const urls = buildUrls(regionId, year);
+export function fetchMonthDataForRegion (regionId) {
+  const urlsYear1 = buildUrls(regionId, THE_YEAR - 2);
+  const urlsYear2 = buildUrls(regionId, THE_YEAR - 1); // TODO: more historical data?
+  const urlsTheYear = buildUrls(regionId, THE_YEAR);
+  const urlObjects = [];
+
+  urlsYear1.forEach((url) => {
+    urlObjects.push({ url, year: THE_YEAR - 2 });
+  });
+
+  urlsYear2.forEach((url) => {
+    urlObjects.push({ url, year: THE_YEAR - 1 });
+  });
+
+  urlsTheYear.forEach((url) => {
+    urlObjects.push({ url, year: THE_YEAR });
+  });
+
   const promises = [];
 
-  urls.forEach((url) => {
+  urlObjects.forEach((urlObj) => {
     promises.push(
       new Promise(function (resolve, reject) {
         let request = new XMLHttpRequest();
@@ -31,13 +50,14 @@ export function fetchMonthDataForRegion (regionId, year) {
           if (this.readyState !== 4) return;
 
           if (this.status >= 200 && this.status < 300) {
-            resolve(JSON.parse(this.response));
+            const monthData = JSON.parse(this.response);
+            resolve({ year: urlObj.year, monthData });
           } else {
-            reject(`Status ${this.status}, '${this.statusText}' for URL ${url}.`);
+            reject(`Status ${this.status}, '${this.statusText}' for URL ${urlObj.url}.`);
           }
         };
         request.withCredentials = true; // Send cookie.
-        request.open('GET', url);
+        request.open('GET', urlObj.url);
         request.send();
       })
     )

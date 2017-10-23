@@ -40,3 +40,10 @@ export const MONTH_NAMES = [
   'Nov.',
   'Dec.'
 ]
+
+// This is the year we use for retrieving monthdata; i.e, when setting the value
+// to 2016, we'll retrieve 12x monthdata for eahcmonth of 2016, and for the
+// first month of 2017.
+export const THE_YEAR = 2017;
+export const FIRST_YEAR = 2015;
+
