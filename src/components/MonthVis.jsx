@@ -120,17 +120,19 @@ class MonthVis extends Component {
               actualDataColor={COLOR_DATA_ACTUAL}
               historicalDataColor={COLOR_DATA_HISTORICAL}
             />
-            <MonthVisLineChart
-              data={null}
-              actualDataColor={COLOR_DATA_ACTUAL}
-              fetchingDataColor={COLOR_DATA_FETCHING}
-              historicalDataColor={COLOR_DATA_HISTORICAL}
-              isFetching={true}
-            />
-            <MonthVisTable
-              data={null}
-              isFetching={true}
-            />
+            <div>
+              <MonthVisLineChart
+                data={null}
+                actualDataColor={COLOR_DATA_ACTUAL}
+                fetchingDataColor={COLOR_DATA_FETCHING}
+                historicalDataColor={COLOR_DATA_HISTORICAL}
+                isFetching={true}
+              />
+              <MonthVisTable
+                data={null}
+                isFetching={true}
+              />
+            </div>
           </div>
         );
       } else {
@@ -140,18 +142,20 @@ class MonthVis extends Component {
               actualDataColor={COLOR_DATA_ACTUAL}
               historicalDataColor={COLOR_DATA_HISTORICAL}
             />
-            <MonthVisLineChart
-              actualData={this.state.data.totalRicePerMonthActual}
-              actualDataColor={COLOR_DATA_ACTUAL}
-              historicalData={this.state.data.totalRicePerMonthHistorical}
-              historicalDataColor={COLOR_DATA_HISTORICAL}
-              fetchingDataColor={COLOR_DATA_FETCHING}
-              isFetching={false}
-            />
-            <MonthVisTable
-              data={this.state.data.totalRicePerMonthActual}
-              isFetching={false}
-            />
+            <div>
+              <MonthVisLineChart
+                actualData={this.state.data.totalRicePerMonthActual}
+                actualDataColor={COLOR_DATA_ACTUAL}
+                historicalData={this.state.data.totalRicePerMonthHistorical}
+                historicalDataColor={COLOR_DATA_HISTORICAL}
+                fetchingDataColor={COLOR_DATA_FETCHING}
+                isFetching={false}
+              />
+              <MonthVisTable
+                data={this.state.data.totalRicePerMonthActual}
+                isFetching={false}
+              />
+            </div>
           </div>
         );
       }
