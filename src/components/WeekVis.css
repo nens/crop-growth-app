@@ -1,0 +1,18 @@
+.GroeneBalk {
+  height: 60px;
+  width: 800px;
+  background-color: #00A55D;
+}
+
+.GroeneBalkText {
+  position: relative;
+  top: 10px;
+  left: 20px;
+  width: 50%;
+
+  color: white;
+  font-size: 34px;
+}
+
+.ChartContainer {
+}
