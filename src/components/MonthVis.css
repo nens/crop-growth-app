@@ -14,7 +14,13 @@
   font-size: 34px;
 }
 
-.ChartContainer {
+.MonthVisContent {
+  height: 380px;
+  min-height: 380px;
+  max-height: 380px;
+}
+
+.LineChartContainer {
   display: inline-block;
   position: relative;
   top: 30px;

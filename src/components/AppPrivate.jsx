@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 
 import { Header } from "./Header.jsx";
 import { MonthVis } from "./MonthVis.jsx";
+import { WeekVis } from "./WeekVis.jsx";
 
 class AppPrivate extends Component {
   constructor () {
@@ -45,6 +46,11 @@ class AppPrivate extends Component {
           selectedRegionId={this.state.selectedRegionId}
           onFetchSuccess={this.handleFetchMonthDataSuccces}
           isFetching={this.state.isFetchingMonthData}
+        />
+        <WeekVis
+          selectedRegionId={this.state.selectedRegionId}
+          onFetchSuccess={this.handleFetchWeekDataSuccces}
+          isFetching={this.state.isFetchingWeekData}
         />
       </div>
     );

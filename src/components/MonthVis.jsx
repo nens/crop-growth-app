@@ -21,6 +21,7 @@ class MonthVis extends Component {
   constructor () {
     super();
     this.state = {
+      selectedRegionId: null,
       isFetching: false,
       data: ""
     };
@@ -91,7 +92,6 @@ class MonthVis extends Component {
           this.setState({
             isFetching: false,
             data: {
-              // raw: responseActualYear,
               totalRicePerMonthActual:
                 this.getTotalRicePerMonthActual(responseActualYear),
               totalRicePerMonthHistorical:
@@ -108,9 +108,25 @@ class MonthVis extends Component {
     }
   }
   getInnerComponent () {
+    ///////////////////////////////////////////////////////////////////////////
+    // There are 3 different "states" for this MonthVis part/component:
+    //
+    // case 1) There is of yet no data present (i.e. not a single chart has
+    //         been drawn so far). This is the initial state of the application.
+    //
+    // case 2) We have retrieved data at least once: but since we are currently
+    //         fetching data for another region, we'll draw an empty chart/table
+    //         expecting fresh data to arrive any minute.
+    //
+    // case 3) We have retrieved data at least once: this is data we'll be
+    //         showing.
     if (this.state.data === "") {
       if (!this.state.isFetching) {
-        return <WelcomeMessage />
+        return (
+          <div className={styles.MonthVisContent}>
+            <WelcomeMessage />
+          </div>
+        );
       }
     } else {
       if (this.state.isFetching) {
@@ -164,7 +180,7 @@ class MonthVis extends Component {
   render () {
     const { isFetchingMonthData } = this.props;
     return (
-      <div>
+      <div className={styles.MonthVisContent}>
         <div className={styles.GroeneBalk}>
           <div className={styles.GroeneBalkText}>
             Monthly

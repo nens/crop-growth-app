@@ -38,8 +38,6 @@ class MonthVisLineChart extends Component {
     });
   }
   render () {
-    console.log("[F] MonthVisLineChart.render");
-
     const isFetching = this.props.isFetching;
 
     if (!isFetching && (!this.props.actualData || !this.props.historicalData)) {
@@ -56,10 +54,8 @@ class MonthVisLineChart extends Component {
       fetchingDataColor
     } = this.props;
 
-    console.log("[dbg] fetchingDataColor:", fetchingDataColor);
-
     return (
-      <div className={styles.ChartContainer}>
+      <div className={styles.LineChartContainer}>
         <LineChart
           width={620}
           height={250}

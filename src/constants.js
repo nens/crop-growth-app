@@ -47,3 +47,8 @@ export const MONTH_NAMES = [
 export const THE_YEAR = 2017;
 export const FIRST_YEAR = 2015;
 
+// This is the amount of weeks for which we'll retrieve data; a.o.t. monthdata,
+// it isn't exactly clear for how many weeks (max) we can fetch data for w/o the
+// backend getting a heartattack.
+export const AMOUNT_OF_WEEKS = 6;
+
