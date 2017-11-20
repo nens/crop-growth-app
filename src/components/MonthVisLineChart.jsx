@@ -21,45 +21,78 @@ class MonthVisLineChart extends Component {
   }
   updateData (props) {
     if (!props.isFetching) {
-      this.setState({ formattedData: this.formatData(props.data) });
+      this.setState({
+        // Both actual and historical data (=required to have Recharts.js draw
+        // two distinct lines simultaneously in a single charts)
+        formattedData: this.formatData(props.actualData, props.historicalData),
+      });
     }
   }
-  formatData (data) {
+  formatData (dataActual, dataHistorical) {
     return MONTH_NAMES.map((monthName, i) => {
-      return { area: data[i], monthName };
+      return {
+        monthName,
+        areaActual: dataActual[i],
+        areaHistorical: dataHistorical[i]
+      };
     });
   }
   render () {
+    console.log("[F] MonthVisLineChart.render");
+
     const isFetching = this.props.isFetching;
 
-    if (!isFetching && !this.props.data) {
+    if (!isFetching && (!this.props.actualData || !this.props.historicalData)) {
       return null;
     }
+
+    if (this.state.formattedData === "") {
+      return null;
+    }
+
+    const {
+      actualDataColor,
+      historicalDataColor,
+      fetchingDataColor
+    } = this.props;
+
+    console.log("[dbg] fetchingDataColor:", fetchingDataColor);
 
     return (
       <div className={styles.ChartContainer}>
         <LineChart
-          width={600}
+          width={620}
           height={250}
           data={this.state.formattedData}>
 
+          {/* Line 1 of 2: the actual year values for the selected region (12x) */}
           <Line
             className={`${styles.LineOpacityDefault} ${isFetching ? styles.LineOpacityInactive : ""}`}
             type="monotone"
-            dataKey="area"
-            stroke={ isFetching ? "#CCC" : "#00A55D" }
+            dataKey="areaActual"
+            stroke={ isFetching ? fetchingDataColor : actualDataColor }
+            strokeWidth={2}
+            dot={false}
+          />
+
+          {/* Line 2 of 2: the historical average values for the selected region (12x) */}
+          <Line
+            className={`${styles.LineOpacityDefault} ${isFetching ? styles.LineOpacityInactive : ""}`}
+            type="monotone"
+            dataKey="areaHistorical"
+            stroke={ isFetching ? fetchingDataColor : historicalDataColor }
             strokeWidth={2}
             dot={false}
           />
 
           <XAxis
+            tickCount={13}
             dataKey="monthName"
-            tickCount={8}
-            tick={{ fontSize: "12px" }}
+            tick={{ fontSize: "11px" }}
           />
           <YAxis
             tickCount={5}
-            tick={{ fontSize: "12px" }}
+            tick={{ fontSize: "11px" }}
             tickFormatter={ (x) => x + " Ha" }
           />
           <CartesianGrid strokeDasharray="3 3" />

@@ -30,15 +30,15 @@ class MonthVisTable extends Component {
   }
   render () {
 
-    console.log("[F] render");
-    console.log("*** this.state.formattedData:", this.state.formattedData);
+    // console.log("[F] render");
+    // console.log("*** this.state.formattedData:", this.state.formattedData);
 
     return (
       <table className={styles.AreaTable}>
         <thead>
           <tr>
             <th>Month</th>
-            <th>Rice area (Ha)</th>
+            <th>Rice (ha)</th>
           </tr>
         </thead>
         <tbody>
