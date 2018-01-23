@@ -4,41 +4,65 @@ import ReactDOM from "react-dom";
 import MDSpinner from "react-md-spinner";
 
 import { fetchWeekDataForRegion } from "../tools/fetch-data-for-region.js";
+import { WeekVisTable } from "./WeekVisTable.jsx";
+import { HarvestBarChart } from "./HarvestBarChart.jsx";
 
 import styles from './WeekVis.css';
+
+import {
+  getWeekVisUnixTimestamps,
+  convertTimestampToUTC
+} from '../tools/utils.js';
 
 class WeekVis extends Component {
   constructor () {
     super();
+
+
+    const DEV_MODE = true;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Three types of timestamps:
+
+    // 1) ms since 01-01-1970
+    const unixTimestamps = getWeekVisUnixTimestamps(DEV_MODE);
+
+    // 2) UTC, used for API calls to raster-aggregates
+    const utcTimestamps = unixTimestamps.map(convertTimestampToUTC);
+
+    // 3) UTC, used for 2x yAxis labeling
+    const utcTimestampSlugs = utcTimestamps.map((ts) => ts.split('T')[0])
+
     this.state = {
+      utcTimestamps: utcTimestamps,
+      utcTimestampSlugs: utcTimestampSlugs,
       selectedRegionId: null,
       isFetching: false,
       data: ""
     };
   }
   componentWillReceiveProps (props) {
-    console.log("[F] WeekVis.componentWillReceiveProps");
     this.setState({
       selectedRegionId: props.selectedRegionId,
       isFetching: props.isFetching
     });
 
     if (props.selectedRegionId) {
-      console.log("[dbg] props.selectedRegionId is TRUTHY");
       this.setState({ isFetching: true });
-      fetchWeekDataForRegion(props.selectedRegionId).then(
+      fetchWeekDataForRegion(props.selectedRegionId, this.state.utcTimestamps)
+      .then(
         (response) => {
-          console.log("[+] promise resolved; response =", response);
+          this.setState({ isFetching: false, data: response });
         },
         (error) => {
-          console.log("[E] promise error:", error);
+          this.setState({ isFetching: false, data: "" });
+          console.error("[E] promise error:", error);
         }
       );
-    } else {
-      console.log("[dbg] props.selectedRegionId is FALSY");
     }
   }
   getInnerComponent () {
+
     ///////////////////////////////////////////////////////////////////////////
     // There are 3 different "states" for this WeekVis part/component:
     //
@@ -51,7 +75,49 @@ class WeekVis extends Component {
     //
     // case 3) We have retrieved data at least once: this is data we'll be
     //         showing.
-    return null;
+
+    if (this.state.data === "") {
+      if (!this.state.isFetching) {
+        return (
+          <div className={styles.WeekVisContent}>
+            <WelcomeMessage />
+          </div>
+        );
+      } else
+        return null;
+    } else {
+      if (this.state.isFetching) {
+        return (
+          <div className={styles.WeekVisContent}>
+            <WeekVisTable
+              utcTimestampSlugs={this.state.utcTimestampSlugs}
+              data={null}
+              isFetching={true}
+            />
+            <HarvestBarChart
+              utcTimestampSlugs={this.state.utcTimestampSlugs}
+              data={null}
+              isFetching={true}
+            />
+          </div>
+        );
+      } else {
+        return (
+          <div className={styles.WeekVisContent}>
+            <WeekVisTable
+              utcTimestampSlugs={this.state.utcTimestampSlugs}
+              data={this.state.data}
+              isFetching={false}
+            />
+            <HarvestBarChart
+              utcTimestampSlugs={this.state.utcTimestampSlugs}
+              data={this.state.data}
+              isFetching={false}
+            />
+          </div>
+        );
+      }
+    }
   }
   render () {
     const { isFetchingMonthData } = this.props;

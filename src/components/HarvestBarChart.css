@@ -1,0 +1,32 @@
+.TheBarChartContainer {
+  position: relative;
+  top: -215px;
+  left: 494px;
+
+  width: 300px;
+  height: 280px;
+}
+
+.BarChartLegend {
+  position: relative;
+  left: 64px;
+  top: -10px;
+  width: 200px;
+  height: 20px;
+}
+
+.BarChartLegendText {
+  position: relative;
+  left: 50px;
+  bottom: 5px;
+  color: #666;
+  font-size: 11px;
+}
+
+.BarChartLegendColor {
+  position: relative;
+  top: 9px;
+  width: 40px;
+  height: 3px;
+  background-color: #e84506;
+}

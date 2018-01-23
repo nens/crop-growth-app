@@ -29,10 +29,6 @@ class MonthVisTable extends Component {
     });
   }
   render () {
-
-    // console.log("[F] render");
-    // console.log("*** this.state.formattedData:", this.state.formattedData);
-
     return (
       <table className={styles.AreaTable}>
         <thead>

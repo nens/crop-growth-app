@@ -23,3 +23,13 @@ export function getRGBAstring(hexColor, opacity) {
   rgba.push(Math.floor(opacity * 255));
   return RGBAlistToRGBAstring(rgba);
 }
+
+export function lighten (hexColor, factor = 0.5) {
+  const rgbList = hexColorToRGB(hexColor);
+  const lighterRgbList = rgbList.map((decValue) => {
+    const diff = 255 - decValue;
+    const increment = Math.floor(diff * factor);
+    return decValue + increment;
+  });
+  return RGBAlistToHexColor(lighterRgbList);
+}

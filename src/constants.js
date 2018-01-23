@@ -1,4 +1,6 @@
-var ALL_REGIONS_URL = "https://sat4rice.lizard.net/api/v3/regions/?in_bbox="
+export const RASTER_UUID = "fc8065b4-b351-49c2-a4be-43136e979fbc";
+
+export const ALL_REGIONS_URL = "https://sat4rice.lizard.net/api/v3/regions/?in_bbox="
   + 104.76150512695312
   + ","
   + 10.381116038835579
@@ -7,8 +9,6 @@ var ALL_REGIONS_URL = "https://sat4rice.lizard.net/api/v3/regions/?in_bbox="
   + ","
   + 9.367772770859636
   + "&z=8&page_size=5000&format=json";
-
-// console.log("ALL REGIONS URL:", ALL_REGIONS_URL);
 
 
 // TEMP.SOLUTION: We have a local copy of the JSON containing the Vietnam
@@ -50,5 +50,40 @@ export const FIRST_YEAR = 2015;
 // This is the amount of weeks for which we'll retrieve data; a.o.t. monthdata,
 // it isn't exactly clear for how many weeks (max) we can fetch data for w/o the
 // backend getting a heartattack.
+// For which weeks exactly we want to retrieve this N * week-data?
+// ANS/citation from design: "we want the current week and the past N-1 weeks."
 export const AMOUNT_OF_WEEKS = 6;
 
+export const GROWTH_STAGES = [
+  'Fallow',
+  'Bare field',
+  'Seedling',
+  'Tillering',
+  'Booting',
+  'Flowering',
+  'Milking',
+  'Ripening',
+  'Harvest'
+];
+
+export const NON_BARREN_GROWTH_STAGES = [
+  'Seedling',
+  'Tillering',
+  'Booting',
+  'Flowering',
+  'Milking',
+  'Ripening',
+  'Harvest'
+];
+
+export const GROWTH_STAGE_COLORS = {
+  'Fallow'      : '#aab3b6',
+  'Bare field'  : '#6e7476',
+  'Seedling'    : '#0093d3',
+  'Tillering'   : '#459b00',
+  'Booting'     : '#34c300',
+  'Flowering'   : '#253a20',
+  'Milking'     : '#ffc306',
+  'Ripening'    : '#ff7813',
+  'Harvest'     : '#e84506'
+};

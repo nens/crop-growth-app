@@ -1,0 +1,35 @@
+.WeekTableHeader {
+  font-weight: 100;
+  color: #444;
+}
+
+.VerticalColumnName {
+  position: relative;
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 11px;
+  transform: rotate(-90deg);
+}
+
+.VerticalColumn {
+  height: 80px;
+  /*width: 30px;*/
+}
+
+.TableCell {
+  background-color: rgba(128, 128, 128, 0.2);
+  text-align: center;
+}
+
+.TheTable {
+  position: relative;
+  top: 20px;
+  left: 20px;
+  font-size: 11px;
+  color: #666;
+}
+
+.TableRow {
+  height: 26px;
+}

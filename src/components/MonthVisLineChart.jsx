@@ -46,6 +46,8 @@ class MonthVisLineChart extends Component {
 
     if (this.state.formattedData === "") {
       return null;
+    } else {
+      console.log("[!] formattedData (lineChart) looks like:", this.state.formattedData);
     }
 
     const {

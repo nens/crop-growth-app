@@ -20,7 +20,7 @@ const URL_BASE = "http://localhost:9000/api/v3/raster-aggregates/?agg=counts&ras
 function buildUrlsForMonthData (regionId, year) {
   let urls = [];
   let regionUrl = URL_BASE + "&geom_id=" + regionId;
-  let start;
+  let time;
   for (let i = 1; i <= 12; i++) {
     let str = "";
     if (i < 10) {
@@ -28,8 +28,8 @@ function buildUrlsForMonthData (regionId, year) {
     } else {
       str = "" + i;
     }
-    start = year + "-" + str + "-01T00:00:00";
-    urls.push(regionUrl + "&time=" + start);
+    time = year + "-" + str + "-01T00:00:00";
+    urls.push(regionUrl + "&time=" + time);
   }
   return urls;
 }
@@ -80,58 +80,82 @@ export function fetchMonthDataForRegion (regionId) {
 ///////////////////////////////////////////////////////////////////////////////
 // Part 2/2: retrieving week-data
 
-function buildTimestampsForWeekData () {
-  const HALF_AMOUNT_OF_WEEKS = Math.floor(AMOUNT_OF_WEEKS / 2);
-  const YEAR_IN_MS = 31556926000;
-  const WEEK_IN_MS = 604800000;
-  const oneYearAgo = Date.now() - YEAR_IN_MS;
+export function fetchWeekDataForRegion (regionId, utcTimestamps) {
 
-  let pastTimestamps = [];
-  let futureTimestamps = [];
+  const urls = buildUrlsForWeekData(regionId, utcTimestamps);
+  const promises = [];
 
-  for (let i = HALF_AMOUNT_OF_WEEKS; i > 0; i--) {
-    pastTimestamps.push(oneYearAgo - (i * WEEK_IN_MS));
-  }
+  urls.forEach((url, i) => {
+    promises.push(
+      new Promise((resolve, reject) => {
+        let request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+          if (this.readyState !== 4) return;
 
-  for (let i = 1; i < HALF_AMOUNT_OF_WEEKS; i++) {
-    futureTimestamps.push(oneYearAgo + (i * WEEK_IN_MS));
-  }
-
-  return pastTimestamps.concat([oneYearAgo], futureTimestamps);
-}
-
-function convertTimestampToUTC (msTimestamp) {
-  let d = new Date(msTimestamp);
-
-  >>> HIER WAS IK <<<
-
-
-}
-
-function buildUrlsForWeekData (regionId) {
-  let urls = [];
-  let regionUrl = URL_BASE + "&geom_id=" + regionId;
-
-  // 1) First, create the timestamps:
-  const timestampsForWeekData = buildTimestampsForWeekData();
-  let utcTimestamps = [];
-
-  timestampsForWeekData.forEach(function (msTimestamp) {
-    utcTimestamps.push(convertTimestampToUTC(msTimestamp));
+          if (this.status >= 200 && this.status < 300) {
+            resolve({
+              weekTimestamp: utcTimestamps[i],
+              weekData: JSON.parse(this.response)
+            });
+          } else {
+            reject(`Status ${this.status}, '${this.statusText}' for URL ${url}.`);
+          }
+        };
+        request.withCredentials = true; // Send cookie.
+        request.open('GET', url);
+        request.send();
+      })
+    );
   });
 
-  return urls;
+  return Promise.all(promises);
 }
 
+//////////////////////////////////////////////////////
+// NB! This gives us timestamps as wanted by advisors:
+//////////////////////////////////////////////////////
+// function buildTimestampsForWeekData () {
+//   const HALF_AMOUNT_OF_WEEKS = Math.floor(AMOUNT_OF_WEEKS / 2);
+//   const YEAR_IN_MS = 31556926000;
+//   const WEEK_IN_MS = 604800000;
+//   const oneYearAgo = Date.now() - YEAR_IN_MS;
 
-export function fetchWeekDataForRegion (regionId) {
-  console.log("[F] fetchWeekDataForRegion; regionid =", regionId);
+//   let pastTimestamps = [];
+//   let futureTimestamps = [];
 
-  let urlsForWeekdata = buildUrlsForWeekData(regionId);
+//   for (let i = HALF_AMOUNT_OF_WEEKS; i > 0; i--) {
+//     pastTimestamps.push(oneYearAgo - (i * WEEK_IN_MS));
+//   }
 
-  // ..WIP!
+//   for (let i = 1; i < HALF_AMOUNT_OF_WEEKS; i++) {
+//     futureTimestamps.push(oneYearAgo + (i * WEEK_IN_MS));
+//   }
 
-  return new Promise(function (resolve, reject) {
-    resolve(['Deze lijst is leeg']);
+//   return pastTimestamps.concat([oneYearAgo], futureTimestamps);
+// }
+
+///////////////////////////////////////////////////////////
+// NB! This gives us timestamps that actually lead to data:
+//////////////////////////////////////////////////////////
+// function buildTimestampsForWeekData () {
+//   const WEEK_IN_MS = 604800000;
+//   const firstTimestamp = Date.parse('15 Sep 2017 00:00:00 GMT');
+//   const allTimestamps = [firstTimestamp];
+//   for (let i = 1; i < AMOUNT_OF_WEEKS; i++) {
+//     allTimestamps.push(firstTimestamp + i * WEEK_IN_MS);
+//   }
+//   return allTimestamps;
+// }
+
+// function convertTimestampToUTC (msTimestamp) {
+//   let d = new Date(msTimestamp);
+//   let isoDate = d.toISOString();
+//   return isoDate;
+// }
+
+function buildUrlsForWeekData (regionId, utcTimestamps) {
+  const regionUrl = URL_BASE + "&geom_id=" + regionId + "&time=";
+  return utcTimestamps.map((utcTimestamp) => {
+    return regionUrl + utcTimestamp;
   });
 }

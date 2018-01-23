@@ -1,7 +1,12 @@
 .GroeneBalk {
   height: 60px;
   width: 800px;
-  background-color: #00A55D;
+  /*
+  ACI-GREEN (fugly):
+    background-color: #00A55D;
+    Instead, temporarily we use the color for growthstage Harvest:
+  */
+  background-color: rgb(166, 166, 166);
 }
 
 .GroeneBalkText {
