@@ -69,7 +69,6 @@ class WeekVisTable extends Component {
     return (
       <table className={styles.TheTable}>
         <WeekTableHeader />
-        >>> HIER WAS Ik <<<
         <tbody>
         {
           isFetching

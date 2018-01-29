@@ -7,6 +7,11 @@ import find from 'lodash/find';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 
+import {
+  getWeekVisUnixTimestamps,
+  convertTimestampToUTC
+} from '../tools/utils.js'
+
 import { GROWTH_STAGE_COLORS, PIXEL_SIZE } from '../constants';
 
 import styles from "./HarvestBarChart.css";
@@ -14,45 +19,81 @@ import styles from "./HarvestBarChart.css";
 class HarvestBarChart extends Component {
   constructor () {
     super();
-    this.formatData = this.formatData.bind(this);
+    this.state = {
+      isFetching: null,
+      formattedData: null,
+    };
+
+    // WHY CAN THIS REMAIN COMMENTED W/O CRASHING????
+    ///////////////////////////////////////////////////////////////////////////
+    // this.updateData = this.updateData.bind(this);
+    // this.getFormattedData = this.getFormattedData.bind(this);
+    // this.getFormattedTimestamp = this.getFormattedTimestamp.bind(this);
+
+
   }
-  formatData (rawData) {
-    console.log("[F] formatData; arg 'rawData' =", rawData);
+  componentWillMount () {
+    this.updateData(this.props);
+  }
+  componentWillReceiveProps (props) {
+    this.updateData(props);
+  }
+  updateData (props) {
+    const formattedData = this.getFormattedData(
+      props.data,
+      props.isFetching
+    );
+    this.setState({ formattedData, isFetching: props.isFetching });
+  }
+  getFormattedData (rawData, isFetching) {
+    if (isFetching) {
+      // Still fetching data...
+      if (this.state.formattedData) {
+        // ..but we already have the most recently retrieved data; we will use
+        // that while still fetching the new data (because: smoother UX/no
+        // disappearing grid/animations etc)
+        return this.state.formattedData;
+      } else {
+        // ..and there is no previously retrieved data: we'll use dummy data
+        // (because: grid/axis will be in place when we'll draw the actual data)
+        let unixTimestamps = getWeekVisUnixTimestamps(true), // TODO: set arg to false for non-dev environments
+            weekTimestamps = unixTimestamps.map(convertTimestampToUTC);
 
-    const results = [];
-    let singleResult, harvestArea;
-
-    forEach(rawData, function (x) {
-      singleResult = {
-        timestamp: x.weekTimestamp.split('T')[0]
+        return weekTimestamps.map((ts) => {
+          return {
+            'timestamp': ts.split('T')[0],
+            'harvestArea': null
+          };
+        });
       }
+    } else {
+      // OK, fetching data is finished: let's format that data for our BarChart:
+      let results = [],
+          singleResult,
+          harvestArea;
 
-      try {
-        harvestArea = find(x.weekData.data, { 'label' : 'Harvest' }).data;
-      } catch (e) {
-        harvestArea = 0;
-      }
-
-      singleResult.harvestArea = PIXEL_SIZE * harvestArea;
-      results.push(singleResult);
-    });
-
-    return results;
+      forEach(rawData, function (x) {
+        singleResult = {
+          timestamp: x.weekTimestamp.split('T')[0]
+        }
+        try {
+          harvestArea = find(x.weekData.data, { 'label' : 'Harvest' }).data;
+        } catch (e) {
+          harvestArea = 0;
+        }
+        singleResult.harvestArea = Math.round(100 * PIXEL_SIZE * harvestArea) / 100;
+        results.push(singleResult);
+      });
+      return results;
+    }
+  }
+  getFormattedTimestamp (ts) {
+    const parts = ts.split('-');
+    return parts[1] + '-' + parts[2];
   }
   render () {
-    const formattedData = this.formatData(this.props.data);
-    const BAR_COLOR = GROWTH_STAGE_COLORS.Harvest;
 
-    function _timestampFormatter (ts) {
-      // if (ts === formattedData[0].timestamp) {
-      //   return ts;
-      // } else {
-      const parts = ts.split('-');
-      return parts[1] + '-' + parts[2];
-      // }
-    }
-
-    console.log("...formattedData looks like:", formattedData);
+    const { formattedData, isFetching } = this.state;
 
     return (
       <div className={styles.TheBarChartContainer}>
@@ -69,7 +110,7 @@ class HarvestBarChart extends Component {
             tickCount={6}
             dataKey="timestamp"
             tick={{ fontSize: "11px" }}
-            tickFormatter={_timestampFormatter}
+            tickFormatter={this.getFormattedTimestamp}
           />
           <YAxis
             tickCount={5}
@@ -77,12 +118,15 @@ class HarvestBarChart extends Component {
             tickFormatter={ (x) => x + " Ha" }
           />
           <CartesianGrid strokeDasharray="3 3" />
+
           <Bar
+            className={`${styles.BarOpacityDefault} ${isFetching ? styles.BarOpacityInactive : ""}`}
             dataKey="harvestArea"
-            fill={BAR_COLOR}
+            fill={isFetching ?  "#666666" : GROWTH_STAGE_COLORS.Harvest}
             stroke="#666"
             barSize={42}
           />
+
         </BarChart>
       </div>
     );

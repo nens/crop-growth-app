@@ -30,3 +30,16 @@
   height: 3px;
   background-color: #e84506;
 }
+
+.Hidden {
+  display: none;
+}
+
+.BarOpacityDefault {
+  opacity: 1;
+  -webkit-transition: opacity 1s;
+}
+
+.BarOpacityDefault.BarOpacityInactive {
+  opacity: 0;
+}
