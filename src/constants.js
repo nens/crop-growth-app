@@ -66,6 +66,11 @@ export const GROWTH_STAGES = [
   'Harvest'
 ];
 
+export const BARREN_GROWTH_STAGES = [
+  'Fallow',
+  'Bare field'
+];
+
 export const NON_BARREN_GROWTH_STAGES = [
   'Seedling',
   'Tillering',

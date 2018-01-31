@@ -95,16 +95,18 @@ class HarvestBarChart extends Component {
 
     const { formattedData, isFetching } = this.state;
 
+    const yAxisFormatter = isFetching
+      ? (_) => '... ac.'
+      : (x) => x + " ac."
+
     return (
       <div className={styles.TheBarChartContainer}>
-        <div className={styles.BarChartLegend}>
-          <div className={styles.BarChartLegendColor}></div>
-          <span className={styles.BarChartLegendText}>
-            Harvest
-          </span>
-        </div>
 
-        <BarChart width={300} height={240} data={formattedData}>
+        <BarChart
+          width={280}
+          height={390}
+          data={formattedData}
+          className={styles.TheBarChart}>
           <XAxis
             interval="preserveStart"
             tickCount={6}
@@ -115,7 +117,7 @@ class HarvestBarChart extends Component {
           <YAxis
             tickCount={5}
             tick={{ fontSize: "11px" }}
-            tickFormatter={ (x) => x + " Ha" }
+            tickFormatter={yAxisFormatter}
           />
           <CartesianGrid strokeDasharray="3 3" />
 
@@ -128,6 +130,11 @@ class HarvestBarChart extends Component {
           />
 
         </BarChart>
+
+        <div className={styles.BarChartLegend}>
+          <div className={styles.BarChartLegendColor} />
+          <span className={styles.BarChartLegendText}>harvest</span>
+        </div>
       </div>
     );
   }

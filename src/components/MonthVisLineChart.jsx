@@ -46,8 +46,6 @@ class MonthVisLineChart extends Component {
 
     if (this.state.formattedData === "") {
       return null;
-    } else {
-      console.log("[!] formattedData (lineChart) looks like:", this.state.formattedData);
     }
 
     const {
@@ -55,6 +53,10 @@ class MonthVisLineChart extends Component {
       historicalDataColor,
       fetchingDataColor
     } = this.props;
+
+    const yAxisFormatter = isFetching
+      ? (_) => '... ac.'
+      : (x) => x + " ac."
 
     return (
       <div className={styles.LineChartContainer}>
@@ -91,7 +93,7 @@ class MonthVisLineChart extends Component {
           <YAxis
             tickCount={5}
             tick={{ fontSize: "11px" }}
-            tickFormatter={ (x) => x + " Ha" }
+            tickFormatter={yAxisFormatter}
           />
           <CartesianGrid strokeDasharray="3 3" />
         </LineChart>

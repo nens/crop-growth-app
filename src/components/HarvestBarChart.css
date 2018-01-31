@@ -1,26 +1,22 @@
 .TheBarChartContainer {
+  clear: both;
   position: relative;
-  top: -215px;
-  left: 494px;
-
-  width: 300px;
-  height: 280px;
+  width: 240px;
+  margin-top: 20px;
+  margin-left: 20px;
 }
+
+.TheBarChart {
+  margin-left: -20px;
+}
+
 
 .BarChartLegend {
-  position: relative;
-  left: 64px;
-  top: -10px;
-  width: 200px;
+  width: 240px;
   height: 20px;
-}
-
-.BarChartLegendText {
-  position: relative;
-  left: 50px;
-  bottom: 5px;
-  color: #666;
-  font-size: 11px;
+  margin-bottom: 40px;
+  margin-left: 40px;
+  margin-top: -10px;
 }
 
 .BarChartLegendColor {
@@ -31,13 +27,22 @@
   background-color: #e84506;
 }
 
+.BarChartLegendText {
+  position: relative;
+  margin-top: 10px;
+  left: 50px;
+  color: #666;
+  font-size: 11px;
+}
+
+
 .Hidden {
   display: none;
 }
 
 .BarOpacityDefault {
   opacity: 1;
-  -webkit-transition: opacity 1s;
+  -webkit-transition: opacity 0.75s;
 }
 
 .BarOpacityDefault.BarOpacityInactive {

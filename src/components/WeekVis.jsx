@@ -6,6 +6,7 @@ import MDSpinner from "react-md-spinner";
 import { fetchWeekDataForRegion } from "../tools/fetch-data-for-region.js";
 import { WeekVisTable } from "./WeekVisTable.jsx";
 import { HarvestBarChart } from "./HarvestBarChart.jsx";
+import { WeekVisPieChart } from "./WeekVisPieChart.jsx";
 
 import styles from './WeekVis.css';
 
@@ -17,7 +18,6 @@ import {
 class WeekVis extends Component {
   constructor () {
     super();
-
 
     const DEV_MODE = true;
 
@@ -52,6 +52,7 @@ class WeekVis extends Component {
       fetchWeekDataForRegion(props.selectedRegionId, this.state.utcTimestamps)
       .then(
         (response) => {
+          console.log("[+] P-resolved; weekData total response =", response);
           this.setState({ isFetching: false, data: response });
         },
         (error) => {
@@ -89,31 +90,48 @@ class WeekVis extends Component {
       if (this.state.isFetching) {
         return (
           <div className={styles.WeekVisContent}>
-            <WeekVisTable
-              utcTimestampSlugs={this.state.utcTimestampSlugs}
-              data={null}
-              isFetching={true}
-            />
-            <HarvestBarChart
-              utcTimestampSlugs={this.state.utcTimestampSlugs}
-              data={null}
-              isFetching={true}
-            />
+            <div className={styles.WeekVisContentLeftSide}>
+              <WeekVisPieChart
+                data={null}
+                isFetching={true}
+              />
+              <WeekVisTable
+                utcTimestampSlugs={this.state.utcTimestampSlugs}
+                data={null}
+                isFetching={true}
+              />
+            </div>
+           <div className={styles.WeekVisContentRightSide}>
+             <HarvestBarChart
+                utcTimestampSlugs={this.state.utcTimestampSlugs}
+                data={null}
+                isFetching={true}
+              />
+            </div>
           </div>
         );
       } else {
         return (
           <div className={styles.WeekVisContent}>
-            <WeekVisTable
-              utcTimestampSlugs={this.state.utcTimestampSlugs}
-              data={this.state.data}
-              isFetching={false}
-            />
-            <HarvestBarChart
-              utcTimestampSlugs={this.state.utcTimestampSlugs}
-              data={this.state.data}
-              isFetching={false}
-            />
+            <div className={styles.WeekVisContentLeftSide}>
+              <WeekVisPieChart
+                rawData={this.state.data}
+                isFetching={false}
+              />
+              <WeekVisTable
+                utcTimestampSlugs={this.state.utcTimestampSlugs}
+                data={this.state.data}
+                isFetching={false}
+              />
+            </div>
+
+            <div className={styles.WeekVisContentRightSide}>
+              <HarvestBarChart
+                utcTimestampSlugs={this.state.utcTimestampSlugs}
+                data={this.state.data}
+                isFetching={false}
+              />
+            </div>
           </div>
         );
       }
@@ -162,7 +180,7 @@ class Spinner extends Component {
           style={{
             position: "relative",
             top: "-23px",
-            left: "160px"
+            left: "145px"
           }}
         />
       </div>

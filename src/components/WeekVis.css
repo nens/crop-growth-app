@@ -23,4 +23,33 @@
 }
 
 .WeekVisContent {
+  position: relative;
+  height: 470px;
+  width: 800px;
+  max-width: 800px;
+  margin-top: 20px;
+}
+
+.WeekVisContentLeftSide {
+  overflow: hidden;
+  float: left;
+  margin-left: 20px;
+
+  width: 440px;
+  max-width: 440px;
+  margin-top: 10px;
+
+  height: 420px;
+  max-height: 420px;
+}
+
+.WeekVisContentRightSide {
+  float: right;
+  position: relative;
+  height: 420px;
+  max-height: 420px;
+  width: 320px;
+  max-width: 320px;
+
+  overflow: hidden;
 }

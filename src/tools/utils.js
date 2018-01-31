@@ -69,3 +69,16 @@ export function convertTimestampToUTC (msTimestamp) {
   let isoDate = d.toISOString();
   return isoDate;
 }
+
+// NB! This expects that raster-aggregates gives us  the area of a region
+// in *ACRES*, not *HECTARES*:
+export function convertAcresToHectares (areaInAcres, mustRound) {
+
+  const MULTIPLIER = 0.404685642;
+  const areaInHectares = MULTIPLIER * areaInAcres;
+
+  return mustRound
+    ? Math.round(areaInHectares)
+    : areaInHectares;
+
+}

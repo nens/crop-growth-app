@@ -31,7 +31,6 @@ class WeekVisTable extends Component {
     this.updateData(props);
   }
   updateData (props) {
-    console.log("[F] updateData; props =", props);
     if (!props.isFetching) {
       this.setState({ formattedData: this.formatData(props.data) });
     }
@@ -67,33 +66,35 @@ class WeekVisTable extends Component {
     const { isFetching, utcTimestampSlugs } = this.props;
 
     return (
-      <table className={styles.TheTable}>
-        <WeekTableHeader />
-        <tbody>
-        {
-          isFetching
-            ? [0,1,2,3,4,5].map((_, i) => {
-                return (
-                  <WeekTableRow
-                    rowIsEmpty={true}
-                    timestamp={utcTimestampSlugs[0]}
-                    key={i}
-                  />
-                );
-              })
-            : this.state.formattedData.map((tuple, i) => {
-                return (
-                  <WeekTableRow
-                    rowIsEmpty={false}
-                    key={i}
-                    timestamp={utcTimestampSlugs[0]}
-                    weekData={tuple[1]}
-                  />
-                );
-              })
-        }
-        </tbody>
-      </table>
+      <div className={styles.TheTableContainer}>
+        <table className={styles.TheTable}>
+          <WeekTableHeader />
+          <tbody>
+          {
+            isFetching
+              ? [0,1,2,3,4,5].map((_, i) => {
+                  return (
+                    <WeekTableRow
+                      rowIsEmpty={true}
+                      timestamp={utcTimestampSlugs[0]}
+                      key={i}
+                    />
+                  );
+                })
+              : this.state.formattedData.map((tuple, i) => {
+                  return (
+                    <WeekTableRow
+                      rowIsEmpty={false}
+                      key={i}
+                      timestamp={utcTimestampSlugs[0]}
+                      weekData={tuple[1]}
+                    />
+                  );
+                })
+          }
+          </tbody>
+        </table>
+      </div>
     );
   }
 }
@@ -107,7 +108,7 @@ class WeekTableHeader extends Component {
       <thead>
         <tr>
           <th key={0} style={{'width': '70px', 'textAlign': 'center' }}>
-            Date
+            week
           </th>
           {
             NON_BARREN_GROWTH_STAGES.map(function (gs, i) {
@@ -122,7 +123,7 @@ class WeekTableHeader extends Component {
                   <div
                     style={{'backgroundColor': rgbaString }}
                     className={styles.VerticalColumnName}>
-                    {gs}
+                    {gs.toLowerCase()}
                   </div>
                 </th>
               );
@@ -146,7 +147,7 @@ class WeekTableRow extends Component {
           NON_BARREN_GROWTH_STAGES.map((gs, i) => {
             const area = rowIsEmpty
               ? '...'
-              : Math.round(weekData[gs] * PIXEL_SIZE * 100) / 100
+              : Math.round(weekData[gs] * PIXEL_SIZE)
             return (
               <td key={i + 1} className={styles.TableCell}>
                 {area}

@@ -19,8 +19,15 @@ class MonthVisTable extends Component {
     this.updateData(props);
   }
   updateData (props) {
-    if (!props.isFetching) {
-      this.setState({ formattedData: this.formatData(props.data) });
+    if (props.isFetching) {
+      this.setState({
+        isFetching: true
+      });
+    } else {
+      this.setState({
+        formattedData: this.formatData(props.data),
+        isFetching: false
+      });
     }
   }
   formatData (data) {
@@ -29,12 +36,15 @@ class MonthVisTable extends Component {
     });
   }
   render () {
+
+    const { formattedData, isFetching } = this.state;
+
     return (
       <table className={styles.AreaTable}>
         <thead>
           <tr>
-            <th>Month</th>
-            <th>Rice (ha)</th>
+            <th>month</th>
+            <th>rice (acres)</th>
           </tr>
         </thead>
         <tbody>
@@ -43,7 +53,7 @@ class MonthVisTable extends Component {
             return (
               <tr key={Math.random()}>
                 <td>{monthData.monthName}</td>
-                <td>{monthData.area + " ha"}</td>
+                <td>{isFetching ? '...' : monthData.area}</td>
               </tr>
             );
           })
