@@ -1,0 +1,21 @@
+.PieChartContainer {
+  height: 150px;
+  background-color: rgba(127, 127, 127, 0.2);
+  overflow: hidden;
+  width: 440px;
+  max-width: 440px;
+
+  margin-bottom: 30px
+}
+
+.ThePieChart {
+}
+
+.PieOpacityDefault {
+  opacity: 1;
+  -webkit-transition: opacity 0.75s;
+}
+
+.PieOpacityDefault.PieOpacityInactive {
+  opacity: 0;
+}
