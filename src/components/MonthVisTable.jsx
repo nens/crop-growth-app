@@ -9,10 +9,15 @@ import styles from './MonthVis.css';
 class MonthVisTable extends Component {
   constructor () {
     super();
-    this.state = { formattedData: "" };
+    this.state = {
+      currentYear: null,
+      formattedData: "",
+      isFetching: false
+    };
     this.formatData = this.formatData.bind(this);
   }
   componentWillMount () {
+    this.setState({ currentYear: this.props.currentYear });
     this.updateData(this.props);
   }
   componentWillReceiveProps (props) {
@@ -37,7 +42,7 @@ class MonthVisTable extends Component {
   }
   render () {
 
-    const { formattedData, isFetching } = this.state;
+    const { formattedData, isFetching, currentYear } = this.state;
 
     return (
       <table className={styles.AreaTable}>
@@ -52,7 +57,9 @@ class MonthVisTable extends Component {
           this.state.formattedData.map((monthData, idx) => {
             return (
               <tr key={Math.random()}>
-                <td style={{'textAlign': 'center', 'minWidth': '80px'}}>01-{ idx > 8 ? idx + 1 : '0' + (idx + 1) }-2017</td>
+                <td style={{'textAlign': 'center', 'minWidth': '80px'}}>
+                  01-{ idx > 8 ? idx + 1 : '0' + (idx + 1) }-{currentYear - 1}
+                </td>
                 <td>{isFetching ? '...' : monthData.area}</td>
               </tr>
             );

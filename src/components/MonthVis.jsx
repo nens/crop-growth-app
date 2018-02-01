@@ -23,6 +23,7 @@ class MonthVis extends Component {
     this.state = {
       selectedRegionId: null,
       isFetching: false,
+      months: null,
       data: ""
     };
   }
@@ -30,7 +31,6 @@ class MonthVis extends Component {
     const result = [];
     let totalRiceSingleMonth;
     responseActualYear.forEach((monthData) => {
-      console.log("monthData:", monthData);
       totalRiceSingleMonth = 0;
       monthData.data.forEach((regionData) => {
         totalRiceSingleMonth += regionData.data;
@@ -64,21 +64,24 @@ class MonthVis extends Component {
   componentWillReceiveProps (props) {
     this.setState({
       selectedRegionId: props.selectedRegionId,
-      isFetching: props.isFetching
+      isFetching: props.isFetching,
+      months: props.months,
+      currentYear: props.currentYear
     });
-    if (props.selectedRegionId) {
+    const currentYear = props.months[0].getFullYear();
+    console.log("currentYear:", currentYear);
+    if (props.months && props.selectedRegionId) {
       this.setState({ isFetching: true });
-      fetchMonthDataForRegion(props.selectedRegionId).then(
+      fetchMonthDataForRegion(props.selectedRegionId, props.months)
+      .then(
         (response) => {
-          console.log("[P] resolved..");
-
-          const responseActualYear = filter(response, { year: THE_YEAR }).map(
+          // console.log("total response:", response);
+          const responseActualYear = filter(response, { year: currentYear - 1 }).map(
             (obj) => obj.monthData);
-
-          console.log("responseActualYear:", responseActualYear);
-
-          const responsePreviousYears = reject(response, { year: THE_YEAR }).map(
+          // console.log("responseActualYear:", responseActualYear);
+          const responsePreviousYears = reject(response, { year: currentYear - 1 }).map(
             (obj) => obj.monthData);
+          // console.log("responsePreviousYears:", responsePreviousYears);
 
           this.setState({
             isFetching: false,
@@ -126,6 +129,7 @@ class MonthVis extends Component {
             <MonthVisLegend
               actualDataColor={COLOR_DATA_ACTUAL}
               historicalDataColor={COLOR_DATA_HISTORICAL}
+              currentYear={this.state.currentYear || '...'}
             />
             <MonthVisLineChart
               data={null}
@@ -138,6 +142,7 @@ class MonthVis extends Component {
             <MonthVisTable
               data={null}
               isFetching={true}
+              currentYear={this.state.currentYear || '...'}
             />
             }
           </div>
@@ -148,6 +153,7 @@ class MonthVis extends Component {
             <MonthVisLegend
               actualDataColor={COLOR_DATA_ACTUAL}
               historicalDataColor={COLOR_DATA_HISTORICAL}
+              currentYear={this.state.currentYear || '...'}
             />
             <MonthVisLineChart
               actualData={this.state.data.totalRicePerMonthActual}
@@ -160,6 +166,7 @@ class MonthVis extends Component {
             <MonthVisTable
               data={this.state.data.totalRicePerMonthActual}
               isFetching={false}
+              currentYear={this.state.currentYear || '...'}
             />
           </div>
         );
@@ -188,6 +195,7 @@ class MonthVis extends Component {
 
 class MonthVisLegend extends Component {
   render () {
+    const { currentYear } = this.props;
     return (
       <div className={styles.LegendContainer}>
 
@@ -196,7 +204,7 @@ class MonthVisLegend extends Component {
             className={styles.LegendColorIndicator}
             style={{ backgroundColor: COLOR_DATA_ACTUAL }}>
           </div>
-          <div className={styles.LegendText}>{THE_YEAR}</div>
+          <div className={styles.LegendText}>{currentYear - 1}</div>
         </div>
 
         <div className={styles.LegendRightHalf}>
@@ -205,7 +213,7 @@ class MonthVisLegend extends Component {
             style={{ backgroundColor: COLOR_DATA_HISTORICAL }}>
           </div>
           <div className={styles.LegendText}>
-            {FIRST_YEAR + "-" + (THE_YEAR - 1) + " (Average)"}
+            {(currentYear - 3) + "-" + (currentYear - 2) + " (average)"}
           </div>
         </div>
 

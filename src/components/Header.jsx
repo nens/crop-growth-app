@@ -63,7 +63,7 @@ class Header extends Component {
 
           <div className={`${styles.KeyValuePair}`}>
             <span className={`${styles.KeyWrapper}`}>date generated:</span>
-            <span className={`${styles.ValueWrapper}`}>{getCurrentDate()}</span>
+            <span className={`${styles.ValueWrapper}`}><b>{getCurrentDate()}</b></span>
           </div>
 
         </div>

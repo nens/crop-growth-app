@@ -31,14 +31,19 @@ class HarvestBarChart extends Component {
     this.updateData(props);
   }
   updateData (props) {
+    console.log("props.weeks:", props.weeks);
     const formattedData = this.getFormattedData(
       props.data,
       props.isFetching
     );
-    this.setState({ formattedData, isFetching: props.isFetching });
+    this.setState({
+      formattedData,
+      isFetching: props.isFetching,
+      weeks: props.weeks
+    });
   }
   getFormattedData (rawData, isFetching) {
-    if (isFetching) {
+    if (isFetching || !this.state.weeks) {
       // Still fetching data...
       if (this.state.formattedData) {
         // ..but we already have the most recently retrieved data; we will use
@@ -48,12 +53,11 @@ class HarvestBarChart extends Component {
       } else {
         // ..and there is no previously retrieved data: we'll use dummy data
         // (because: grid/axis will be in place when we'll draw the actual data)
-        let unixTimestamps = getWeekVisUnixTimestamps(true), // TODO: set arg to false for non-dev environments
-            weekTimestamps = unixTimestamps.map(convertTimestampToUTC);
 
-        return weekTimestamps.map((ts) => {
+
+        return [0,1,2,3,4,5].map((week) => {
           return {
-            'timestamp': ts.split('T')[0],
+            'timestamp': '...',
             'harvestArea': null
           };
         });
@@ -62,11 +66,15 @@ class HarvestBarChart extends Component {
       // OK, fetching data is finished: let's format that data for our BarChart:
       let results = [],
           singleResult,
-          harvestArea;
+          harvestArea,
+          weeks = this.state.weeks;
 
-      forEach(rawData, function (x) {
+        console.log('weeks sorta lookis like:', weeks);
+
+      forEach(rawData, function (x, idx) {
+        const week = weeks[idx];
         singleResult = {
-          timestamp: x.weekTimestamp.split('T')[0]
+          timestamp: week.getDate() + '-' + week.getMonth(),
         }
         try {
           harvestArea = find(x.weekData.data, { 'label' : 'Harvest' }).data;

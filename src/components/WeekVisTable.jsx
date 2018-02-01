@@ -62,8 +62,20 @@ class WeekVisTable extends Component {
 
     return objToTuples(dictPerWeekCollection);
   }
+
   render () {
-    const { isFetching, utcTimestampSlugs } = this.props;
+    const { isFetching, weeks } = this.props;
+
+    const pad = (n) => n > 9 ? '' + n : '0' + n;
+
+    console.log("##weeks##", weeks);
+
+    const utcTimestampSlugs = weeks.map((week) => {
+      const year = week.getFullYear();
+      const month = pad(week.getMonth() + 1);
+      const day = pad(week.getDate());
+      return day + '-' + month + '-' + year;
+    });
 
     return (
       <div className={styles.TheTableContainer}>

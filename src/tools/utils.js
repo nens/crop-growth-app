@@ -13,7 +13,7 @@ export function getCurrentDate () {
   if (month < 10) { month = '0' + month }
   if ( date < 10) {  date = '0' +  date }
 
-  return date + "/" + month + "/" + year;
+  return year + '-' + month + '-' + date;
 }
 
 export function calculateAverage (ls, mustRoundResult) {

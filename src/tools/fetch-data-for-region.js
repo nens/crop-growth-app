@@ -1,5 +1,7 @@
 import { THE_YEAR, AMOUNT_OF_WEEKS } from "../constants";
 
+import { getCurrentYear } from "./utils-time.js";
+
 // Valid URL (demo.lizard.net):
 ////////////////////////////////////////////
 // https://sat4rice.lizard.net/api/v3/raster-aggregates/
@@ -17,44 +19,33 @@ const URL_BASE = "http://localhost:9000/api/v3/raster-aggregates/?agg=counts&ras
 ///////////////////////////////////////////////////////////////////////////////
 // Part 1/2: retrieving month-data
 
-function buildUrlsForMonthData (regionId, year) {
-  let urls = [];
-  let regionUrl = URL_BASE + "&geom_id=" + regionId;
-  let time;
-  for (let i = 1; i <= 12; i++) {
-    let str = "";
-    if (i < 10) {
-      str = "0" + i;
-    } else {
-      str = "" + i;
-    }
-    time = year + "-" + str + "-01T00:00:00";
-    urls.push(regionUrl + "&time=" + time);
-  }
+function buildMonthUrls (regionId, months) {
+  console.log('months:', months);
+  let urls = [],
+      regionUrl = URL_BASE + "&geom_id=" + regionId,
+      tsRep,
+      tsDay,
+      tsMonth,
+      tsYear;
+
+  const pad = (n) => n > 9 ? '' + n : '0' + n;
+
+  months.forEach((month) => {
+    tsMonth = month.getMonth() + 1;
+    tsYear = month.getFullYear();
+    tsRep = tsYear + '-' + pad(tsMonth) + '-' + "-01T00:00:00";
+    urls.push(regionUrl + "&time=" + tsRep);
+  });
   return urls;
 }
 
-export function fetchMonthDataForRegion (regionId) {
-  const urlsYear1 = buildUrlsForMonthData(regionId, THE_YEAR - 2);
-  const urlsYear2 = buildUrlsForMonthData(regionId, THE_YEAR - 1); // TODO: more historical data?
-  const urlsTheYear = buildUrlsForMonthData(regionId, THE_YEAR);
-  const urlObjects = [];
-
-  urlsYear1.forEach((url) => {
-    urlObjects.push({ url, year: THE_YEAR - 2 });
-  });
-
-  urlsYear2.forEach((url) => {
-    urlObjects.push({ url, year: THE_YEAR - 1 });
-  });
-
-  urlsTheYear.forEach((url) => {
-    urlObjects.push({ url, year: THE_YEAR });
-  });
-
+export function fetchMonthDataForRegion (regionId, months) {
+  const urls = buildMonthUrls(regionId, months);
   const promises = [];
+  const currentYear = months[0].getFullYear();
 
-  urlObjects.forEach((urlObj) => {
+  urls.reverse().forEach((url, idx) => {
+    const year = currentYear - Math.floor(idx / 12);
     promises.push(
       new Promise(function (resolve, reject) {
         let request = new XMLHttpRequest();
@@ -63,26 +54,48 @@ export function fetchMonthDataForRegion (regionId) {
 
           if (this.status >= 200 && this.status < 300) {
             const monthData = JSON.parse(this.response);
-            resolve({ year: urlObj.year, monthData });
+            resolve({ year: year, monthData });
           } else {
-            reject(`Status ${this.status}, '${this.statusText}' for URL ${urlObj.url}.`);
+            reject(`Status ${this.status}, '${this.statusText}' for URL ${url}.`);
           }
         };
         request.withCredentials = true; // Send cookie.
-        request.open('GET', urlObj.url);
+        request.open('GET', url);
         request.send();
       })
     )
   });
   return Promise.all(promises);
-};
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Part 2/2: retrieving week-data
 
-export function fetchWeekDataForRegion (regionId, utcTimestamps) {
+function buildWeekUrls (regionId, weeks) {
+  console.log('weeks:', weeks);
+  let urls = [],
+      regionUrl = URL_BASE + "&geom_id=" + regionId,
+      tsRep,
+      tsDay,
+      tsMonth,
+      tsYear;
 
-  const urls = buildUrlsForWeekData(regionId, utcTimestamps);
+  const pad = (n) => n > 9 ? '' + n : '0' + n;
+
+  weeks.forEach((week) => {
+    tsMonth = week.getMonth() + 1;
+    tsYear = week.getFullYear();
+    tsDay = week.getDate();
+    tsRep = tsYear + '-' + pad(tsMonth) + '-' + pad(tsDay) + "T00:00:00";
+    urls.push(regionUrl + "&time=" + tsRep);
+  });
+  return urls;
+}
+
+export function fetchWeekDataForRegion (regionId, weeks) {
+
+  const utcTimestamps = weeks.map((week) => week.getTime());
+  const urls = buildWeekUrls(regionId, weeks);
   const promises = [];
 
   urls.forEach((url, i) => {
@@ -94,7 +107,7 @@ export function fetchWeekDataForRegion (regionId, utcTimestamps) {
 
           if (this.status >= 200 && this.status < 300) {
             resolve({
-              weekTimestamp: utcTimestamps[i],
+              weekTimestamp: "@@@@@@",
               weekData: JSON.parse(this.response)
             });
           } else {

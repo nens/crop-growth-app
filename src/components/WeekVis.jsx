@@ -38,18 +38,20 @@ class WeekVis extends Component {
       utcTimestampSlugs: utcTimestampSlugs,
       selectedRegionId: null,
       isFetching: false,
-      data: ""
+      data: "",
+      weeks: null
     };
   }
   componentWillReceiveProps (props) {
     this.setState({
       selectedRegionId: props.selectedRegionId,
-      isFetching: props.isFetching
+      isFetching: props.isFetching,
+      weeks: props.weeks
     });
 
     if (props.selectedRegionId) {
       this.setState({ isFetching: true });
-      fetchWeekDataForRegion(props.selectedRegionId, this.state.utcTimestamps)
+      fetchWeekDataForRegion(props.selectedRegionId, props.weeks)
       .then(
         (response) => {
           this.setState({ isFetching: false, data: response });
@@ -98,6 +100,7 @@ class WeekVis extends Component {
                 utcTimestampSlugs={this.state.utcTimestampSlugs}
                 data={null}
                 isFetching={true}
+                weeks={this.state.weeks}
               />
             </div>
            <div className={styles.WeekVisContentRightSide}>
@@ -105,6 +108,7 @@ class WeekVis extends Component {
                 utcTimestampSlugs={this.state.utcTimestampSlugs}
                 data={null}
                 isFetching={true}
+                weeks={this.state.weeks}
               />
             </div>
           </div>
@@ -121,6 +125,7 @@ class WeekVis extends Component {
                 utcTimestampSlugs={this.state.utcTimestampSlugs}
                 data={this.state.data}
                 isFetching={false}
+                weeks={this.state.weeks}
               />
             </div>
 
@@ -129,6 +134,7 @@ class WeekVis extends Component {
                 utcTimestampSlugs={this.state.utcTimestampSlugs}
                 data={this.state.data}
                 isFetching={false}
+                weeks={this.state.weeks}
               />
             </div>
           </div>
