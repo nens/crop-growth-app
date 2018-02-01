@@ -76,7 +76,8 @@ class WeekVisTable extends Component {
                   return (
                     <WeekTableRow
                       rowIsEmpty={true}
-                      timestamp={utcTimestampSlugs[0]}
+                      isFirstRow={false}
+                      timestamp={utcTimestampSlugs[i]}
                       key={i}
                     />
                   );
@@ -85,8 +86,9 @@ class WeekVisTable extends Component {
                   return (
                     <WeekTableRow
                       rowIsEmpty={false}
+                      isFirstRow={i === 0}
                       key={i}
-                      timestamp={utcTimestampSlugs[0]}
+                      timestamp={utcTimestampSlugs[i]}
                       weekData={tuple[1]}
                     />
                   );
@@ -107,7 +109,7 @@ class WeekTableHeader extends Component {
     return (
       <thead>
         <tr>
-          <th key={0} style={{'width': '70px', 'textAlign': 'center' }}>
+          <th key={0} style={{'width': '100px', 'textAlign': 'center' }}>
             week
           </th>
           {
@@ -119,7 +121,6 @@ class WeekTableHeader extends Component {
                   key={i + 1}
                   style={{'backgroundColor': bgColor }}
                   className={styles.VerticalColumn}>
-
                   <div
                     style={{'backgroundColor': rgbaString }}
                     className={styles.VerticalColumnName}>
@@ -137,12 +138,14 @@ class WeekTableHeader extends Component {
 
 class WeekTableRow extends Component {
   render () {
-    const { timestamp, weekData, rowIsEmpty } = this.props;
+    const { timestamp, weekData, rowIsEmpty, isFirstRow } = this.props;
     return (
       <tr className={styles.TableRow}>
-        <td key={0} style={{'color': '#666'}}>
-          { timestamp }
-        </td>
+        {
+          isFirstRow
+            ? (<td key={0} style={{'color': '#666'}}><b>{timestamp}</b></td>)
+            : (<td key={0} style={{'color': '#666'}}>{timestamp}</td>)
+        }
         {
           NON_BARREN_GROWTH_STAGES.map((gs, i) => {
             const area = rowIsEmpty

@@ -25,13 +25,13 @@ class WeekVis extends Component {
     // Three types of timestamps:
 
     // 1) ms since 01-01-1970
-    const unixTimestamps = getWeekVisUnixTimestamps(DEV_MODE);
+    const unixTimestamps = getWeekVisUnixTimestamps(DEV_MODE).reverse();
 
     // 2) UTC, used for API calls to raster-aggregates
     const utcTimestamps = unixTimestamps.map(convertTimestampToUTC);
 
     // 3) UTC, used for 2x yAxis labeling
-    const utcTimestampSlugs = utcTimestamps.map((ts) => ts.split('T')[0])
+    const utcTimestampSlugs = utcTimestamps.map((ts) => ts.split('T')[0]);
 
     this.state = {
       utcTimestamps: utcTimestamps,
@@ -52,7 +52,6 @@ class WeekVis extends Component {
       fetchWeekDataForRegion(props.selectedRegionId, this.state.utcTimestamps)
       .then(
         (response) => {
-          console.log("[+] P-resolved; weekData total response =", response);
           this.setState({ isFetching: false, data: response });
         },
         (error) => {

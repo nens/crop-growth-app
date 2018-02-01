@@ -39,15 +39,15 @@
   max-width: 440px;
   margin-top: 10px;
 
-  height: 420px;
-  max-height: 420px;
+  height: 440px;
+  max-height: 440px;
 }
 
 .WeekVisContentRightSide {
   float: right;
   position: relative;
-  height: 420px;
-  max-height: 420px;
+  height: 440px;
+  max-height: 440px;
   width: 320px;
   max-width: 320px;
 

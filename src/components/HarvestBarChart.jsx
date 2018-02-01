@@ -23,14 +23,6 @@ class HarvestBarChart extends Component {
       isFetching: null,
       formattedData: null,
     };
-
-    // WHY CAN THIS REMAIN COMMENTED W/O CRASHING????
-    ///////////////////////////////////////////////////////////////////////////
-    // this.updateData = this.updateData.bind(this);
-    // this.getFormattedData = this.getFormattedData.bind(this);
-    // this.getFormattedTimestamp = this.getFormattedTimestamp.bind(this);
-
-
   }
   componentWillMount () {
     this.updateData(this.props);

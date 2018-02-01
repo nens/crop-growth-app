@@ -15,14 +15,24 @@
   margin-bottom: 10px;
 }
 
-.GroeneBalk {
+.GroeneBalkLinks {
   height: 100px;
-  width: 800px;
+  width: 400px;
   /*
   ACI-GREEN (fugly):
     background-color: #00A55D;
     Instead, temporarily we use the color for growthstage Harvest:
   */
+  background-color: rgb(166, 166, 166);
+}
+
+.GroeneBalkRechts {
+  position: relative;
+  margin-left: 400px;
+  margin-top: -100px; ;
+
+  height: 100px;
+  width: 400px;
   background-color: rgb(166, 166, 166);
 }
 
