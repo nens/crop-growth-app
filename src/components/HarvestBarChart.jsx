@@ -79,7 +79,7 @@ class HarvestBarChart extends Component {
       return results;
     }
   }
-  getFormattedTimestamp (ts) {
+  getFormattedTimestamp (ts, a, b, c) {
     const parts = ts.split('-');
     return parts[1] + '-' + parts[2];
   }
@@ -88,12 +88,11 @@ class HarvestBarChart extends Component {
     const { formattedData, isFetching } = this.state;
 
     const yAxisFormatter = isFetching
-      ? (_) => '... ac.'
-      : (x) => x + " ac."
+      ? (_) => '... ha.'
+      : (x) => x + " ha."
 
     return (
       <div className={styles.TheBarChartContainer}>
-
         <BarChart
           width={280}
           height={390}

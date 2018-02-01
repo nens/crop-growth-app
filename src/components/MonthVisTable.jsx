@@ -43,16 +43,16 @@ class MonthVisTable extends Component {
       <table className={styles.AreaTable}>
         <thead>
           <tr>
-            <th>month</th>
-            <th>rice (acres)</th>
+            <th>date</th>
+            <th>rice (ha.)</th>
           </tr>
         </thead>
         <tbody>
         {
-          this.state.formattedData.map((monthData) => {
+          this.state.formattedData.map((monthData, idx) => {
             return (
               <tr key={Math.random()}>
-                <td>{monthData.monthName}</td>
+                <td style={{'textAlign': 'center', 'minWidth': '80px'}}>01-{ idx > 8 ? idx + 1 : '0' + (idx + 1) }-2017</td>
                 <td>{isFetching ? '...' : monthData.area}</td>
               </tr>
             );

@@ -35,7 +35,7 @@ class Header extends Component {
         </div>
         <div className={`${styles.ContentWrapper}`}>
           <div className={`${styles.KeyValuePair} ${styles.FirstRow}`}>
-            <div className={`${styles.KeyWrapper}`}>Area:</div>
+            <div className={`${styles.KeyWrapper}`}>region:</div>
             <select value={selectedRegionId} onChange={onRegionSelected}>
               <option disabled value="">-</option>
               {
@@ -62,7 +62,7 @@ class Header extends Component {
           </div>
 
           <div className={`${styles.KeyValuePair}`}>
-            <span className={`${styles.KeyWrapper}`}>Date generated:</span>
+            <span className={`${styles.KeyWrapper}`}>date generated:</span>
             <span className={`${styles.ValueWrapper}`}>{getCurrentDate()}</span>
           </div>
 

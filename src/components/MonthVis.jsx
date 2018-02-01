@@ -27,29 +27,19 @@ class MonthVis extends Component {
     };
   }
   getTotalRicePerMonthActual (responseActualYear) {
-    // console.log("[F] getTotalRicePerMonthActual; responseActualYear =", responseActualYear);
     const result = [];
     let totalRiceSingleMonth;
     responseActualYear.forEach((monthData) => {
+      console.log("monthData:", monthData);
       totalRiceSingleMonth = 0;
       monthData.data.forEach((regionData) => {
-        if (regionData.class > 2) {
-          totalRiceSingleMonth += regionData.data;
-        }
+        totalRiceSingleMonth += regionData.data;
       });
       result.push(Math.round(totalRiceSingleMonth * PIXEL_SIZE));
     });
-
-    // console.log("*** result (actual):", result);
     return result;
   }
   getTotalRicePerMonthHistorical (responsePreviousYears) {
-    // console.log("[F] getTotalRicePerMonthHistorical; responsePreviousYears =", responsePreviousYears);
-
-    if (responsePreviousYears.length % 12 !== 0) {
-      console.error("Historical avg not determined; historical data was for an incorrect amt of months");
-    }
-
     const result = [];
     let totalRiceSingleMonth;
     let j;
@@ -59,16 +49,14 @@ class MonthVis extends Component {
       result[j] = result[j] || [];
       totalRiceSingleMonth = 0;
       monthData.data.forEach((regionData) => {
-        if (regionData.class > 2) {
-          totalRiceSingleMonth += regionData.data;
-        }
+        totalRiceSingleMonth += regionData.data;
       });
-      result[j].push(Math.round(totalRiceSingleMonth * PIXEL_SIZE));
+      result[j].push(Math.round(totalRiceSingleMonth));
     });
 
     const finalResult = [];
     result.forEach((monthValues, i) => {
-      finalResult.push(calculateAverage(monthValues, true));
+      finalResult.push(PIXEL_SIZE * calculateAverage(monthValues, true));
     });
 
     return finalResult;
@@ -82,9 +70,12 @@ class MonthVis extends Component {
       this.setState({ isFetching: true });
       fetchMonthDataForRegion(props.selectedRegionId).then(
         (response) => {
+          console.log("[P] resolved..");
 
           const responseActualYear = filter(response, { year: THE_YEAR }).map(
             (obj) => obj.monthData);
+
+          console.log("responseActualYear:", responseActualYear);
 
           const responsePreviousYears = reject(response, { year: THE_YEAR }).map(
             (obj) => obj.monthData);
@@ -181,7 +172,7 @@ class MonthVis extends Component {
       <div className={styles.MonthVisContent}>
         <div className={styles.GroeneBalk}>
           <div className={styles.GroeneBalkText}>
-            Monthly
+            monthly
           </div>
           {
             this.state.isFetching

@@ -55,8 +55,8 @@ class MonthVisLineChart extends Component {
     } = this.props;
 
     const yAxisFormatter = isFetching
-      ? (_) => '... ac.'
-      : (x) => x + " ac."
+      ? (_) => '... ha.'
+      : (x) => x + " ha."
 
     return (
       <div className={styles.LineChartContainer}>

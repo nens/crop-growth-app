@@ -142,7 +142,7 @@ class WeekVis extends Component {
       <div>
         <div className={styles.GroeneBalk}>
           <div className={styles.GroeneBalkText}>
-            Weekly
+            weekly
           </div>
           {
             this.state.isFetching

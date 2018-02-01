@@ -54,7 +54,7 @@ class WeekVisTable extends Component {
           dataForSingleWeek, { 'label': growthStage }
         );
         dictForSingleWeek.data[growthStage] =
-          dataForGrowthStage ? dataForGrowthStage.data : 0;
+          dataForGrowthStage ? PIXEL_SIZE * dataForGrowthStage.data : 0;
       });
 
       dictPerWeekCollection.push(dictForSingleWeek);
@@ -139,18 +139,22 @@ class WeekTableHeader extends Component {
 class WeekTableRow extends Component {
   render () {
     const { timestamp, weekData, rowIsEmpty, isFirstRow } = this.props;
+
+    const parts = timestamp.split('-');
+    const tsEuro = parts[2] + '-' + parts[1] + '-' + parts[0];
+
     return (
       <tr className={styles.TableRow}>
         {
           isFirstRow
-            ? (<td key={0} style={{'color': '#666'}}><b>{timestamp}</b></td>)
-            : (<td key={0} style={{'color': '#666'}}>{timestamp}</td>)
+            ? (<td key={0} style={{color: '#666', textAlign: 'center'}}><b>{tsEuro}</b></td>)
+            : (<td key={0} style={{color: '#666', textAlign: 'center'}}>{tsEuro}</td>)
         }
         {
           NON_BARREN_GROWTH_STAGES.map((gs, i) => {
             const area = rowIsEmpty
               ? '...'
-              : Math.round(weekData[gs] * PIXEL_SIZE)
+              : Math.round(weekData[gs])
             return (
               <td key={i + 1} className={styles.TableCell}>
                 {area}
