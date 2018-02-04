@@ -69,3 +69,10 @@ export function convertTimestampToUTC (msTimestamp) {
   let isoDate = d.toISOString();
   return isoDate;
 }
+
+// We do NOT use barren growth-stages;
+// we do NOT use no-data;
+// We do NOT use category -1 "other";
+export function growthStageIsAllowed (gsClass) {
+  return gsClass >= 2 && gsClass <= 9;
+}

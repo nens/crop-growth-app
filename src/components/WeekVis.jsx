@@ -3,10 +3,14 @@ import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import MDSpinner from "react-md-spinner";
 
+import cloneDeep from "lodash/cloneDeep";
+
 import { fetchWeekDataForRegion } from "../tools/fetch-data-for-region.js";
 import { WeekVisTable } from "./WeekVisTable.jsx";
 import { HarvestBarChart } from "./HarvestBarChart.jsx";
 import { WeekVisPieChart } from "./WeekVisPieChart.jsx";
+
+import { growthStageIsAllowed } from "../tools/utils.js";
 
 import styles from './WeekVis.css';
 
@@ -54,7 +58,7 @@ class WeekVis extends Component {
       fetchWeekDataForRegion(props.selectedRegionId, props.weeks)
       .then(
         (response) => {
-          this.setState({ isFetching: false, data: response });
+          this.setState({ isFetching: false, data: this.preprocessWeekData(response) });
         },
         (error) => {
           this.setState({ isFetching: false, data: "" });
@@ -62,6 +66,11 @@ class WeekVis extends Component {
         }
       );
     }
+  }
+  preprocessWeekData (response) {
+    console.log("[F] preprocessWeekData; response =", response);
+
+    return response;
   }
   getInnerComponent () {
 
@@ -118,7 +127,7 @@ class WeekVis extends Component {
           <div className={styles.WeekVisContent}>
             <div className={styles.WeekVisContentLeftSide}>
               <WeekVisPieChart
-                rawData={this.state.data}
+                rawData={cloneDeep(this.state.data)}
                 isFetching={false}
               />
               <WeekVisTable

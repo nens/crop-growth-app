@@ -9,7 +9,7 @@ import reject from "lodash/reject";
 import { MonthVisLineChart } from "./MonthVisLineChart";
 import { MonthVisTable} from "./MonthVisTable";
 import { fetchMonthDataForRegion } from "../tools/fetch-data-for-region.js";
-import { calculateAverage } from "../tools/utils.js";
+import { calculateAverage, growthStageIsAllowed } from "../tools/utils.js";
 import { PIXEL_SIZE, FIRST_YEAR, THE_YEAR, MONTH_NAMES } from "../constants.js";
 import styles from './MonthVis.css';
 
@@ -28,12 +28,17 @@ class MonthVis extends Component {
     };
   }
   getTotalRicePerMonthActual (responseActualYear) {
+    console.log("[F] getTotalRicePerMonthActual");
     const result = [];
-    let totalRiceSingleMonth;
-    responseActualYear.forEach((monthData) => {
+    let totalRiceSingleMonth, monthData;
+
+    responseActualYear.forEach((monthDataObj) => {
+      monthData = monthDataObj.monthData;
       totalRiceSingleMonth = 0;
       monthData.data.forEach((regionData) => {
-        totalRiceSingleMonth += regionData.data;
+        if (growthStageIsAllowed(regionData.class)) {
+          totalRiceSingleMonth += regionData.data;
+        }
       });
       result.push(Math.round(totalRiceSingleMonth * PIXEL_SIZE));
     });
@@ -41,15 +46,17 @@ class MonthVis extends Component {
   }
   getTotalRicePerMonthHistorical (responsePreviousYears) {
     const result = [];
-    let totalRiceSingleMonth;
-    let j;
+    let j, monthData, totalRiceSingleMonth;
 
-    responsePreviousYears.forEach((monthData, i) => {
+    responsePreviousYears.forEach((monthDataObj, i) => {
+      monthData = monthDataObj.monthData;
       j = i % 12;
       result[j] = result[j] || [];
       totalRiceSingleMonth = 0;
       monthData.data.forEach((regionData) => {
-        totalRiceSingleMonth += regionData.data;
+        if (growthStageIsAllowed(regionData.class)) {
+          totalRiceSingleMonth += regionData.data;
+        }
       });
       result[j].push(Math.round(totalRiceSingleMonth));
     });
@@ -74,13 +81,11 @@ class MonthVis extends Component {
       fetchMonthDataForRegion(props.selectedRegionId, props.months)
       .then(
         (response) => {
-          console.log("total responses:", response);
-          const responseActualYear = filter(response, { year: currentYear }).map(
-            (obj) => obj.monthData);
-          console.log("responseActualYear:", responseActualYear);
-          const responsePreviousYears = reject(response, { year: currentYear }).map(
-            (obj) => obj.monthData);
-          console.log("responsePreviousYears:", responsePreviousYears);
+          // console.log("total responses:", response);
+          const responseActualYear = filter(response, { year: currentYear });
+          // console.log("responseActualYear:", responseActualYear);
+          const responsePreviousYears = reject(response, { year: currentYear });
+          // console.log("responsePreviousYears:", responsePreviousYears);
 
           this.setState({
             isFetching: false,

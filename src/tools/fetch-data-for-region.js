@@ -1,4 +1,4 @@
-import { THE_YEAR, AMOUNT_OF_WEEKS } from "../constants";
+import { THE_YEAR, AMOUNT_OF_WEEKS, RASTER_URL } from "../constants";
 
 import { getCurrentYear, dateToSlug } from "./utils-time.js";
 
@@ -14,14 +14,14 @@ import { getCurrentYear, dateToSlug } from "./utils-time.js";
 //    &time=2017-10-05T11:00:00 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //    &window=3600000
 
-const URL_BASE = "http://localhost:9000/api/v3/raster-aggregates/?agg=counts&rasters=fc8065b&srs=EPSG:4326&styles=GrowthStage_Rice_D";
+// const URL_BASE = "/api/v3/raster-aggregates/?agg=counts&rasters=fc8065b&srs=EPSG:4326&styles=GrowthStage_Rice_D";
 
 ///////////////////////////////////////////////////////////////////////////////
 // Part 1/2: retrieving month-data
 
 function buildMonthUrls (regionId, months) {
   let urls = [],
-      regionUrl = URL_BASE + "&geom_id=" + regionId,
+      regionUrl = RASTER_URL + "&geom_id=" + regionId,
       tsRep,
       tsDay,
       tsMonth,
@@ -44,18 +44,9 @@ export function fetchMonthDataForRegion (regionId, months) {
   const currentYear = months[0].getFullYear();
 
   urls.reverse().forEach((url, idxRight) => {
-    console.log("*****************");
-    console.log("*** url.......:", url);
-    console.log("*** idxRight..:", idxRight);
-
     const idxLeft = months.length - (idxRight + 1);
-    console.log("*** idxLeft...:", idxLeft);
-
-
     const month = months[idxLeft];
-    console.log("*** month:", month);
     const year = currentYear - Math.floor(idxLeft / 12);
-    console.log("*** year:", year);
     promises.push(
       new Promise(function (resolve, reject) {
         let request = new XMLHttpRequest();
@@ -86,7 +77,7 @@ export function fetchMonthDataForRegion (regionId, months) {
 
 function buildWeekUrls (regionId, weeks) {
   let urls = [],
-      regionUrl = URL_BASE + "&geom_id=" + regionId,
+      regionUrl = RASTER_URL + "&geom_id=" + regionId,
       tsRep,
       tsDay,
       tsMonth,
@@ -119,7 +110,9 @@ export function fetchWeekDataForRegion (regionId, weeks) {
           if (this.readyState !== 4) return;
 
           if (this.status >= 200 && this.status < 300) {
+            console.log("response", dateToSlug(week), this.response);
             resolve({
+              url: url,
               weekTimestamp: dateToSlug(week),
               weekData: JSON.parse(this.response)
             });
@@ -138,7 +131,7 @@ export function fetchWeekDataForRegion (regionId, weeks) {
 }
 
 function buildUrlsForWeekData (regionId, utcTimestamps) {
-  const regionUrl = URL_BASE + "&geom_id=" + regionId + "&time=";
+  const regionUrl = RASTER_URL + "&geom_id=" + regionId + "&time=";
   return utcTimestamps.map((utcTimestamp) => {
     return regionUrl + utcTimestamp;
   });

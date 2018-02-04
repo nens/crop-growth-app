@@ -110,11 +110,15 @@ class Header extends Component {
           <div className={`${styles.GroeneBalkText}`}>
             Crop Growth
           </div>
+
+          {/*}
           <img
             className={`${styles.LogoAci}`}
             src={LogoAci}
             height="80"
           />
+          */}
+
         </div>
         <div className={`${styles.GroeneBalkRechts}`}>
           <img

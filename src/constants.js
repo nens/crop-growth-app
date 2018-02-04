@@ -52,6 +52,8 @@ export const DISTRICTS = countryConfig[country].districts;
 
 export const PIXEL_SIZE = countryConfig[country].pixelSize;
 
+export const RASTER_URL = countryConfig[country].uri;
+
 // The abbreviated monthnames to be used in x-axis scales. These are completely
 // the same as in the design document.
 export const MONTH_NAMES = [

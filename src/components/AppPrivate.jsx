@@ -28,6 +28,8 @@ class AppPrivate extends Component {
       currentYear: currentYear,
       now: now,
       dates: {
+        // 'months' has an inverted order: 36 dates starting on
+        // 01-12-<current-year>, ending with 01-01-<current-year - 2>
         months: getMonths(currentYear),
         weeks: getWeeks(now)
       }
@@ -60,8 +62,6 @@ class AppPrivate extends Component {
           selectedRegionId={this.state.selectedRegionId}
           onRegionSelected={this.handleRegionSelected}
         />
-        {
-
         <MonthVis
           selectedRegionId={this.state.selectedRegionId}
           onFetchSuccess={this.handleFetchMonthDataSuccces}
@@ -69,16 +69,12 @@ class AppPrivate extends Component {
           currentYear={this.state.currentYear}
           months={this.state.dates.months}
         />
-        /*}
         <WeekVis
           selectedRegionId={this.state.selectedRegionId}
           onFetchSuccess={this.handleFetchWeekDataSuccces}
           isFetching={this.state.isFetchingWeekData}
           weeks={this.state.dates.weeks}
         />
-        */
-        }
-
       </div>
     );
   }
