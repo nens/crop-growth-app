@@ -31,19 +31,17 @@ class HarvestBarChart extends Component {
     this.updateData(props);
   }
   updateData (props) {
-    console.log("props.weeks:", props.weeks);
     const formattedData = this.getFormattedData(
       props.data,
       props.isFetching
     );
     this.setState({
-      formattedData,
-      isFetching: props.isFetching,
-      weeks: props.weeks
+      formattedData: formattedData.reverse(),
+      isFetching: props.isFetching
     });
   }
   getFormattedData (rawData, isFetching) {
-    if (isFetching || !this.state.weeks) {
+    if (isFetching) {
       // Still fetching data...
       if (this.state.formattedData) {
         // ..but we already have the most recently retrieved data; we will use
@@ -53,11 +51,12 @@ class HarvestBarChart extends Component {
       } else {
         // ..and there is no previously retrieved data: we'll use dummy data
         // (because: grid/axis will be in place when we'll draw the actual data)
+        let unixTimestamps = getWeekVisUnixTimestamps(true),
+            weekTimestamps = unixTimestamps.map(convertTimestampToUTC);
 
-
-        return [0,1,2,3,4,5].map((week) => {
+        return weekTimestamps.map((ts) => {
           return {
-            'timestamp': '...',
+            'timestamp': ts.split('T')[0],
             'harvestArea': null
           };
         });
@@ -66,15 +65,11 @@ class HarvestBarChart extends Component {
       // OK, fetching data is finished: let's format that data for our BarChart:
       let results = [],
           singleResult,
-          harvestArea,
-          weeks = this.state.weeks;
+          harvestArea;
 
-        console.log('weeks sorta lookis like:', weeks);
-
-      forEach(rawData, function (x, idx) {
-        const week = weeks[idx];
+      forEach(rawData, function (x) {
         singleResult = {
-          timestamp: week.getDate() + '-' + week.getMonth(),
+          timestamp: x.weekTimestamp.split('T')[0]
         }
         try {
           harvestArea = find(x.weekData.data, { 'label' : 'Harvest' }).data;
@@ -87,7 +82,7 @@ class HarvestBarChart extends Component {
       return results;
     }
   }
-  getFormattedTimestamp (ts, a, b, c) {
+  getFormattedTimestamp (ts) {
     const parts = ts.split('-');
     return parts[1] + '-' + parts[2];
   }
@@ -102,16 +97,16 @@ class HarvestBarChart extends Component {
     return (
       <div className={styles.TheBarChartContainer}>
         <BarChart
-          width={280}
+          width={240}
           height={390}
           data={formattedData}
           className={styles.TheBarChart}>
           <XAxis
-            interval="preserveStart"
+            interval="preserveEnd"
             tickCount={6}
             dataKey="timestamp"
             tick={{ fontSize: "11px" }}
-            tickFormatter={this.getFormattedTimestamp}
+            tickFormatter={isFetching ? () => '...' : this.getFormattedTimestamp}
           />
           <YAxis
             tickCount={5}

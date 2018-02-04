@@ -58,7 +58,7 @@ class MonthVisTable extends Component {
             return (
               <tr key={Math.random()}>
                 <td style={{'textAlign': 'center', 'minWidth': '80px'}}>
-                  01-{ idx > 8 ? idx + 1 : '0' + (idx + 1) }-{currentYear - 1}
+                  {currentYear}-{ idx > 8 ? idx + 1 : '0' + (idx + 1) }-01
                 </td>
                 <td>{isFetching ? '...' : monthData.area}</td>
               </tr>

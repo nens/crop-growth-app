@@ -68,8 +68,6 @@ class WeekVisTable extends Component {
 
     const pad = (n) => n > 9 ? '' + n : '0' + n;
 
-    console.log("##weeks##", weeks);
-
     const utcTimestampSlugs = weeks.map((week) => {
       const year = week.getFullYear();
       const month = pad(week.getMonth() + 1);
@@ -122,7 +120,7 @@ class WeekTableHeader extends Component {
       <thead>
         <tr>
           <th key={0} style={{'width': '100px', 'textAlign': 'center' }}>
-            week
+            week (ha.)
           </th>
           {
             NON_BARREN_GROWTH_STAGES.map(function (gs, i) {
@@ -157,11 +155,7 @@ class WeekTableRow extends Component {
 
     return (
       <tr className={styles.TableRow}>
-        {
-          isFirstRow
-            ? (<td key={0} style={{color: '#666', textAlign: 'center'}}><b>{tsEuro}</b></td>)
-            : (<td key={0} style={{color: '#666', textAlign: 'center'}}>{tsEuro}</td>)
-        }
+        <td key={0} style={{color: '#666', textAlign: 'center'}}>{tsEuro}</td>
         {
           NON_BARREN_GROWTH_STAGES.map((gs, i) => {
             const area = rowIsEmpty

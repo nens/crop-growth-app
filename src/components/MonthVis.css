@@ -47,14 +47,9 @@
 .AreaTable {
   position: relative;
   display: inline-block;
-  /*top: -20px;*/
-  /*left: 35px;*/
-
   margin-left: 35px;
-
   font-size: 11px;
   color: #666;
-  /*background-color: #aaf;*/
 }
 
 .AreaTable > thead > tr > th {
@@ -70,7 +65,7 @@
 .AreaTable > tbody > tr > td {
   text-align: center;
   height: 16px;
-  background-color: rgba(128, 128, 128, .2);
+  background-color: #E6E6E6;
 }
 
 .AreaTable > tbody > tr > td:first-child {
@@ -95,8 +90,6 @@
 
   width: 15%;
   height: 40px;
-
-  /*background-color: rgba(255, 0, 0, 0.1);*/
 }
 
 .LegendRightHalf {
@@ -105,8 +98,6 @@
 
   width: 35%;
   height: 40px;
-
-  /*background-color: rgba(0, 0, 255, 0.1);*/
 }
 
 .LegendColorIndicator {

@@ -12,6 +12,8 @@ import { Header } from "./Header.jsx";
 import { MonthVis } from "./MonthVis.jsx";
 import { WeekVis } from "./WeekVis.jsx";
 
+import styles from "./AppPrivate.css";
+
 class AppPrivate extends Component {
   constructor () {
     super();
@@ -26,7 +28,7 @@ class AppPrivate extends Component {
       currentYear: currentYear,
       now: now,
       dates: {
-        months: getMonths(currentYear - 1),
+        months: getMonths(currentYear),
         weeks: getWeeks(now)
       }
     };
@@ -52,12 +54,14 @@ class AppPrivate extends Component {
   render () {
     const { firstName } = this.props;
     return (
-      <div>
+      <div className={styles.AppPrivateContainer}>
         <Header
           firstName={firstName}
           selectedRegionId={this.state.selectedRegionId}
           onRegionSelected={this.handleRegionSelected}
         />
+        {
+
         <MonthVis
           selectedRegionId={this.state.selectedRegionId}
           onFetchSuccess={this.handleFetchMonthDataSuccces}
@@ -65,12 +69,15 @@ class AppPrivate extends Component {
           currentYear={this.state.currentYear}
           months={this.state.dates.months}
         />
+        /*}
         <WeekVis
           selectedRegionId={this.state.selectedRegionId}
           onFetchSuccess={this.handleFetchWeekDataSuccces}
           isFetching={this.state.isFetchingWeekData}
           weeks={this.state.dates.weeks}
         />
+        */
+        }
 
       </div>
     );

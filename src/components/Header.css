@@ -17,7 +17,7 @@
 
 .GroeneBalkLinks {
   height: 100px;
-  width: 400px;
+  width: 600px;
   /*
   ACI-GREEN (fugly):
     background-color: #00A55D;
@@ -28,11 +28,11 @@
 
 .GroeneBalkRechts {
   position: relative;
-  margin-left: 400px;
+  margin-left: 600px;
   margin-top: -100px; ;
 
   height: 100px;
-  width: 400px;
+  width: 200px;
   background-color: rgb(166, 166, 166);
 }
 
@@ -82,4 +82,11 @@
 .ValueWrapper {
   height: 100%;
   float: left;
+}
+
+.SmallMap {
+  position: absolute;
+  right: 0;
+  border: 2px solid rgb(166, 166, 166);
+
 }

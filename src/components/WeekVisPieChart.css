@@ -1,6 +1,5 @@
 .PieChartContainer {
   height: 150px;
-  background-color: rgba(127, 127, 127, 0.2);
   width: 440px;
   max-width: 440px;
 
@@ -8,7 +7,14 @@
 }
 
 .ThePieChart {
-  margin-left: 16px;
+  float: right;
+  background-color: #E6E6E6;
+  max-height: 150px;
+}
+
+.ThePieChart .recharts-pie {
+  background-color: #aaf;
+  margin-left: 100px
 }
 
 .PieOpacityDefault {

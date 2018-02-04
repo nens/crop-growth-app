@@ -73,7 +73,7 @@ class WeekVisPieChart extends Component {
   }
 
   getFormattedData (rawData) {
-    // We select a single week of data:
+    // We select a single (=most recent) week of data:
     const weekData = rawData[0].weekData.data;
 
     // We know the total amount pixels for the region (inc. NO_DATA pixels)
@@ -127,16 +127,16 @@ class WeekVisPieChart extends Component {
     return (
       <div className={styles.PieChartContainer}>
         <PieChart
-          width={400}
+          width={364}
           height={300}
           className={styles.ThePieChart}>
           <Pie
             startAngle={180}
             endAngle={0}
             data={formattedData}
-            cx={200}
+            cx={182}
             cy={150}
-            outerRadius={100}
+            outerRadius={91}
             label={renderCustomizedLabel}
             labelLine={{stroke: '#666'}}
             className={`${styles.PieOpacityDefault} ${isFetching ? styles.PieOpacityInactive : ""}`}

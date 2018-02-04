@@ -69,19 +69,18 @@ class MonthVis extends Component {
       currentYear: props.currentYear
     });
     const currentYear = props.months[0].getFullYear();
-    console.log("currentYear:", currentYear);
     if (props.months && props.selectedRegionId) {
       this.setState({ isFetching: true });
       fetchMonthDataForRegion(props.selectedRegionId, props.months)
       .then(
         (response) => {
-          // console.log("total response:", response);
-          const responseActualYear = filter(response, { year: currentYear - 1 }).map(
+          console.log("total responses:", response);
+          const responseActualYear = filter(response, { year: currentYear }).map(
             (obj) => obj.monthData);
-          // console.log("responseActualYear:", responseActualYear);
-          const responsePreviousYears = reject(response, { year: currentYear - 1 }).map(
+          console.log("responseActualYear:", responseActualYear);
+          const responsePreviousYears = reject(response, { year: currentYear }).map(
             (obj) => obj.monthData);
-          // console.log("responsePreviousYears:", responsePreviousYears);
+          console.log("responsePreviousYears:", responsePreviousYears);
 
           this.setState({
             isFetching: false,
@@ -204,7 +203,7 @@ class MonthVisLegend extends Component {
             className={styles.LegendColorIndicator}
             style={{ backgroundColor: COLOR_DATA_ACTUAL }}>
           </div>
-          <div className={styles.LegendText}>{currentYear - 1}</div>
+          <div className={styles.LegendText}>{currentYear}</div>
         </div>
 
         <div className={styles.LegendRightHalf}>
@@ -213,7 +212,7 @@ class MonthVisLegend extends Component {
             style={{ backgroundColor: COLOR_DATA_HISTORICAL }}>
           </div>
           <div className={styles.LegendText}>
-            {(currentYear - 3) + "-" + (currentYear - 2) + " (average)"}
+            {(currentYear - 2) + "-" + (currentYear - 1) + " (average)"}
           </div>
         </div>
 

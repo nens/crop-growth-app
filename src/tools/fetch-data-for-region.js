@@ -1,6 +1,6 @@
 import { THE_YEAR, AMOUNT_OF_WEEKS } from "../constants";
 
-import { getCurrentYear } from "./utils-time.js";
+import { getCurrentYear, dateToSlug } from "./utils-time.js";
 
 // Valid URL (demo.lizard.net):
 ////////////////////////////////////////////
@@ -20,7 +20,6 @@ const URL_BASE = "http://localhost:9000/api/v3/raster-aggregates/?agg=counts&ras
 // Part 1/2: retrieving month-data
 
 function buildMonthUrls (regionId, months) {
-  console.log('months:', months);
   let urls = [],
       regionUrl = URL_BASE + "&geom_id=" + regionId,
       tsRep,
@@ -33,7 +32,7 @@ function buildMonthUrls (regionId, months) {
   months.forEach((month) => {
     tsMonth = month.getMonth() + 1;
     tsYear = month.getFullYear();
-    tsRep = tsYear + '-' + pad(tsMonth) + '-' + "-01T00:00:00";
+    tsRep = tsYear + '-' + pad(tsMonth) + "-01T00:00:00";
     urls.push(regionUrl + "&time=" + tsRep);
   });
   return urls;
@@ -44,17 +43,31 @@ export function fetchMonthDataForRegion (regionId, months) {
   const promises = [];
   const currentYear = months[0].getFullYear();
 
-  urls.reverse().forEach((url, idx) => {
-    const year = currentYear - Math.floor(idx / 12);
+  urls.reverse().forEach((url, idxRight) => {
+    console.log("*****************");
+    console.log("*** url.......:", url);
+    console.log("*** idxRight..:", idxRight);
+
+    const idxLeft = months.length - (idxRight + 1);
+    console.log("*** idxLeft...:", idxLeft);
+
+
+    const month = months[idxLeft];
+    console.log("*** month:", month);
+    const year = currentYear - Math.floor(idxLeft / 12);
+    console.log("*** year:", year);
     promises.push(
       new Promise(function (resolve, reject) {
         let request = new XMLHttpRequest();
         request.onreadystatechange = function () {
           if (this.readyState !== 4) return;
-
           if (this.status >= 200 && this.status < 300) {
             const monthData = JSON.parse(this.response);
-            resolve({ year: year, monthData });
+            resolve({
+              monthData,
+              year: year,
+              month: month
+            });
           } else {
             reject(`Status ${this.status}, '${this.statusText}' for URL ${url}.`);
           }
@@ -72,7 +85,6 @@ export function fetchMonthDataForRegion (regionId, months) {
 // Part 2/2: retrieving week-data
 
 function buildWeekUrls (regionId, weeks) {
-  console.log('weeks:', weeks);
   let urls = [],
       regionUrl = URL_BASE + "&geom_id=" + regionId,
       tsRep,
@@ -98,7 +110,8 @@ export function fetchWeekDataForRegion (regionId, weeks) {
   const urls = buildWeekUrls(regionId, weeks);
   const promises = [];
 
-  urls.forEach((url, i) => {
+  urls.forEach((url, idx) => {
+    const week = weeks[idx];
     promises.push(
       new Promise((resolve, reject) => {
         let request = new XMLHttpRequest();
@@ -107,7 +120,7 @@ export function fetchWeekDataForRegion (regionId, weeks) {
 
           if (this.status >= 200 && this.status < 300) {
             resolve({
-              weekTimestamp: "@@@@@@",
+              weekTimestamp: dateToSlug(week),
               weekData: JSON.parse(this.response)
             });
           } else {

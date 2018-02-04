@@ -1,9 +1,16 @@
 .TheBarChartContainer {
   clear: both;
   position: relative;
-  width: 240px;
-  margin-top: 20px;
+  width: 260px;
+  height: 440px;
+
+  padding-top: 20px;
+  padding-left: 10px;
+
+  margin-top: 12px;
   margin-left: 20px;
+
+  background-color: #E6E6E6;
 }
 
 .TheBarChart {
