@@ -130,6 +130,9 @@ class WeekVisPieChart extends Component {
           width={364}
           height={300}
           className={styles.ThePieChart}>
+          <text x={5} y={15} fill="#666" fontSize={11}>
+            OLA KANKGEROE
+          </text>
           <Pie
             startAngle={180}
             endAngle={0}
