@@ -46,9 +46,7 @@ class AppPrivate extends Component {
   }
   handleRegionSelected (e) {
     const regionId = parseInt(e.target.value);
-    console.log("** regionId:", regionId)
     const feature = getFeatureById(regionId);
-    console.log("** feature:", feature);
 
     this.setState({
       selectedRegionId: regionId,

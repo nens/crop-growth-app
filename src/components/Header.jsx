@@ -6,7 +6,7 @@ import find from 'lodash/find';
 import reduce from 'lodash/reduce';
 
 import { getCurrentDate, getFeatureById } from "../tools/utils.js";
-import { CENTROID, PROVINCES, DISTRICTS } from "../constants.js";
+import { CENTROID, PROVINCES, DISTRICTS, COUNTRY } from "../constants.js";
 
 import LogoAci from './images/logo-aci.png';
 import styles from './Header.css';
@@ -99,7 +99,7 @@ class Header extends Component {
     let imageUrl;
     if (selectedRegionId) {
       const centroid = getCentroid(selectedRegionId);
-      imageUrl = getMapboxUrl(centroid[1], centroid[0]);
+      imageUrl = getMapboxUrl(centroid[1], centroid[0], 8);
     } else {
       imageUrl = getMapboxUrl(CENTROID.lat, CENTROID.lon, CENTROID.zoom);
     }
@@ -108,7 +108,7 @@ class Header extends Component {
       <div className={`${styles.Header}`}>
         <div className={`${styles.GroeneBalkLinks}`}>
           <div className={`${styles.GroeneBalkText}`}>
-            Crop Growth
+            Crop Growth {COUNTRY.toUpperCase()}
           </div>
 
           {/*}

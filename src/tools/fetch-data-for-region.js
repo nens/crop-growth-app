@@ -110,7 +110,7 @@ export function fetchWeekDataForRegion (regionId, weeks) {
           if (this.readyState !== 4) return;
 
           if (this.status >= 200 && this.status < 300) {
-            console.log("response", dateToSlug(week), this.response);
+            // console.log("response", dateToSlug(week), this.response);
             resolve({
               url: url,
               weekTimestamp: dateToSlug(week),

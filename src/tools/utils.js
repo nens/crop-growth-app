@@ -81,19 +81,11 @@ export function growthStageIsAllowed (gsClass) {
 
 export function getFeatureById (regionId) {
 
-  console.log("!!! regionId:", regionId);
-
   let feature;
-
-  console.log("PROVINCES:", PROVINCES);
-  console.log("DISTRICTS:", DISTRICTS);
 
   // First, check whether the regionId if for a province (which are only present
   // for Vietnam, not Bangladesh):
-  if (PROVINCES){
-    console.log("PROVINCES=truthy; feature =", feature);
-    const allFeatures = PROVINCES.results.features;
-
+  if (PROVINCES) {
     feature = find(PROVINCES.results.features, { id: regionId });
   }
 

@@ -28,7 +28,6 @@ class MonthVis extends Component {
     };
   }
   getTotalRicePerMonthActual (responseActualYear) {
-    console.log("[F] getTotalRicePerMonthActual");
     const result = [];
     let totalRiceSingleMonth, monthData;
 
@@ -54,6 +53,10 @@ class MonthVis extends Component {
       result[j] = result[j] || [];
       totalRiceSingleMonth = 0;
       monthData.data.forEach((regionData) => {
+        if (regionData === null) {
+          console.error("Oops! region data => NULL... average just became less reliable (time=" + monthDataObj.month + ")");
+          return;
+        }
         if (growthStageIsAllowed(regionData.class)) {
           totalRiceSingleMonth += regionData.data;
         }
@@ -81,11 +84,11 @@ class MonthVis extends Component {
       fetchMonthDataForRegion(props.selectedRegionId, props.months)
       .then(
         (response) => {
-          // console.log("total responses:", response);
+          console.log("total responses:", response);
           const responseActualYear = filter(response, { year: currentYear });
-          // console.log("responseActualYear:", responseActualYear);
+          console.log("responseActualYear:", responseActualYear);
           const responsePreviousYears = reject(response, { year: currentYear });
-          // console.log("responsePreviousYears:", responsePreviousYears);
+          console.log("responsePreviousYears:", responsePreviousYears);
 
           this.setState({
             isFetching: false,

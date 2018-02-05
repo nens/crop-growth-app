@@ -18,7 +18,6 @@ class Main extends Component {
     };
   }
   componentWillMount() {
-    // console.log("REGION_DATA:", REGION_DATA);
     userIsLoggedIn().then(
       bootstrap => {
         if (bootstrap.authenticated) {

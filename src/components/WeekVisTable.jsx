@@ -36,13 +36,8 @@ class WeekVisTable extends Component {
     }
   }
   formatData (_allWeekData) {
-
-    console.log('_allWeekData:', _allWeekData);
     const allTimestamps = map(_allWeekData, 'weekTimestamp');
     const allWeekData = map(_allWeekData, 'weekData');
-
-    console.log("allWeekData:", allWeekData);
-    console.log("allTimestamps:", allTimestamps);
 
     let dataForSingleWeek,
         dataForGrowthStage,
@@ -61,7 +56,6 @@ class WeekVisTable extends Component {
         dictForSingleWeek.data[growthStage] =
           dataForGrowthStage ? PIXEL_SIZE * dataForGrowthStage.data : 0;
       });
-      console.log("dataForSingleWeek:", dataForSingleWeek)
       dictPerWeekCollection.push(dictForSingleWeek);
     });
 
