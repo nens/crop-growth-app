@@ -33,19 +33,20 @@ class WeekVisPieChart extends Component {
     this.updateData(props);
   }
   updateData (props) {
-    const { isFetching, rawData } = props;
+    const { isFetching, rawData, selectedRegionSlug } = props;
     if (isFetching) {
       this.setState({
-        isFetching: true
+        isFetching: true,
+        selectedRegionSlug: selectedRegionSlug
       });
     } else {
       this.setState({
         isFetching: false,
-        formattedData: this.getFormattedData(rawData)
+        formattedData: this.getFormattedData(rawData),
+        selectedRegionSlug: selectedRegionSlug
       });
     }
   }
-
   preprocessWeekData (weekData) {
     // We sort the week data by growthstage, filtering out barren growth-stages;
     // however, we'll add the amount of measured pixels for those two barren
@@ -101,7 +102,7 @@ class WeekVisPieChart extends Component {
   }
   render () {
 
-    let { formattedData, isFetching } = this.state;
+    let { formattedData, isFetching, selectedRegionSlug } = this.state;
 
     const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
       const MULTIPLIER = Math.PI / 180;
@@ -130,8 +131,8 @@ class WeekVisPieChart extends Component {
           width={364}
           height={300}
           className={styles.ThePieChart}>
-          <text x={5} y={15} fill="#666" fontSize={11}>
-            OLA KANKGEROE
+          <text x={8} y={15} fill="#666" fontSize={11}>
+            {selectedRegionSlug}
           </text>
           <Pie
             startAngle={180}

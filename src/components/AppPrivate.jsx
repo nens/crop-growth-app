@@ -8,11 +8,14 @@ import {
   getWeeks
 } from "../tools/utils-time.js";
 
+import { getFeatureById } from "../tools/utils.js";
+
 import { Header } from "./Header.jsx";
 import { MonthVis } from "./MonthVis.jsx";
 import { WeekVis } from "./WeekVis.jsx";
 
 import styles from "./AppPrivate.css";
+
 
 class AppPrivate extends Component {
   constructor () {
@@ -23,6 +26,7 @@ class AppPrivate extends Component {
 
     this.state = {
       selectedRegionId: "",
+      selectedRegionSlug: "",
       isFetchingMonthData: false,
       isFetchingWeekData: false,
       currentYear: currentYear,
@@ -41,8 +45,14 @@ class AppPrivate extends Component {
       this.handleFetchWeekDataSuccces.bind(this);
   }
   handleRegionSelected (e) {
+    const regionId = parseInt(e.target.value);
+    console.log("** regionId:", regionId)
+    const feature = getFeatureById(regionId);
+    console.log("** feature:", feature);
+
     this.setState({
-      selectedRegionId: parseInt(e.target.value),
+      selectedRegionId: regionId,
+      selectedRegionSlug: feature.properties.name,
       isFetchingMonthData: true,
       isFetchingWeekData: true
     });
@@ -71,6 +81,7 @@ class AppPrivate extends Component {
         />
         <WeekVis
           selectedRegionId={this.state.selectedRegionId}
+          selectedRegionSlug={this.state.selectedRegionSlug}
           onFetchSuccess={this.handleFetchWeekDataSuccces}
           isFetching={this.state.isFetchingWeekData}
           weeks={this.state.dates.weeks}

@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 import find from 'lodash/find';
 import reduce from 'lodash/reduce';
 
-import { getCurrentDate } from "../tools/utils.js";
+import { getCurrentDate, getFeatureById } from "../tools/utils.js";
 import { CENTROID, PROVINCES, DISTRICTS } from "../constants.js";
 
 import LogoAci from './images/logo-aci.png';

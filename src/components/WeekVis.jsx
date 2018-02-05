@@ -49,6 +49,7 @@ class WeekVis extends Component {
   componentWillReceiveProps (props) {
     this.setState({
       selectedRegionId: props.selectedRegionId,
+      selectedRegionSlug: props.selectedRegionSlug,
       isFetching: props.isFetching,
       weeks: props.weeks
     });
@@ -58,7 +59,7 @@ class WeekVis extends Component {
       fetchWeekDataForRegion(props.selectedRegionId, props.weeks)
       .then(
         (response) => {
-          this.setState({ isFetching: false, data: this.preprocessWeekData(response) });
+          this.setState({ isFetching: false, data: response });
         },
         (error) => {
           this.setState({ isFetching: false, data: "" });
@@ -66,11 +67,6 @@ class WeekVis extends Component {
         }
       );
     }
-  }
-  preprocessWeekData (response) {
-    console.log("[F] preprocessWeekData; response =", response);
-
-    return response;
   }
   getInnerComponent () {
 
@@ -104,6 +100,7 @@ class WeekVis extends Component {
               <WeekVisPieChart
                 data={null}
                 isFetching={true}
+                selectedRegionSlug={'...'}
               />
               <WeekVisTable
                 utcTimestampSlugs={this.state.utcTimestampSlugs}
@@ -129,6 +126,7 @@ class WeekVis extends Component {
               <WeekVisPieChart
                 rawData={cloneDeep(this.state.data)}
                 isFetching={false}
+                selectedRegionSlug={this.state.selectedRegionSlug}
               />
               <WeekVisTable
                 utcTimestampSlugs={this.state.utcTimestampSlugs}
