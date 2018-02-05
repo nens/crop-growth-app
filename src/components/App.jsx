@@ -52,11 +52,9 @@ class Main extends Component {
       return null;
     } else {
       if (this.state.error) {
-        return (<div>There was an error</div>);
-
+        return <div>There was an error</div>;
       } else if (this.state.isLoggedIn) {
         return <AppPrivate firstName={this.state.bootstrapData.first_name} />
-
       } else {
         // TODO: auto-redirect to SSO when not logged in......
         return (<div>Your will be redirected to the SSO soon...</div>);

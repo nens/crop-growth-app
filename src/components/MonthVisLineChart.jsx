@@ -38,8 +38,6 @@ class MonthVisLineChart extends Component {
     });
   }
   render () {
-    console.log("[F] MonthVisLineChart.render");
-
     const isFetching = this.props.isFetching;
 
     if (!isFetching && (!this.props.actualData || !this.props.historicalData)) {
@@ -56,10 +54,12 @@ class MonthVisLineChart extends Component {
       fetchingDataColor
     } = this.props;
 
-    console.log("[dbg] fetchingDataColor:", fetchingDataColor);
+    const yAxisFormatter = isFetching
+      ? (_) => '... ha.'
+      : (x) => x + " ha."
 
     return (
-      <div className={styles.ChartContainer}>
+      <div className={styles.LineChartContainer}>
         <LineChart
           width={620}
           height={250}
@@ -93,7 +93,7 @@ class MonthVisLineChart extends Component {
           <YAxis
             tickCount={5}
             tick={{ fontSize: "11px" }}
-            tickFormatter={ (x) => x + " Ha" }
+            tickFormatter={yAxisFormatter}
           />
           <CartesianGrid strokeDasharray="3 3" />
         </LineChart>

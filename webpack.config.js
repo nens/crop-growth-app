@@ -1,18 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const path = require("path");
 const webpack = require("webpack");
 
@@ -38,7 +23,7 @@ const config = {
     extensions: [".js", ".jsx", ".css"]
   },
   devServer: {
-    hot: true,
+    hot: false,
     compress: false,
     inline: false,
     contentBase: path.join(__dirname, "dist"),

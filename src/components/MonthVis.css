@@ -1,7 +1,12 @@
 .GroeneBalk {
   height: 60px;
   width: 800px;
-  background-color: #00A55D;
+  /*
+  ACI-GREEN (fugly):
+    background-color: #00A55D;
+    Instead, temporarily we use the color for growthstage Harvest:
+  */
+  background-color: rgb(166, 166, 166);
 }
 
 .GroeneBalkText {
@@ -14,10 +19,18 @@
   font-size: 34px;
 }
 
-.ChartContainer {
+.MonthVisContent {
+  height: 370px;
+  min-height: 370px;
+  max-height: 370px;
+
+  width: 800px;
+}
+
+.LineChartContainer {
   display: inline-block;
   position: relative;
-  top: 30px;
+  top: 16px;
   left: -10px;
   width: 600px;
 }
@@ -34,10 +47,29 @@
 .AreaTable {
   position: relative;
   display: inline-block;
-  top: 16px;
-  left: 50px;
-  font-size: 12px;
+  margin-left: 35px;
+  font-size: 11px;
   color: #666;
+}
+
+.AreaTable > thead > tr > th {
+  text-align: center;
+  width: 60px;
+  height: 20px;
+}
+
+.AreaTable > thead > tr > th:first-child {
+  background-color: #fff;
+}
+
+.AreaTable > tbody > tr > td {
+  text-align: center;
+  height: 16px;
+  background-color: #E6E6E6;
+}
+
+.AreaTable > tbody > tr > td:first-child {
+  background-color: #fff;
 }
 
 .LegendContainer {
@@ -46,11 +78,10 @@
 
   margin-left: 55px;
   margin-top: 10px;
-  margin-bottom: -30px;
-  width: 620px;
-  height: 40px;
-  min-height: 40px;
-  /*background-color: #aaf;*/
+  max-width: 500px;
+  min-width: 500px;
+  height: 20px;
+  min-height: 20px;
 }
 
 .LegendLeftHalf {
@@ -59,18 +90,14 @@
 
   width: 15%;
   height: 40px;
-
-  /*background-color: rgba(255, 0, 0, 0.1);*/
 }
 
 .LegendRightHalf {
   display: inline-block;
   float: left;
 
-  width: 85%;
+  width: 35%;
   height: 40px;
-
-  /*background-color: rgba(0, 0, 255, 0.1);*/
 }
 
 .LegendColorIndicator {

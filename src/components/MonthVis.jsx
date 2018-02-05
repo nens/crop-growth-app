@@ -9,7 +9,7 @@ import reject from "lodash/reject";
 import { MonthVisLineChart } from "./MonthVisLineChart";
 import { MonthVisTable} from "./MonthVisTable";
 import { fetchMonthDataForRegion } from "../tools/fetch-data-for-region.js";
-import { calculateAverage } from "../tools/utils.js";
+import { calculateAverage, growthStageIsAllowed } from "../tools/utils.js";
 import { PIXEL_SIZE, FIRST_YEAR, THE_YEAR, MONTH_NAMES } from "../constants.js";
 import styles from './MonthVis.css';
 
@@ -21,53 +21,49 @@ class MonthVis extends Component {
   constructor () {
     super();
     this.state = {
+      selectedRegionId: null,
       isFetching: false,
+      months: null,
       data: ""
     };
   }
   getTotalRicePerMonthActual (responseActualYear) {
-    // console.log("[F] getTotalRicePerMonthActual; responseActualYear =", responseActualYear);
+    console.log("[F] getTotalRicePerMonthActual");
     const result = [];
-    let totalRiceSingleMonth;
-    responseActualYear.forEach((monthData) => {
+    let totalRiceSingleMonth, monthData;
+
+    responseActualYear.forEach((monthDataObj) => {
+      monthData = monthDataObj.monthData;
       totalRiceSingleMonth = 0;
       monthData.data.forEach((regionData) => {
-        if (regionData.class > 2) {
+        if (growthStageIsAllowed(regionData.class)) {
           totalRiceSingleMonth += regionData.data;
         }
       });
       result.push(Math.round(totalRiceSingleMonth * PIXEL_SIZE));
     });
-
-    // console.log("*** result (actual):", result);
     return result;
   }
   getTotalRicePerMonthHistorical (responsePreviousYears) {
-    // console.log("[F] getTotalRicePerMonthHistorical; responsePreviousYears =", responsePreviousYears);
-
-    if (responsePreviousYears.length % 12 !== 0) {
-      console.error("Historical avg not determined; historical data was for an incorrect amt of months");
-    }
-
     const result = [];
-    let totalRiceSingleMonth;
-    let j;
+    let j, monthData, totalRiceSingleMonth;
 
-    responsePreviousYears.forEach((monthData, i) => {
+    responsePreviousYears.forEach((monthDataObj, i) => {
+      monthData = monthDataObj.monthData;
       j = i % 12;
       result[j] = result[j] || [];
       totalRiceSingleMonth = 0;
       monthData.data.forEach((regionData) => {
-        if (regionData.class > 2) {
+        if (growthStageIsAllowed(regionData.class)) {
           totalRiceSingleMonth += regionData.data;
         }
       });
-      result[j].push(Math.round(totalRiceSingleMonth * PIXEL_SIZE));
+      result[j].push(Math.round(totalRiceSingleMonth));
     });
 
     const finalResult = [];
     result.forEach((monthValues, i) => {
-      finalResult.push(calculateAverage(monthValues, true));
+      finalResult.push(PIXEL_SIZE * calculateAverage(monthValues, true));
     });
 
     return finalResult;
@@ -75,23 +71,25 @@ class MonthVis extends Component {
   componentWillReceiveProps (props) {
     this.setState({
       selectedRegionId: props.selectedRegionId,
-      isFetching: props.isFetching
+      isFetching: props.isFetching,
+      months: props.months,
+      currentYear: props.currentYear
     });
-    if (props.selectedRegionId) {
+    const currentYear = props.months[0].getFullYear();
+    if (props.months && props.selectedRegionId) {
       this.setState({ isFetching: true });
-      fetchMonthDataForRegion(props.selectedRegionId).then(
+      fetchMonthDataForRegion(props.selectedRegionId, props.months)
+      .then(
         (response) => {
-
-          const responseActualYear = filter(response, { year: THE_YEAR }).map(
-            (obj) => obj.monthData);
-
-          const responsePreviousYears = reject(response, { year: THE_YEAR }).map(
-            (obj) => obj.monthData);
+          // console.log("total responses:", response);
+          const responseActualYear = filter(response, { year: currentYear });
+          // console.log("responseActualYear:", responseActualYear);
+          const responsePreviousYears = reject(response, { year: currentYear });
+          // console.log("responsePreviousYears:", responsePreviousYears);
 
           this.setState({
             isFetching: false,
             data: {
-              // raw: responseActualYear,
               totalRicePerMonthActual:
                 this.getTotalRicePerMonthActual(responseActualYear),
               totalRicePerMonthHistorical:
@@ -108,54 +106,72 @@ class MonthVis extends Component {
     }
   }
   getInnerComponent () {
+    ///////////////////////////////////////////////////////////////////////////
+    // There are 3 different "states" for this MonthVis part/component:
+    //
+    // case 1) There is of yet no data present (i.e. not a single chart has
+    //         been drawn so far). This is the initial state of the application.
+    //
+    // case 2) We have retrieved data at least once: but since we are currently
+    //         fetching data for another region, we'll draw an empty chart/table
+    //         expecting fresh data to arrive any minute.
+    //
+    // case 3) We have retrieved data at least once: this is data we'll be
+    //         showing.
     if (this.state.data === "") {
       if (!this.state.isFetching) {
-        return <WelcomeMessage />
+        return (
+          <div className={styles.MonthVisContent}>
+            <WelcomeMessage />
+          </div>
+        );
       }
     } else {
       if (this.state.isFetching) {
         return (
-          <div>
+          <div className={styles.MonthVisContent}>
             <MonthVisLegend
               actualDataColor={COLOR_DATA_ACTUAL}
               historicalDataColor={COLOR_DATA_HISTORICAL}
+              currentYear={this.state.currentYear || '...'}
             />
-            <div>
-              <MonthVisLineChart
-                data={null}
-                actualDataColor={COLOR_DATA_ACTUAL}
-                fetchingDataColor={COLOR_DATA_FETCHING}
-                historicalDataColor={COLOR_DATA_HISTORICAL}
-                isFetching={true}
-              />
-              <MonthVisTable
-                data={null}
-                isFetching={true}
-              />
-            </div>
+            <MonthVisLineChart
+              data={null}
+              actualDataColor={COLOR_DATA_ACTUAL}
+              fetchingDataColor={COLOR_DATA_FETCHING}
+              historicalDataColor={COLOR_DATA_HISTORICAL}
+              isFetching={true}
+            />
+            {
+            <MonthVisTable
+              data={null}
+              isFetching={true}
+              currentYear={this.state.currentYear || '...'}
+            />
+            }
           </div>
         );
       } else {
         return (
-          <div>
+          <div className={styles.MonthVisContent}>
             <MonthVisLegend
               actualDataColor={COLOR_DATA_ACTUAL}
               historicalDataColor={COLOR_DATA_HISTORICAL}
+              currentYear={this.state.currentYear || '...'}
             />
-            <div>
-              <MonthVisLineChart
-                actualData={this.state.data.totalRicePerMonthActual}
-                actualDataColor={COLOR_DATA_ACTUAL}
-                historicalData={this.state.data.totalRicePerMonthHistorical}
-                historicalDataColor={COLOR_DATA_HISTORICAL}
-                fetchingDataColor={COLOR_DATA_FETCHING}
-                isFetching={false}
-              />
-              <MonthVisTable
-                data={this.state.data.totalRicePerMonthActual}
-                isFetching={false}
-              />
-            </div>
+            <MonthVisLineChart
+              actualData={this.state.data.totalRicePerMonthActual}
+              actualDataColor={COLOR_DATA_ACTUAL}
+              historicalData={this.state.data.totalRicePerMonthHistorical}
+              historicalDataColor={COLOR_DATA_HISTORICAL}
+              fetchingDataColor={COLOR_DATA_FETCHING}
+              isFetching={false}
+            />
+            <MonthVisTable
+              data={this.state.data.totalRicePerMonthActual}
+              isFetching={false}
+              currentYear={this.state.currentYear || '...'}
+            />
           </div>
         );
       }
@@ -164,10 +180,10 @@ class MonthVis extends Component {
   render () {
     const { isFetchingMonthData } = this.props;
     return (
-      <div>
+      <div className={styles.MonthVisContent}>
         <div className={styles.GroeneBalk}>
           <div className={styles.GroeneBalkText}>
-            Monthly
+            monthly
           </div>
           {
             this.state.isFetching
@@ -183,6 +199,7 @@ class MonthVis extends Component {
 
 class MonthVisLegend extends Component {
   render () {
+    const { currentYear } = this.props;
     return (
       <div className={styles.LegendContainer}>
 
@@ -191,7 +208,7 @@ class MonthVisLegend extends Component {
             className={styles.LegendColorIndicator}
             style={{ backgroundColor: COLOR_DATA_ACTUAL }}>
           </div>
-          <div className={styles.LegendText}>{THE_YEAR}</div>
+          <div className={styles.LegendText}>{currentYear}</div>
         </div>
 
         <div className={styles.LegendRightHalf}>
@@ -200,7 +217,7 @@ class MonthVisLegend extends Component {
             style={{ backgroundColor: COLOR_DATA_HISTORICAL }}>
           </div>
           <div className={styles.LegendText}>
-            {FIRST_YEAR + "-" + (THE_YEAR - 1) + " (Average)"}
+            {(currentYear - 2) + "-" + (currentYear - 1) + " (average)"}
           </div>
         </div>
 

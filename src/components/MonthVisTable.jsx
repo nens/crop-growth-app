@@ -9,18 +9,30 @@ import styles from './MonthVis.css';
 class MonthVisTable extends Component {
   constructor () {
     super();
-    this.state = { formattedData: "" };
+    this.state = {
+      currentYear: null,
+      formattedData: "",
+      isFetching: false
+    };
     this.formatData = this.formatData.bind(this);
   }
   componentWillMount () {
+    this.setState({ currentYear: this.props.currentYear });
     this.updateData(this.props);
   }
   componentWillReceiveProps (props) {
     this.updateData(props);
   }
   updateData (props) {
-    if (!props.isFetching) {
-      this.setState({ formattedData: this.formatData(props.data) });
+    if (props.isFetching) {
+      this.setState({
+        isFetching: true
+      });
+    } else {
+      this.setState({
+        formattedData: this.formatData(props.data),
+        isFetching: false
+      });
     }
   }
   formatData (data) {
@@ -30,24 +42,25 @@ class MonthVisTable extends Component {
   }
   render () {
 
-    // console.log("[F] render");
-    // console.log("*** this.state.formattedData:", this.state.formattedData);
+    const { formattedData, isFetching, currentYear } = this.state;
 
     return (
       <table className={styles.AreaTable}>
         <thead>
           <tr>
-            <th>Month</th>
-            <th>Rice (ha)</th>
+            <th>date</th>
+            <th>rice (ha.)</th>
           </tr>
         </thead>
         <tbody>
         {
-          this.state.formattedData.map((monthData) => {
+          this.state.formattedData.map((monthData, idx) => {
             return (
               <tr key={Math.random()}>
-                <td>{monthData.monthName}</td>
-                <td>{monthData.area + " ha"}</td>
+                <td style={{'textAlign': 'center', 'minWidth': '80px'}}>
+                  {currentYear}-{ idx > 8 ? idx + 1 : '0' + (idx + 1) }-01
+                </td>
+                <td>{isFetching ? '...' : monthData.area}</td>
               </tr>
             );
           })

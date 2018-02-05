@@ -1,0 +1,55 @@
+.GroeneBalk {
+  height: 60px;
+  width: 800px;
+  /*
+  ACI-GREEN (fugly):
+    background-color: #00A55D;
+    Instead, temporarily we use the color for growthstage Harvest:
+  */
+  background-color: rgb(166, 166, 166);
+}
+
+.GroeneBalkText {
+  position: relative;
+  top: 10px;
+  left: 20px;
+  width: 50%;
+
+  color: white;
+  font-size: 34px;
+}
+
+.ChartContainer {
+}
+
+.WeekVisContent {
+  position: relative;
+  height: 470px;
+  width: 800px;
+  max-width: 800px;
+  margin-top: 20px;
+}
+
+.WeekVisContentLeftSide {
+  overflow: hidden;
+  float: left;
+  margin-left: 20px;
+
+  width: 440px;
+  max-width: 440px;
+  margin-top: 10px;
+
+  height: 440px;
+  max-height: 440px;
+}
+
+.WeekVisContentRightSide {
+  float: right;
+  position: relative;
+  height: 440px;
+  max-height: 440px;
+  width: 320px;
+  max-width: 320px;
+
+  overflow: hidden;
+}
