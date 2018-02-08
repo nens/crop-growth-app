@@ -55,7 +55,7 @@ class WeekVisPieChart extends Component {
     // We sort the week data by growthstage, filtering out barren growth-stages;
     // however, we'll add the amount of measured pixels for those two barren
     // stages to the "other" category.
-    const weekDataSorted = [];
+    let weekDataSorted = [];
 
     [...NON_BARREN_GROWTH_STAGES, -1].forEach((gs) => {
       const weekDataForGS = find(weekData, { label: gs });
@@ -74,6 +74,16 @@ class WeekVisPieChart extends Component {
       });
     }
 
+    console.log('weekDataSorted:', weekDataSorted)
+
+    if (weekDataSorted.length === 0) {
+      weekDataSorted.push({
+        class: -1,
+        color: '#ffffff',
+        data: 1,
+        label: "other"
+      })
+    }
     return weekDataSorted;
   }
 

@@ -29,9 +29,12 @@ class MonthVis extends Component {
   }
   getTotalRicePerMonthActual (responseActualYear) {
     const result = [];
+    const currentMonthIdx = (new Date()).getMonth();
     let totalRiceSingleMonth, monthData;
 
-    responseActualYear.forEach((monthDataObj) => {
+    responseActualYear.forEach((monthDataObj, idx) => {
+      if (idx > currentMonthIdx)
+        return;
       monthData = monthDataObj.monthData;
       totalRiceSingleMonth = 0;
       monthData.data.forEach((regionData) => {
@@ -234,8 +237,13 @@ class WelcomeMessage extends Component {
     return (
       <div style={{
         position: "relative",
-        top: "220px",
-        left: "330px"
+        top: "140px",
+        width: "160px",
+        textAlign: "center",
+        margin: "auto 50%",
+        left: "-80px",
+        fontSize: "12px",
+        color: "#666"
       }}>
         Please select an area
       </div>

@@ -157,7 +157,7 @@ class WeekVis extends Component {
       <div>
         <div className={styles.GroeneBalk}>
           <div className={styles.GroeneBalkText}>
-            weekly
+            6-daily
           </div>
           {
             this.state.isFetching
@@ -176,8 +176,13 @@ class WelcomeMessage extends Component {
     return (
       <div style={{
         position: "relative",
-        top: "220px",
-        left: "330px"
+        top: "140px",
+        width: "160px",
+        textAlign: "center",
+        margin: "auto 50%",
+        left: "-80px",
+        fontSize: "12px",
+        color: "#666"
       }}>
         Please select an area
       </div>

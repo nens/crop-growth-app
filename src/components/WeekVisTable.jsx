@@ -32,6 +32,7 @@ class WeekVisTable extends Component {
   }
   updateData (props) {
     if (!props.isFetching) {
+      console.log('formatted_data', this.formatData(props.data));
       this.setState({ formattedData: this.formatData(props.data) });
     }
   }
@@ -119,7 +120,7 @@ class WeekTableHeader extends Component {
       <thead>
         <tr>
           <th key={0} style={{'width': '100px', 'textAlign': 'center' }}>
-            week (ha.)
+            6-days (ha.)
           </th>
           {
             NON_BARREN_GROWTH_STAGES.map(function (gs, i) {

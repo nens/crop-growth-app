@@ -29,11 +29,10 @@ class MonthVisLineChart extends Component {
     }
   }
   formatData (dataActual, dataHistorical) {
-    const currentMonthIdx = (new Date()).getMonth();
     return MONTH_NAMES.map((monthName, i) => {
       return {
         monthName,
-        areaActual: i <= currentMonthIdx ? dataActual[i] : null,
+        areaActual: dataActual[i],
         areaHistorical: dataHistorical[i]
       };
     });

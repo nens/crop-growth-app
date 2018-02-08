@@ -26,6 +26,11 @@ export function getMonths (currentYear) {
 export function getWeeks (nowUnixTime) {
   // Return js date objects for 6 weeks; the current date, plus 5 weeks earlier.
   const WEEK_IN_MS = 604800000;
+
+  //  Update 08/02/18: we need 6 day intervals
+  // const WEEK_MINUS_DAY = 604800000 - 604800000 / 7;
+
+  // console.log('week minus day:', WEEK_MINUS_DAY);
   const dateObjects = [];
   for (let i = 0; i < AMOUNT_OF_WEEKS; i++) {
     dateObjects.push(new Date(nowUnixTime - i * WEEK_IN_MS));
