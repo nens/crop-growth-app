@@ -111,13 +111,11 @@ class Header extends Component {
             Crop Growth {COUNTRY.toUpperCase()}
           </div>
 
-          {/*}
           <img
-            className={`${styles.LogoAci}`}
+            className={`${COUNTRY === 'BANGLADESH' ? styles.LogoAci : styles.LogoAciHidden}`}
             src={LogoAci}
             height="80"
           />
-          */}
 
         </div>
         <div className={`${styles.GroeneBalkRechts}`}>

@@ -23,19 +23,23 @@ class MonthVisLineChart extends Component {
     if (!props.isFetching) {
       this.setState({
         // Both actual and historical data (=required to have Recharts.js draw
-        // two distinct lines simultaneously in a single charts)
+        // two distinct lines simultaneously in a single chart)
         formattedData: this.formatData(props.actualData, props.historicalData),
       });
     }
   }
   formatData (dataActual, dataHistorical) {
+    const currentMonthIdx = (new Date()).getMonth();
     return MONTH_NAMES.map((monthName, i) => {
       return {
         monthName,
-        areaActual: dataActual[i],
+        areaActual: i <= currentMonthIdx ? dataActual[i] : null,
         areaHistorical: dataHistorical[i]
       };
     });
+  }
+  rejectFutureData () {
+
   }
   render () {
     const isFetching = this.props.isFetching;
@@ -55,15 +59,17 @@ class MonthVisLineChart extends Component {
     } = this.props;
 
     const yAxisFormatter = isFetching
-      ? (_) => '... ha.'
-      : (x) => x + " ha."
+      ? (_) => '...'
+      : (x) => x + ""
 
     return (
       <div className={styles.LineChartContainer}>
+        <div className={styles.YAxisLabel}>rice area (ha.)</div>
         <LineChart
-          width={620}
-          height={250}
-          data={this.state.formattedData}>
+          width={600}
+          height={260}
+          data={this.state.formattedData}
+          styles={styles.YAxisLabel}>
 
           {/* Line 1 of 2: the actual year values for the selected region (12x) */}
           <Line

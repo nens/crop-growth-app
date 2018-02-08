@@ -13,6 +13,8 @@ import {
   NON_BARREN_GROWTH_STAGES
 } from "../constants.js";
 
+import { dateToSlug } from "../tools/utils-time.js";
+
 import styles from './WeekVisPieChart.css';
 
 class WeekVisPieChart extends Component {
@@ -33,17 +35,19 @@ class WeekVisPieChart extends Component {
     this.updateData(props);
   }
   updateData (props) {
-    const { isFetching, rawData, selectedRegionSlug } = props;
+    const { isFetching, rawData, selectedRegionSlug, latestWeek } = props;
     if (isFetching) {
       this.setState({
         isFetching: true,
-        selectedRegionSlug: selectedRegionSlug
+        selectedRegionSlug: selectedRegionSlug,
+        latestWeekSlug: latestWeek ? dateToSlug(latestWeek) : '...'
       });
     } else {
       this.setState({
         isFetching: false,
         formattedData: this.getFormattedData(rawData),
-        selectedRegionSlug: selectedRegionSlug
+        selectedRegionSlug: selectedRegionSlug,
+        latestWeekSlug: dateToSlug(latestWeek)
       });
     }
   }
@@ -102,7 +106,8 @@ class WeekVisPieChart extends Component {
   }
   render () {
 
-    let { formattedData, isFetching, selectedRegionSlug } = this.state;
+    let { formattedData, isFetching, selectedRegionSlug, latestWeekSlug }
+      = this.state;
 
     const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
       const MULTIPLIER = Math.PI / 180;
@@ -132,7 +137,7 @@ class WeekVisPieChart extends Component {
           height={300}
           className={styles.ThePieChart}>
           <text x={8} y={15} fill="#666" fontSize={11}>
-            {selectedRegionSlug}
+            {latestWeekSlug}
           </text>
           <Pie
             startAngle={180}

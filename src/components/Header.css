@@ -47,11 +47,16 @@
   font-weight: bold;
 }
 
-.LogoAci {
+.LogoAci,
+.LogoAciHidden {
   position: relative;
   top: -30px;
   right: 10px;
   float: right;
+}
+
+.LogoAciHidden {
+  opacity: 0;
 }
 
 .ContentWrapper {

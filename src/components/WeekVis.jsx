@@ -101,6 +101,7 @@ class WeekVis extends Component {
                 data={null}
                 isFetching={true}
                 selectedRegionSlug={'...'}
+                latestWeek={this.state.weeks[0]}
               />
               <WeekVisTable
                 utcTimestampSlugs={this.state.utcTimestampSlugs}
@@ -127,6 +128,7 @@ class WeekVis extends Component {
                 rawData={cloneDeep(this.state.data)}
                 isFetching={false}
                 selectedRegionSlug={this.state.selectedRegionSlug}
+                latestWeek={this.state.weeks[0]}
               />
               <WeekVisTable
                 utcTimestampSlugs={this.state.utcTimestampSlugs}
