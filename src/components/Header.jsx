@@ -6,11 +6,20 @@ import find from 'lodash/find';
 import reduce from 'lodash/reduce';
 
 import { getCurrentDate, getFeatureById } from "../tools/utils.js";
-import { CENTROID, PROVINCES, DISTRICTS, COUNTRY } from "../constants.js";
+import {
+  CENTROID,
+  PROVINCES,
+  DISTRICTS,
+  MUNICPALITIES,
+  COUNTRY,
+  REGION_TYPES,
+  countryConfig,
+  REGION_DATA_1,
+  REGION_DATA_2
+} from "../constants.js";
 
 import LogoAci from './images/logo-aci.png';
 import styles from './Header.css';
-
 
 const MAPBOX_STYLE_ID = 'light-v9';
 
@@ -69,13 +78,11 @@ const getCentroid = (regionId) => {
 
   // First, check whether the regionId if for a province (which are only present
   // for Vietnam, not Bangladesh):
-  if (PROVINCES){
-    feature = find(PROVINCES.results.features, { id: regionId });
-  }
+  feature = find(REGION_DATA_1.results.features, { id: regionId });
 
   if (!feature) {
     // If not, we know it has to be a district:
-    feature = find(DISTRICTS.results.features, { id: regionId });
+    feature = find(REGION_DATA_2.results.features, { id: regionId });
   }
 
   if (!feature) {
@@ -104,6 +111,14 @@ class Header extends Component {
       imageUrl = getMapboxUrl(CENTROID.lat, CENTROID.lon, CENTROID.zoom);
     }
 
+    const zLevel1 = REGION_TYPES[0];
+    const zLevel2 = REGION_TYPES[1];
+
+    const regionData1 = countryConfig[COUNTRY][zLevel1];
+    const regionData2 = countryConfig[COUNTRY][zLevel2];
+
+    console.log(regionData1, regionData2)
+
     return (
       <div className={`${styles.Header}`}>
         <div className={`${styles.GroeneBalkLinks}`}>
@@ -131,27 +146,27 @@ class Header extends Component {
             <div className={`${styles.KeyWrapper}`}>region:</div>
             <select value={selectedRegionId} onChange={onRegionSelected}>
               <option disabled value="">-</option>
-              { PROVINCES
-                ? PROVINCES.results.features.map((province) => {
+              {
+                regionData1.results.features.map((province) => {
+                  console.log("provin:", province);
                     return (
                       <option key={province.id} value={province.id}>
-                        { 'province: ' + (province.properties.name || 'region #' + province.id)}
+                        { zLevel1.toLowerCase() + ': ' + (province.properties.name || 'region #' + province.id)}
                       </option>
                     )
-                  })
-                : null
+                  }
+                )
               }
               {
-                DISTRICTS.results.features.map((district) => {
+                regionData2.results.features.map((district) => {
                     return (
                       <option key={district.id} value={district.id}>
-                        { 'district: ' + (district.properties.name || 'region #' + district.id)}
+                        { zLevel2.toLowerCase() + ': ' + (district.properties.name || 'region #' + district.id)}
                       </option>
                     )
-                  })
-                }
+                  }
+                )
               }
-
             </select>
           </div>
 

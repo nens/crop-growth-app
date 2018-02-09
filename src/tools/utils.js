@@ -3,7 +3,14 @@ import forEach from 'lodash/forEach';
 import find from 'lodash/find';
 
 
-import { AMOUNT_OF_WEEKS, PROVINCES, DISTRICTS } from '../constants.js';
+import {
+  AMOUNT_OF_WEEKS,
+  COUNTRY,
+  REGION_TYPE_1,
+  REGION_TYPE_2,
+  REGION_DATA_1,
+  REGION_DATA_2
+} from '../constants.js';
 
 export function getCurrentDate () {
   const d = new Date();
@@ -85,13 +92,10 @@ export function getFeatureById (regionId) {
 
   // First, check whether the regionId if for a province (which are only present
   // for Vietnam, not Bangladesh):
-  if (PROVINCES) {
-    feature = find(PROVINCES.results.features, { id: regionId });
-  }
-
+  feature = find(REGION_DATA_1.results.features, { id: regionId });
   if (!feature) {
     // If not, we know it has to be a district:
-    feature = find(DISTRICTS.results.features, { id: regionId });
+    feature = find(REGION_DATA_2.results.features, { id: regionId });
   }
 
   if (!feature) {
