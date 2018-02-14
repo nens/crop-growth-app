@@ -30,8 +30,6 @@ class MonthVis extends Component {
     };
   }
   getTotalRicePerMonthActual (responseActualYear) {
-    console.log("[F] getTotalRicePerMonthActual; arg responseActualYear =", responseActualYear);
-
     const result = [];
     const currentMonthIdx = (new Date()).getMonth();
     let totalRiceSingleMonth, monthData;
@@ -53,12 +51,9 @@ class MonthVis extends Component {
     const totalArea = this.state.totalArea;
     const totalPixels = responseActualYear[0].monthData.data[0].total;
     const resultHa = map(result, (pxCount) => pixels2hectares(pxCount, totalPixels, totalArea));
-
-    console.log("*** resultHa:", resultHa);
     return resultHa;
   }
   getTotalRicePerMonthHistorical (responsePreviousYears) {
-    console.log("[F] getTotalRicePerMonthHistorical; arg responsePreviousYears =", responsePreviousYears);
     const result = [];
     let j, monthData, totalRiceSingleMonth;
 
@@ -90,7 +85,6 @@ class MonthVis extends Component {
     const finalResultHa =  map(finalResult,
       (pxCount) => pixels2hectares(pxCount, totalPixels, totalArea));
 
-    console.log("*** finalResult:", finalResult);
     return finalResultHa;
   }
   componentWillReceiveProps (props) {

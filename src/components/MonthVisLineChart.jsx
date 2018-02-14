@@ -29,16 +29,22 @@ class MonthVisLineChart extends Component {
     }
   }
   formatData (dataActual, dataHistorical) {
-    return MONTH_NAMES.map((monthName, i) => {
+
+    console.log("[F] formatData (dataActual, dataHistorical) { ...");
+    console.log("*** dataActual........:", dataActual);
+    console.log("*** dataHistorical....:", dataHistorical);
+
+    const result = MONTH_NAMES.map((monthName, i) => {
       return {
         monthName,
         areaActual: dataActual[i],
         areaHistorical: dataHistorical[i]
       };
     });
-  }
-  rejectFutureData () {
 
+    console.log("*** result:", result);
+
+    return result;
   }
   render () {
     const isFetching = this.props.isFetching;
@@ -65,7 +71,7 @@ class MonthVisLineChart extends Component {
       <div className={styles.LineChartContainer}>
         <div className={styles.YAxisLabel}>rice area (ha.)</div>
         <LineChart
-          width={600}
+          width={550}
           height={260}
           data={this.state.formattedData}
           styles={styles.YAxisLabel}>
