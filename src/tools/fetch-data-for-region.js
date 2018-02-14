@@ -1,6 +1,6 @@
 import { THE_YEAR, AMOUNT_OF_WEEKS, RASTER_URL } from "../constants";
 
-import { getCurrentYear, dateToSlug } from "./utils-time.js";
+import { getCurrentYear, dateToSlug, pad } from "./utils-time.js";
 
 // Valid URL (demo.lizard.net):
 ////////////////////////////////////////////
@@ -96,11 +96,15 @@ function buildWeekUrls (regionId, weeks) {
 }
 
 export function fetchWeekDataForRegion (regionId, weeks) {
+  // Edit: 9-2-18: they want to show historic data in the HarvestBarChart;
+  /////////////////////////////////////////////////////////////////////////////
+  // Citation to prevent any miss-communication:
+  //
+  //
 
+  const promises = [];
   const utcTimestamps = weeks.map((week) => week.getTime());
   const urls = buildWeekUrls(regionId, weeks);
-  const promises = [];
-
   urls.forEach((url, idx) => {
     const week = weeks[idx];
     promises.push(
@@ -114,7 +118,53 @@ export function fetchWeekDataForRegion (regionId, weeks) {
             resolve({
               url: url,
               weekTimestamp: dateToSlug(week),
-              weekData: JSON.parse(this.response)
+              weekData: JSON.parse(this.response),
+              isHistorical: false
+            });
+          } else {
+            reject(`Status ${this.status}, '${this.statusText}' for URL ${url}.`);
+          }
+        };
+        request.withCredentials = true; // Send cookie.
+        request.open('GET', url);
+        request.send();
+      })
+    );
+  });
+
+  const weeksLastYear = weeks.map((week) => {
+    var year    = week.getFullYear();
+    var month   = week.getMonth() + 1;
+    var date    = week.getDate();
+    var hour    = week.getHours();
+    var min     = week.getMinutes();
+    var sec     = week.getSeconds();
+
+    const weekUtcRep = '' + (year - 1) + '-' + pad(month) + '-' + pad(date) + 'T'
+      + pad(hour) + ':' +  pad(min) + ':' + pad(sec) + 'Z';
+
+    return new Date(weekUtcRep);
+  });
+
+  const urlsLastYear = buildWeekUrls(regionId, weeksLastYear);
+
+  // console.log("urlsLastYear =", urlsLastYear);
+
+  urlsLastYear.forEach((url, idx) => {
+    const week = weeksLastYear[idx];
+    promises.push(
+      new Promise((resolve, reject) => {
+        let request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+          if (this.readyState !== 4) return;
+
+          if (this.status >= 200 && this.status < 300) {
+            // console.log("[!] response", dateToSlug(week), this.response);
+            resolve({
+              url: url,
+              weekTimestamp: dateToSlug(week),
+              weekData: JSON.parse(this.response),
+              isHistorical: true
             });
           } else {
             reject(`Status ${this.status}, '${this.statusText}' for URL ${url}.`);

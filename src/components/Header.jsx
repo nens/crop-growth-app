@@ -147,23 +147,26 @@ class Header extends Component {
             <select value={selectedRegionId} onChange={onRegionSelected}>
               <option disabled value="">-</option>
               {
-                regionData1.results.features.map((province) => {
-                  console.log("provin:", province);
+                regionData2.results.features.map((district) => {
                     return (
-                      <option key={province.id} value={province.id}>
-                        { zLevel1.toLowerCase() + ': ' + (province.properties.name || 'region #' + province.id)}
-                      </option>
-                    )
+                      <OptComponent
+                        regionType={zLevel2}
+                        region={district}
+                        key={district.id}
+                      />
+                    );
                   }
                 )
               }
               {
-                regionData2.results.features.map((district) => {
+                regionData1.results.features.map((province) => {
                     return (
-                      <option key={district.id} value={district.id}>
-                        { zLevel2.toLowerCase() + ': ' + (district.properties.name || 'region #' + district.id)}
-                      </option>
-                    )
+                      <OptComponent
+                        regionType={zLevel1}
+                        region={province}
+                        key={province.id}
+                      />
+                    );
                   }
                 )
               }
@@ -180,5 +183,23 @@ class Header extends Component {
     );
   }
 }
+
+class OptComponent extends Component {
+  constructor () {
+    super();
+    this.getRegionSlug = this.getRegionSlug.bind(this);
+  }
+  getRegionSlug (region, regionType) {
+    return regionType.toLowerCase() + ': ' +
+      (region.properties && region.properties.name || 'region #' + region.id);
+  }
+  render () {
+    const { region, regionType } = this.props;
+
+    return <option value={region.id}>{ this.getRegionSlug(region, regionType) }</option>
+  }
+}
+
+
 
 export { Header }

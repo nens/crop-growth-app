@@ -104,3 +104,12 @@ export function getFeatureById (regionId) {
     return feature;
   }
 }
+
+
+export function pixels2hectares (pixels, totalPixels, totalArea) {
+  if (!pixels || !totalPixels) {
+    return 0;
+  } else {
+    return Math.round((pixels / totalPixels) * totalArea);
+  }
+}

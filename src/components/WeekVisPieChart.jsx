@@ -74,8 +74,6 @@ class WeekVisPieChart extends Component {
       });
     }
 
-    console.log('weekDataSorted:', weekDataSorted)
-
     if (weekDataSorted.length === 0) {
       weekDataSorted.push({
         class: -1,

@@ -4,13 +4,14 @@ import ReactDOM from "react-dom";
 import MDSpinner from "react-md-spinner";
 
 import cloneDeep from "lodash/cloneDeep";
+import forEach from 'lodash/forEach';
 
 import { fetchWeekDataForRegion } from "../tools/fetch-data-for-region.js";
 import { WeekVisTable } from "./WeekVisTable.jsx";
 import { HarvestBarChart } from "./HarvestBarChart.jsx";
 import { WeekVisPieChart } from "./WeekVisPieChart.jsx";
 
-import { growthStageIsAllowed } from "../tools/utils.js";
+import { growthStageIsAllowed, pixels2hectares } from "../tools/utils.js";
 
 import styles from './WeekVis.css';
 
@@ -43,23 +44,51 @@ class WeekVis extends Component {
       selectedRegionId: null,
       isFetching: false,
       data: "",
-      weeks: null
+      weeks: null,
+      totalArea: null
     };
+
+    this.convertWeekDataToHectares = this.convertWeekDataToHectares.bind(this);
+  }
+  convertWeekDataToHectares (response) {
+    const totalArea = this.state.totalArea;
+
+    forEach(response, (weekResponse) => {
+      forEach(weekResponse.weekData.data, (d) => {
+        const dataInHectares = pixels2hectares(
+          d.data,
+          d.total,
+          totalArea
+        );
+        d.data = dataInHectares;
+      })
+    });
+
+
+    return response;
   }
   componentWillReceiveProps (props) {
     this.setState({
       selectedRegionId: props.selectedRegionId,
       selectedRegionSlug: props.selectedRegionSlug,
       isFetching: props.isFetching,
-      weeks: props.weeks
+      weeks: props.weeks,
+      totalArea: props.totalArea
     });
+
+    console.log("[!] props.totalArea:", props.totalArea);
+
+    const convert = this.convertWeekDataToHectares;
 
     if (props.selectedRegionId) {
       this.setState({ isFetching: true });
       fetchWeekDataForRegion(props.selectedRegionId, props.weeks)
       .then(
         (response) => {
-          this.setState({ isFetching: false, data: response });
+          this.setState({
+            isFetching: false,
+            data: convert(response)
+          });
         },
         (error) => {
           this.setState({ isFetching: false, data: "" });
@@ -137,7 +166,6 @@ class WeekVis extends Component {
                 weeks={this.state.weeks}
               />
             </div>
-
             <div className={styles.WeekVisContentRightSide}>
               <HarvestBarChart
                 utcTimestampSlugs={this.state.utcTimestampSlugs}

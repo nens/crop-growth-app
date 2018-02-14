@@ -37,3 +37,23 @@ export function getWeeks (nowUnixTime) {
   }
   return dateObjects;
 }
+
+
+// This functions pads a given number with a leading zero if necessary, i.e:
+//
+// 0::int   => '00'::str
+// 10::int  => '10'::str
+//
+export function pad (num) {
+
+  const numInt = parseInt(num);
+
+  if (numInt < 10) {
+    return '0' + numInt;
+  } else if (numInt > 99) {
+    console.error("[E] tried to pad n > 99; we\'ll use n\'s string rep")
+    return '' + numInt
+  } else {
+    return '' + numInt;
+  }
+}

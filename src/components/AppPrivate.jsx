@@ -50,6 +50,7 @@ class AppPrivate extends Component {
 
     this.setState({
       selectedRegionId: regionId,
+      selectedRegionArea: feature.properties.area / 10000,
       selectedRegionSlug: feature.properties.name,
       isFetchingMonthData: true,
       isFetchingWeekData: true
@@ -70,12 +71,14 @@ class AppPrivate extends Component {
           selectedRegionId={this.state.selectedRegionId}
           onRegionSelected={this.handleRegionSelected}
         />
+
         <MonthVis
           selectedRegionId={this.state.selectedRegionId}
           onFetchSuccess={this.handleFetchMonthDataSuccces}
           isFetching={this.state.isFetchingMonthData}
           currentYear={this.state.currentYear}
           months={this.state.dates.months}
+          totalArea={this.state.selectedRegionArea}
         />
         <WeekVis
           selectedRegionId={this.state.selectedRegionId}
@@ -83,6 +86,7 @@ class AppPrivate extends Component {
           onFetchSuccess={this.handleFetchWeekDataSuccces}
           isFetching={this.state.isFetchingWeekData}
           weeks={this.state.dates.weeks}
+          totalArea={this.state.selectedRegionArea}
         />
       </div>
     );

@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 
 import find from 'lodash/find';
 import map from 'lodash/map';
+import reject from 'lodash/reject';
 import forEach from 'lodash/forEach';
 
 import {
@@ -32,13 +33,14 @@ class WeekVisTable extends Component {
   }
   updateData (props) {
     if (!props.isFetching) {
-      console.log('formatted_data', this.formatData(props.data));
       this.setState({ formattedData: this.formatData(props.data) });
     }
   }
   formatData (_allWeekData) {
-    const allTimestamps = map(_allWeekData, 'weekTimestamp');
-    const allWeekData = map(_allWeekData, 'weekData');
+    const _allWeekDataActual = reject(_allWeekData, { isHistorical: true });
+
+    const allTimestamps = map(_allWeekDataActual, 'weekTimestamp');
+    const allWeekData = map(_allWeekDataActual, 'weekData');
 
     let dataForSingleWeek,
         dataForGrowthStage,
@@ -52,7 +54,7 @@ class WeekVisTable extends Component {
 
       GROWTH_STAGES.forEach((growthStage) => {
         dataForGrowthStage = find(
-          dataForSingleWeek, { 'label': growthStage }
+          dataForSingleWeek, { label: growthStage }
         );
         dictForSingleWeek.data[growthStage] =
           dataForGrowthStage ? PIXEL_SIZE * dataForGrowthStage.data : 0;

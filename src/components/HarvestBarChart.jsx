@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 
 import forEach from 'lodash/forEach';
 import find from 'lodash/find';
+import reject from 'lodash/reject';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 
@@ -13,6 +14,8 @@ import {
 } from '../tools/utils.js'
 
 import { GROWTH_STAGE_COLORS, PIXEL_SIZE } from '../constants';
+
+import { getCurrentYear } from '../tools/utils-time.js'
 
 import styles from "./HarvestBarChart.css";
 
@@ -42,49 +45,59 @@ class HarvestBarChart extends Component {
   }
   getFormattedData (rawData, isFetching) {
     if (isFetching) {
-      // Still fetching data...
-      if (this.state.formattedData) {
-        // ..but we already have the most recently retrieved data; we will use
-        // that while still fetching the new data (because: smoother UX/no
-        // disappearing grid/animations etc)
-        return this.state.formattedData;
-      } else {
-        // ..and there is no previously retrieved data: we'll use dummy data
-        // (because: grid/axis will be in place when we'll draw the actual data)
-        let unixTimestamps = getWeekVisUnixTimestamps(true),
-            weekTimestamps = unixTimestamps.map(convertTimestampToUTC);
-
-        return weekTimestamps.map((ts) => {
-          return {
-            'timestamp': ts.split('T')[0],
-            'harvestArea': null
-          };
-        });
-      }
+      return this.state.formattedData || null;
     } else {
-      // OK, fetching data is finished: let's format that data for our BarChart:
-      let results = [],
-          singleResult,
-          harvestArea;
 
-      forEach(rawData, function (x) {
-        singleResult = {
-          timestamp: x.weekTimestamp.split('T')[0]
-        }
+      const results = [];
+
+      const CURRENT_YEAR = getCurrentYear();
+      const rawDataActual     = reject(rawData, { isHistorical: true });
+      const rawDataHistorical = reject(rawData, { isHistorical: false });
+
+      forEach(rawDataActual, (rd) => {
+
+        const tsParts = rd.weekTimestamp.split('T')[0].split('-');
+        const tsSlug = tsParts[1] + '-' + tsParts[2];
+        const result = { timestamp: tsSlug };
+
+        let harvestArea;
+
+        // TODO: use other way of calculating this (ie. check lzd-client)
         try {
-          harvestArea = find(x.weekData.data, { 'label' : 'Harvest' }).data;
+          harvestArea = find(rd.weekData.data, { 'label' : 'Harvest' }).data;
+          harvestArea = Math.round(100 * PIXEL_SIZE * harvestArea) / 100;
         } catch (e) {
-          harvestArea = 0;
+          harvestArea = 0
         }
-        singleResult.harvestArea = Math.round(100 * PIXEL_SIZE * harvestArea) / 100;
-        results.push(singleResult);
+
+        result.dataActual = harvestArea;
+        results.push(result);
+      });
+
+      // console.log("[!] results (intermediate):", results);
+
+      forEach(rawDataHistorical, (rd) => {
+
+        const tsParts = rd.weekTimestamp.split('T')[0].split('-');
+        const tsSlug = tsParts[1] + '-' + tsParts[2];
+        const result = find(results, { timestamp: tsSlug });
+
+        let harvestArea;
+
+        try {
+          harvestArea = find(rd.weekData.data, { 'label' : 'Harvest' }).data;
+          harvestArea = Math.round(100 * PIXEL_SIZE * harvestArea) / 100;
+        } catch (e) {
+          harvestArea = 0
+        }
+
+        result.dataHistorical = harvestArea;
       });
       return results;
     }
   }
   getFormattedTimestamp (ts) {
-    const parts = ts.split('-');
-    return parts[1] + '-' + parts[2];
+    return ts;
   }
   render () {
 
@@ -106,7 +119,7 @@ class HarvestBarChart extends Component {
             tickCount={6}
             dataKey="timestamp"
             tick={{ fontSize: "11px" }}
-            tickFormatter={isFetching ? () => '...' : this.getFormattedTimestamp}
+            tickFormatter={isFetching ? () => '.........' : this.getFormattedTimestamp}
           />
           <YAxis
             tickCount={5}
@@ -117,12 +130,19 @@ class HarvestBarChart extends Component {
 
           <Bar
             className={`${styles.BarOpacityDefault} ${isFetching ? styles.BarOpacityInactive : ""}`}
-            dataKey="harvestArea"
+            dataKey="dataActual"
             fill={isFetching ?  "#666666" : GROWTH_STAGE_COLORS.Harvest}
             stroke="#666"
             barSize={42}
           />
 
+          <Bar
+            className={`${styles.BarOpacityDefault} ${isFetching ? styles.BarOpacityInactive : ""}`}
+            dataKey="dataHistorical"
+            fill={isFetching ?  "#666666" : '#ffffff'}
+            stroke="#666"
+            barSize={42}
+          />
         </BarChart>
 
         <div className={styles.BarChartLegend}>

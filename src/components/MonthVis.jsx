@@ -5,11 +5,13 @@ import MDSpinner from "react-md-spinner";
 
 import filter from "lodash/filter";
 import reject from "lodash/reject";
+import map from "lodash/map";
 
 import { MonthVisLineChart } from "./MonthVisLineChart";
 import { MonthVisTable} from "./MonthVisTable";
 import { fetchMonthDataForRegion } from "../tools/fetch-data-for-region.js";
-import { calculateAverage, growthStageIsAllowed } from "../tools/utils.js";
+import { calculateAverage, growthStageIsAllowed, pixels2hectares  }
+  from "../tools/utils.js";
 import { PIXEL_SIZE, FIRST_YEAR, THE_YEAR, MONTH_NAMES } from "../constants.js";
 import styles from './MonthVis.css';
 
@@ -28,6 +30,8 @@ class MonthVis extends Component {
     };
   }
   getTotalRicePerMonthActual (responseActualYear) {
+    console.log("[F] getTotalRicePerMonthActual; arg responseActualYear =", responseActualYear);
+
     const result = [];
     const currentMonthIdx = (new Date()).getMonth();
     let totalRiceSingleMonth, monthData;
@@ -42,11 +46,19 @@ class MonthVis extends Component {
           totalRiceSingleMonth += regionData.data;
         }
       });
+
       result.push(Math.round(totalRiceSingleMonth * PIXEL_SIZE));
     });
-    return result;
+
+    const totalArea = this.state.totalArea;
+    const totalPixels = responseActualYear[0].monthData.data[0].total;
+    const resultHa = map(result, (pxCount) => pixels2hectares(pxCount, totalPixels, totalArea));
+
+    console.log("*** resultHa:", resultHa);
+    return resultHa;
   }
   getTotalRicePerMonthHistorical (responsePreviousYears) {
+    console.log("[F] getTotalRicePerMonthHistorical; arg responsePreviousYears =", responsePreviousYears);
     const result = [];
     let j, monthData, totalRiceSingleMonth;
 
@@ -57,7 +69,7 @@ class MonthVis extends Component {
       totalRiceSingleMonth = 0;
       monthData.data.forEach((regionData) => {
         if (regionData === null) {
-          console.error("Oops! region data => NULL... average just became less reliable (time=" + monthDataObj.month + ")");
+          console.error("[E] Oops! region data => NULL... average just became less reliable (time=" + monthDataObj.month + ")");
           return;
         }
         if (growthStageIsAllowed(regionData.class)) {
@@ -72,14 +84,22 @@ class MonthVis extends Component {
       finalResult.push(PIXEL_SIZE * calculateAverage(monthValues, true));
     });
 
-    return finalResult;
+    const totalArea = this.state.totalArea;
+    const totalPixels = responsePreviousYears[0].monthData.data[0].total;
+
+    const finalResultHa =  map(finalResult,
+      (pxCount) => pixels2hectares(pxCount, totalPixels, totalArea));
+
+    console.log("*** finalResult:", finalResult);
+    return finalResultHa;
   }
   componentWillReceiveProps (props) {
     this.setState({
       selectedRegionId: props.selectedRegionId,
       isFetching: props.isFetching,
       months: props.months,
-      currentYear: props.currentYear
+      currentYear: props.currentYear,
+      totalArea: props.totalArea
     });
     const currentYear = props.months[0].getFullYear();
     if (props.months && props.selectedRegionId) {
@@ -87,11 +107,11 @@ class MonthVis extends Component {
       fetchMonthDataForRegion(props.selectedRegionId, props.months)
       .then(
         (response) => {
-          console.log("total responses:", response);
+          // console.log("total responses:", response);
           const responseActualYear = filter(response, { year: currentYear });
-          console.log("responseActualYear:", responseActualYear);
+          // console.log("responseActualYear:", responseActualYear);
           const responsePreviousYears = reject(response, { year: currentYear });
-          console.log("responsePreviousYears:", responsePreviousYears);
+          // console.log("responsePreviousYears:", responsePreviousYears);
 
           this.setState({
             isFetching: false,
