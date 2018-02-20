@@ -50,6 +50,9 @@ class AppPrivate extends Component {
 
     this.setState({
       selectedRegionId: regionId,
+
+      // Can be used for *displaying* the selected region's total area; it is
+      // not used for calculations.
       selectedRegionArea: feature.properties.area / 10000,
       selectedRegionSlug: feature.properties.name,
       isFetchingMonthData: true,

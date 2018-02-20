@@ -14,11 +14,11 @@ export const countryConfig = {
     pixelSize: 0.002,
     uri: "/api/v3/raster-aggregates/?agg=counts&rasters=62bb4a8&srs=EPSG:4326&styles=GrowthStage_Rice_D",
     regionTypes: ['MUNICIPALITY', 'DISTRICT'],
-    regionZoomLevels: { DISTRICT: 9 }, // Not yet used.. (=improvement)
+    regionZoomLevels: { DISTRICT: 9 },
     centroid : {
       lon: 90.5,
       lat: 23.5,
-      zoom: 6
+      zoom: 5
     },
   },
 
@@ -27,11 +27,11 @@ export const countryConfig = {
     pixelSize: 0.025,
     uri: '/api/v3/raster-aggregates/?agg=counts&rasters=fc8065b&srs=EPSG:4326&styles=GrowthStage_Rice_D',
     regionTypes: ['DISTRICT', 'PROVINCE'],
-    regionZoomLevels: { DISTRICT: 10, PROVINCE: 8 }, // Not yet used.. (=improvement)
+    regionZoomLevels: { DISTRICT: 7, PROVINCE: 6 },
     centroid : {
       lon: 105.3420,
       lat: 10.5500,
-      zoom: 6
+      zoom: 4.5
     }
   }
 }

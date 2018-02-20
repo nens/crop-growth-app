@@ -21,12 +21,15 @@ import {
 import LogoAci from './images/logo-aci.png';
 import styles from './Header.css';
 
+const IMG_WIDTH = 196;
+const IMG_HEIGHT = 96;
+
 const MAPBOX_STYLE_ID = 'light-v9';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoibmVsZW5zY2h1dXJtYW5zIiwiYSI6ImhkXzhTdXcifQ.3k2-KAxQdyl5bILh_FioCw';
 
 const getMapboxUrl = (lat, lon, zoom = 6) => `
-  https://api.mapbox.com/styles/v1/mapbox/${MAPBOX_STYLE_ID}/static/${lon},${lat},${zoom},0,0/200x100?access_token=${MAPBOX_TOKEN}`;
+  https://api.mapbox.com/styles/v1/mapbox/${MAPBOX_STYLE_ID}/static/${lon},${lat},${zoom},0,0/${IMG_WIDTH}x${IMG_HEIGHT}?access_token=${MAPBOX_TOKEN}`;
 
 
 const getCentroidPolygon = (feature) => {
@@ -74,27 +77,41 @@ const getCentroidMultiPolygon = (feature) => {
 
 const getCentroid = (regionId) => {
 
-  let feature;
+  const config = countryConfig[COUNTRY];
 
-  // First, check whether the regionId if for a province (which are only present
-  // for Vietnam, not Bangladesh):
+  let feature, regionType;
+
   feature = find(REGION_DATA_1.results.features, { id: regionId });
 
-  if (!feature) {
-    // If not, we know it has to be a district:
+  if (feature) {
+    regionType = config.regionTypes[0];
+  } else {
     feature = find(REGION_DATA_2.results.features, { id: regionId });
+    regionType = config.regionTypes[1];
   }
 
   if (!feature) {
     console.error('Feature not found');
   }
 
-  return feature.geometry.type.toLowerCase() === 'polygon'
+  const centroid = feature.geometry.type.toLowerCase() === 'polygon'
     ? getCentroidPolygon(feature)
-    : getCentroidMultiPolygon(feature)
+    : getCentroidMultiPolygon(feature);
+
+  const mapboxZoomLevel = config.regionZoomLevels[regionType];
+
+  console.log("For regiontype '" + regionType + "' we gonna use mapbox zoomlevel:", mapboxZoomLevel);
+
+  return [centroid, mapboxZoomLevel];
 }
 
 class Header extends Component {
+  // constructor () {
+  //   super();
+  //   this.state = {
+  //     zLevel: null
+  //   };
+  // }
   render () {
     const {
       firstName,
@@ -105,8 +122,9 @@ class Header extends Component {
 
     let imageUrl;
     if (selectedRegionId) {
-      const centroid = getCentroid(selectedRegionId);
-      imageUrl = getMapboxUrl(centroid[1], centroid[0], 8);
+      const mapboxInfo = getCentroid(selectedRegionId);
+      const centroid = mapboxInfo[0];
+      imageUrl = getMapboxUrl(centroid[1], centroid[0], mapboxInfo[1]);
     } else {
       imageUrl = getMapboxUrl(CENTROID.lat, CENTROID.lon, CENTROID.zoom);
     }
@@ -117,7 +135,7 @@ class Header extends Component {
     const regionData1 = countryConfig[COUNTRY][zLevel1];
     const regionData2 = countryConfig[COUNTRY][zLevel2];
 
-    console.log(regionData1, regionData2)
+    // console.log(regionData1, regionData2)
 
     return (
       <div className={`${styles.Header}`}>
