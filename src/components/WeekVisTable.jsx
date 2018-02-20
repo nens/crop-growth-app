@@ -153,7 +153,7 @@ class WeekTableRow extends Component {
     const { timestamp, weekData, rowIsEmpty, isFirstRow } = this.props;
 
     const parts = timestamp.split('-');
-    const tsEuro = parts[2] + '-' + parts[1] + '-' + parts[0];
+    const tsEuro = parts[1] + '-' + parts[0];
 
     return (
       <tr className={styles.TableRow}>

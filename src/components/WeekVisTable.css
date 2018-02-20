@@ -24,11 +24,13 @@
 
 .VerticalColumn {
   height: 80px;
+  border: 1px solid white;
 }
 
 .TableCell {
   background-color: #E6E6E6;
   text-align: center;
+  border: 1px solid white;
 }
 
 .TableRow {

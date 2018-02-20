@@ -36,8 +36,11 @@ class MonthVisTable extends Component {
     }
   }
   formatData (data) {
+    const currentMonthIdx = (new Date()).getMonth();
+    let value;
     return MONTH_NAMES.map((monthName, i) => {
-      return { area: data[i], monthName };
+      value = i <= currentMonthIdx ? data[i] : undefined;
+      return { area: value, monthName };
     });
   }
   render () {

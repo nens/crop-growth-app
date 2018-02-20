@@ -1,7 +1,7 @@
 .TheBarChartContainer {
   clear: both;
   position: relative;
-  width: 260px;
+  width: 280px;
   height: 440px;
 
   padding-top: 20px;
@@ -13,17 +13,31 @@
   background-color: #E6E6E6;
 }
 
+
+
 .TheBarChart {
-  margin-left: -20px;
+  /*margin-left: -20px;*/
 }
 
 
 .BarChartLegend {
+  position: relative;
+
   width: 240px;
   height: 20px;
   margin-bottom: 40px;
-  margin-left: 40px;
+  margin-left: 20px;
   margin-top: -10px;
+}
+
+.BarChartLegendLeftPart {
+  width: 40%;
+}
+
+.BarChartLegendRightPart {
+  float: right;
+  width: 50%;
+  margin-top: -16px;
 }
 
 .BarChartLegendColor {
@@ -34,9 +48,25 @@
   background-color: #e84506;
 }
 
+.BarChartLegendColorOld {
+  position: relative;
+  top: 9px;
+  width: 40px;
+  height: 3px;
+  background-color: rgb(244, 162, 130);
+}
+
 .BarChartLegendText {
   position: relative;
-  margin-top: 10px;
+  margin-top: 2px;
+  left: 50px;
+  color: #666;
+  font-size: 11px;
+}
+
+.BarChartLegendTextOld {
+  position: relative;
+  /*margin-top: -4px;*/
   left: 50px;
   color: #666;
   font-size: 11px;

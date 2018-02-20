@@ -19,6 +19,8 @@ import { getCurrentYear } from '../tools/utils-time.js'
 
 import styles from "./HarvestBarChart.css";
 
+const COLOR_HARVEST_LAST_YEAR = 'rgb(244, 162, 130)';
+
 class HarvestBarChart extends Component {
   constructor () {
     super();
@@ -97,8 +99,16 @@ class HarvestBarChart extends Component {
     }
   }
   getFormattedTimestamp (ts) {
+    // Apparently this fn is now redudnant:
     return ts;
   }
+  getLegendLabels () {
+    // We'll visualize the year in the legend e.g. not as 2018, but as '18:
+    const currentYear = getCurrentYear() % 2000;
+    const prevYear = currentYear - 1;
+    return ["harvest '" + currentYear, "harvest '" + prevYear];
+  }
+
   render () {
 
     const { formattedData, isFetching } = this.state;
@@ -106,6 +116,8 @@ class HarvestBarChart extends Component {
     const yAxisFormatter = isFetching
       ? (_) => '... ha.'
       : (x) => x + " ha."
+
+    const legendLabels = this.getLegendLabels();
 
     return (
       <div className={styles.TheBarChartContainer}>
@@ -122,6 +134,7 @@ class HarvestBarChart extends Component {
             tickFormatter={isFetching ? () => '.........' : this.getFormattedTimestamp}
           />
           <YAxis
+            width={80}
             tickCount={5}
             tick={{ fontSize: "11px" }}
             tickFormatter={yAxisFormatter}
@@ -131,7 +144,7 @@ class HarvestBarChart extends Component {
           <Bar
             className={`${styles.BarOpacityDefault} ${isFetching ? styles.BarOpacityInactive : ""}`}
             dataKey="dataActual"
-            fill={isFetching ?  "#666666" : GROWTH_STAGE_COLORS.Harvest}
+            fill={isFetching ?  "#666666" : GROWTH_STAGE_COLORS.Harvest }
             stroke="#666"
             barSize={42}
           />
@@ -139,15 +152,22 @@ class HarvestBarChart extends Component {
           <Bar
             className={`${styles.BarOpacityDefault} ${isFetching ? styles.BarOpacityInactive : ""}`}
             dataKey="dataHistorical"
-            fill={isFetching ?  "#666666" : '#ffffff'}
+            fill={isFetching ?  "#666666" : COLOR_HARVEST_LAST_YEAR }
             stroke="#666"
             barSize={42}
           />
         </BarChart>
 
         <div className={styles.BarChartLegend}>
-          <div className={styles.BarChartLegendColor} />
-          <span className={styles.BarChartLegendText}>harvest</span>
+          <div className={styles.BarChartLegendLeftPart}>
+            <div className={styles.BarChartLegendColor} />
+            <div className={styles.BarChartLegendText}>{legendLabels[0]}</div>
+          </div>
+
+          <div className={styles.BarChartLegendRightPart}>
+            <div className={styles.BarChartLegendColorOld} />
+            <div className={styles.BarChartLegendTextOld}>{legendLabels[1]}</div>
+          </div>
         </div>
       </div>
     );

@@ -71,7 +71,6 @@ class AppPrivate extends Component {
           selectedRegionId={this.state.selectedRegionId}
           onRegionSelected={this.handleRegionSelected}
         />
-
         <MonthVis
           selectedRegionId={this.state.selectedRegionId}
           onFetchSuccess={this.handleFetchMonthDataSuccces}

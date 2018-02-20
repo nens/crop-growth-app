@@ -3,9 +3,21 @@ import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 
-import { MONTH_NAMES } from "../constants.js";
+import {
+  MONTH_NAMES,
+  LINE_COLOR_THIS_YEAR,
+  LINE_COLOR_PREV_YEAR,
+  LINE_COLOR_AVG,
+  FETCHING_DATA_COLOR
+} from "../constants.js";
 
 import styles from './MonthVis.css';
+
+import includes from 'lodash/includes';
+
+// const LINE_COLOR_THIS_YEAR = "#FF0080";
+// const LINE_COLOR_PREV_YEAR = "#FFA2FF";
+// const LINE_COLOR_AVG = "#666666";
 
 class MonthVisLineChart extends Component {
   constructor () {
@@ -22,78 +34,110 @@ class MonthVisLineChart extends Component {
   updateData (props) {
     if (!props.isFetching) {
       this.setState({
-        // Both actual and historical data (=required to have Recharts.js draw
-        // two distinct lines simultaneously in a single chart)
-        formattedData: this.formatData(props.actualData, props.historicalData),
+        formattedData: this.formatData(
+          props.dataCurrentYear,
+          props.dataPreviousYear,
+          props.dataThreeYearAvg
+        )
       });
     }
   }
-  formatData (dataActual, dataHistorical) {
+  formatData (dataCurrentYear, dataPreviousYear, dataThreeYearAvg) {
+    console.log("[F] formatData:");
+    console.log("*** dataCurrentYear...:", dataCurrentYear);
+    console.log("*** dataPreviousYear..:", dataPreviousYear);
+    console.log("*** dataThreeYearAvg..:", dataThreeYearAvg);
 
-    console.log("[F] formatData (dataActual, dataHistorical) { ...");
-    console.log("*** dataActual........:", dataActual);
-    console.log("*** dataHistorical....:", dataHistorical);
+    if (includes(arguments, null)) {
+      console.log(
+        "[!] Cannot exec formatData since data ain't sufficiently rich!"
+      );
+
+      return this.state.formattedData;
+    }
+
+    const currentMonthIdx = (new Date()).getMonth()
+
+    console.log("currentMonthIdx:", currentMonthIdx);
 
     const result = MONTH_NAMES.map((monthName, i) => {
       return {
         monthName,
-        areaActual: dataActual[i],
-        areaHistorical: dataHistorical[i]
+        dataCurrentYear:  i <= currentMonthIdx ? dataCurrentYear[i] : null,
+        dataPreviousYear: dataPreviousYear[i],
+        dataThreeYearAvg: dataThreeYearAvg[i]
       };
     });
 
-    console.log("*** result:", result);
+    console.log("RESULT:", result);
 
     return result;
   }
+
   render () {
     const isFetching = this.props.isFetching;
 
-    if (!isFetching && (!this.props.actualData || !this.props.historicalData)) {
-      return null;
-    }
+    if (!isFetching &&
+        !(this.props.dataCurrentYear &&
+          this.props.dataPreviousYear &&
+          this.props.dataThreeYearAvg)) {
+      console.log("..but there's no *new* data to render!");
 
-    if (this.state.formattedData === "") {
-      return null;
+      if (!this.state.formattedData) {
+        console.log("..and no *old* data, too! Early return");
+        return null;
+      } else {
+        console.log(
+          "..but we do still have the *old* data, let's " +
+          "render that instead!!1!");
+      }
     }
-
-    const {
-      actualDataColor,
-      historicalDataColor,
-      fetchingDataColor
-    } = this.props;
 
     const yAxisFormatter = isFetching
       ? (_) => '...'
-      : (x) => x + ""
+      : (x) => x + "";
+
+    const {
+      dataCurrentYear,
+      dataPreviousYear,
+      dataThreeYearAvg
+    } = this.state.formattedData;
 
     return (
       <div className={styles.LineChartContainer}>
         <div className={styles.YAxisLabel}>rice area (ha.)</div>
         <LineChart
-          width={550}
+          width={600}
           height={260}
           data={this.state.formattedData}
           styles={styles.YAxisLabel}>
 
-          {/* Line 1 of 2: the actual year values for the selected region (12x) */}
           <Line
-            className={`${styles.LineOpacityDefault} ${isFetching ? styles.LineOpacityInactive : ""}`}
             type="monotone"
-            dataKey="areaActual"
-            stroke={ isFetching ? fetchingDataColor : actualDataColor }
-            strokeWidth={2}
             dot={false}
-          />
+            className={`${styles.LineOpacityDefault} ${isFetching ? styles.LineOpacityInactive : ""}`}
+            dataKey="dataCurrentYear"
 
-          {/* Line 2 of 2: the historical average values for the selected region (12x) */}
-          <Line
-            className={`${styles.LineOpacityDefault} ${isFetching ? styles.LineOpacityInactive : ""}`}
-            type="monotone"
-            dataKey="areaHistorical"
-            stroke={ isFetching ? fetchingDataColor : historicalDataColor }
+            stroke={ isFetching ? FETCHING_DATA_COLOR : LINE_COLOR_THIS_YEAR }
             strokeWidth={2}
+          />
+          <Line
+            type="monotone"
             dot={false}
+            className={`${styles.LineOpacityDefault} ${isFetching ? styles.LineOpacityInactive : ""}`}
+            dataKey="dataPreviousYear"
+
+            stroke={ isFetching ? FETCHING_DATA_COLOR : LINE_COLOR_PREV_YEAR }
+            strokeWidth={2}
+          />
+          <Line
+            type="monotone"
+            dot={false}
+            className={`${styles.LineOpacityDefault} ${isFetching ? styles.LineOpacityInactive : ""}`}
+            dataKey="dataThreeYearAvg"
+
+            stroke={ isFetching ? FETCHING_DATA_COLOR : LINE_COLOR_AVG }
+            strokeWidth={2}
           />
 
           <XAxis

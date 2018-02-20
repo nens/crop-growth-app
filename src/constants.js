@@ -1,6 +1,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
-export const COUNTRY = 'BANGLADESH';
+export const COUNTRY = 'VIETNAM';
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -149,3 +149,8 @@ export const GROWTH_STAGE_COLORS = {
 };
 
 // e641990d-9990-4778-b167-56f42e78b135
+
+export const LINE_COLOR_THIS_YEAR = "#FF0080";
+export const LINE_COLOR_PREV_YEAR = "#FFA2FF";
+export const LINE_COLOR_AVG       = "#666666";
+export const FETCHING_DATA_COLOR  = "#CCCCCC";
