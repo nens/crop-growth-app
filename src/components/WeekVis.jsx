@@ -76,8 +76,6 @@ class WeekVis extends Component {
       totalArea: props.totalArea
     });
 
-    console.log("[!] props.totalArea:", props.totalArea);
-
     const convert = this.convertWeekDataToHectares;
 
     if (props.selectedRegionId) {

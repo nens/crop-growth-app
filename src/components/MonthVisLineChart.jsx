@@ -43,24 +43,16 @@ class MonthVisLineChart extends Component {
     }
   }
   formatData (dataCurrentYear, dataPreviousYear, dataThreeYearAvg) {
-    console.log("[F] formatData:");
-    console.log("*** dataCurrentYear...:", dataCurrentYear);
-    console.log("*** dataPreviousYear..:", dataPreviousYear);
-    console.log("*** dataThreeYearAvg..:", dataThreeYearAvg);
-
     if (includes(arguments, null)) {
       console.log(
         "[!] Cannot exec formatData since data ain't sufficiently rich!"
       );
-
       return this.state.formattedData;
     }
 
     const currentMonthIdx = (new Date()).getMonth()
 
-    console.log("currentMonthIdx:", currentMonthIdx);
-
-    const result = MONTH_NAMES.map((monthName, i) => {
+    return MONTH_NAMES.map((monthName, i) => {
       return {
         monthName,
         dataCurrentYear:  i <= currentMonthIdx ? dataCurrentYear[i] : null,
@@ -68,10 +60,6 @@ class MonthVisLineChart extends Component {
         dataThreeYearAvg: dataThreeYearAvg[i]
       };
     });
-
-    console.log("RESULT:", result);
-
-    return result;
   }
 
   render () {

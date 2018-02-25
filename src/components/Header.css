@@ -17,22 +17,22 @@
 
 .GroeneBalkLinks {
   height: 100px;
-  width: 600px;
+  width: 630px;
   /*
   ACI-GREEN (fugly):
     background-color: #00A55D;
     Instead, temporarily we use the color for growthstage Harvest:
   */
-  background-color: rgb(166, 166, 166);
+  background-color: rgba(166, 166, 166, 1);
 }
 
 .GroeneBalkRechts {
   position: relative;
-  margin-left: 600px;
+  margin-left: 630px;
   margin-top: -100px; ;
 
   height: 100px;
-  width: 200px;
+  width: 170px;
   background-color: rgb(166, 166, 166);
 }
 
@@ -51,7 +51,6 @@
 .LogoAciHidden {
   position: relative;
   top: -30px;
-  right: 10px;
   float: right;
 }
 
@@ -92,6 +91,10 @@
 .SmallMap {
   position: absolute;
   right: 0;
-  border: 2px solid rgb(166, 166, 166);
+  border: 9px solid rgb(166, 166, 166);
+}
 
+.SelectedRegionSlug {
+  font-weight: bold;
+  cursor: pointer;
 }

@@ -121,8 +121,8 @@ class WeekTableHeader extends Component {
     return (
       <thead>
         <tr>
-          <th key={0} style={{width: '100px', textAlign: 'center', fontWeight: 'normal'}}>
-            6-days (ha.)
+          <th key={0} className={styles.CornerLabel}>
+            <div>6-days (ha.)</div>
           </th>
           {
             NON_BARREN_GROWTH_STAGES.map(function (gs, i) {

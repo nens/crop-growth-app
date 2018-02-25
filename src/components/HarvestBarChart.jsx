@@ -41,7 +41,7 @@ class HarvestBarChart extends Component {
       props.isFetching
     );
     this.setState({
-      formattedData: formattedData.reverse(),
+      formattedData: props.isFetching ? formattedData : formattedData.reverse(),
       isFetching: props.isFetching
     });
   }
@@ -74,8 +74,6 @@ class HarvestBarChart extends Component {
         result.dataActual = harvestArea;
         results.push(result);
       });
-
-      // console.log("[!] results (intermediate):", results);
 
       forEach(rawDataHistorical, (rd) => {
 
@@ -122,7 +120,7 @@ class HarvestBarChart extends Component {
       <div className={styles.TheBarChartContainer}>
         <BarChart
           width={320}
-          height={390}
+          height={410}
           data={formattedData}
           className={styles.TheBarChart}>
           <XAxis

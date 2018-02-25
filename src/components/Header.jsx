@@ -21,8 +21,8 @@ import {
 import LogoAci from './images/logo-aci.png';
 import styles from './Header.css';
 
-const IMG_WIDTH = 196;
-const IMG_HEIGHT = 96;
+const IMG_WIDTH = 150;
+const IMG_HEIGHT = 80;
 
 const MAPBOX_STYLE_ID = 'light-v9';
 
@@ -32,7 +32,7 @@ const getMapboxUrl = (lat, lon, zoom = 6) => `
   https://api.mapbox.com/styles/v1/mapbox/${MAPBOX_STYLE_ID}/static/${lon},${lat},${zoom},0,0/${IMG_WIDTH}x${IMG_HEIGHT}?access_token=${MAPBOX_TOKEN}`;
 
 
-const getCentroidPolygon = (feature) => {
+function getCentroidPolygon (feature) {
   const lons = feature.geometry.coordinates[0].map((lonLat) => lonLat[0]);
   const lats = feature.geometry.coordinates[0].map((lonLat) => lonLat[1]);
 
@@ -47,7 +47,7 @@ const getCentroidPolygon = (feature) => {
   return [lonSum / lons.length, latSum / lats.length];
 }
 
-const getCentroidMultiPolygon = (feature) => {
+function getCentroidMultiPolygon (feature) {
 
   let polygons = feature.geometry.coordinates,
       lonSumTotal = 0,
@@ -75,7 +75,7 @@ const getCentroidMultiPolygon = (feature) => {
   return [lonSumTotal / coordCount, latSumTotal / coordCount];
 }
 
-const getCentroid = (regionId) => {
+function getCentroid (regionId) {
 
   const config = countryConfig[COUNTRY];
 
@@ -100,23 +100,39 @@ const getCentroid = (regionId) => {
 
   const mapboxZoomLevel = config.regionZoomLevels[regionType];
 
-  console.log("For regiontype '" + regionType + "' we gonna use mapbox zoomlevel:", mapboxZoomLevel);
+  // console.log("For regiontype '" + regionType + "' we gonna use mapbox zoomlevel:", mapboxZoomLevel);
 
   return [centroid, mapboxZoomLevel];
 }
 
+function getRegionNameById (regionId) {
+  const feature = getFeatureById(regionId);
+  const slug = feature.properties.name || 'region #' + regionId;
+  return slug;
+}
+
 class Header extends Component {
-  // constructor () {
-  //   super();
-  //   this.state = {
-  //     zLevel: null
-  //   };
-  // }
+  constructor () {
+    super();
+    this.state = {
+      regionName: null,
+      mustSelectRegion: true
+    }
+    this.handleRegionChange = this.handleRegionChange.bind(this);
+  }
+  handleRegionChange(e) {
+    const regionId = parseInt(e.target.value);
+    this.setState({
+      regionName: getRegionNameById(regionId),
+      mustSelectRegion: false
+    });
+
+    this.props.onRegionSelected(e);
+  }
   render () {
     const {
       firstName,
-      selectedRegionId,
-      onRegionSelected
+      selectedRegionId
     } = this.props;
 
 
@@ -135,8 +151,6 @@ class Header extends Component {
     const regionData1 = countryConfig[COUNTRY][zLevel1];
     const regionData2 = countryConfig[COUNTRY][zLevel2];
 
-    // console.log(regionData1, regionData2)
-
     return (
       <div className={`${styles.Header}`}>
         <div className={`${styles.GroeneBalkLinks}`}>
@@ -154,41 +168,49 @@ class Header extends Component {
         <div className={`${styles.GroeneBalkRechts}`}>
           <img
             src={imageUrl}
-            width="196"
-            height="96"
+            width={IMG_WIDTH}
+            height={IMG_HEIGHT}
             className={styles.SmallMap}
           />
         </div>
         <div className={`${styles.ContentWrapper}`}>
           <div className={`${styles.KeyValuePair} ${styles.FirstRow}`}>
             <div className={`${styles.KeyWrapper}`}>region:</div>
-            <select value={selectedRegionId} onChange={onRegionSelected}>
-              <option disabled value="">-</option>
-              {
-                regionData2.results.features.map((district) => {
-                    return (
-                      <OptComponent
-                        regionType={zLevel2}
-                        region={district}
-                        key={district.id}
-                      />
-                    );
+
+            { this.state.mustSelectRegion
+              ? <select value={selectedRegionId} onChange={this.handleRegionChange}>
+                  <option disabled value="">-</option>
+                  {
+                    regionData2.results.features.map((district) => {
+                        return (
+                          <OptComponent
+                            regionType={zLevel2}
+                            region={district}
+                            key={district.id}
+                          />
+                        );
+                      }
+                    )
                   }
-                )
-              }
-              {
-                regionData1.results.features.map((province) => {
-                    return (
-                      <OptComponent
-                        regionType={zLevel1}
-                        region={province}
-                        key={province.id}
-                      />
-                    );
+                  {
+                    regionData1.results.features.map((province) => {
+                        return (
+                          <OptComponent
+                            regionType={zLevel1}
+                            region={province}
+                            key={province.id}
+                          />
+                        );
+                      }
+                    )
                   }
-                )
-              }
-            </select>
+                </select>
+            : <div
+                className={styles.SelectedRegionSlug}
+                onClick={() => { this.setState({ mustSelectRegion: true }) }}>
+                {this.state.regionName}
+              </div>
+           }
           </div>
 
           <div className={`${styles.KeyValuePair}`}>

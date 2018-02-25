@@ -104,8 +104,6 @@ class MonthVis extends Component {
     });
     const currentYear = props.months[0].getFullYear();
 
-    console.log("currentYear (local):", currentYear);
-
     if (props.months && props.selectedRegionId) {
       this.setState({ isFetching: true });
       fetchMonthDataForRegion(props.selectedRegionId, props.months)
@@ -115,17 +113,14 @@ class MonthVis extends Component {
           // YearN; e.g. 2018 (used "literally" to draw single line in chart)
           const responseYearN = filter(response, { year: currentYear });
           const dataYearN = this.getTotalRicePerMonthActual(responseYearN);
-          console.log("[dbg] dataYearN....:", dataYearN);
 
           // YearN_1; e.g 2017 (used "literally" to draw single line in chart)
           const responseYearN_1 = filter(response, { year: currentYear - 1});
           const dataYearN_1 = this.getTotalRicePerMonthActual(responseYearN_1);
-          console.log("[dbg] dataYearN_1..:", dataYearN_1);
 
           // YearN_2; e.g. 2016 (used only to calc. historical average)
           const responseYearN_2 = filter(response, { year: currentYear - 2});
           const dataYearN_2 = this.getTotalRicePerMonthActual(responseYearN_2);
-          console.log("[dbg] dataYearN_2..:", dataYearN_2);
 
           const currentMonthIdx = (new Date()).getMonth();
           const dataThreeYearAvg = [];
@@ -155,8 +150,6 @@ class MonthVis extends Component {
 
             threeYearAvg.push(monthValueAvg);
           }
-
-          console.log("[dbg] Finished building list 'threeYearAvg':", threeYearAvg);
 
           this.setState({
             isFetching: false,

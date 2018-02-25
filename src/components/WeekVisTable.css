@@ -22,7 +22,7 @@
 }
 
 .VerticalColumn {
-  height: 80px;
+  height: 100px;
   border: 1px solid white;
 }
 
@@ -34,4 +34,21 @@
 
 .TableRow {
   height: 26px;
+}
+
+.CornerLabel {
+  max-width: 40px;
+  text-align: center;
+  font-weight: normal;
+
+  /*background-color: #aaf;*/
+}
+
+.CornerLabel > div {
+  position: relative;
+  transform: rotate(-90deg);
+  width: 90px;
+  margin-left: -25px;
+
+  /*background-color: #faa;*/
 }

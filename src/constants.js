@@ -14,7 +14,7 @@ export const countryConfig = {
     pixelSize: 0.002,
     uri: "/api/v3/raster-aggregates/?agg=counts&rasters=62bb4a8&srs=EPSG:4326&styles=GrowthStage_Rice_D",
     regionTypes: ['MUNICIPALITY', 'DISTRICT'],
-    regionZoomLevels: { DISTRICT: 8 },
+    regionZoomLevels: { MUNICIPALITY: 10, DISTRICT: 8 },
     centroid : {
       lon: 90.5,
       lat: 23.5,

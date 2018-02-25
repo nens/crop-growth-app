@@ -144,7 +144,7 @@ class WeekVisPieChart extends Component {
           width={430}
           height={300}
           className={styles.ThePieChart}>
-          <text x={0} y={15} fill="#666" fontSize={11}>
+          <text x={6} y={15} fill="#666" fontSize={11}>
             {latestWeekSlug + ' growth stages'}
           </text>
           <Pie

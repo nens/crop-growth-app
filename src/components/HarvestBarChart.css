@@ -2,13 +2,13 @@
   clear: both;
   position: relative;
   /*width: 280px;*/
-  height: 440px;
+  /*height: 460px;*/
 
   padding-top: 20px;
   padding-left: 10px;
 
-  margin-top: 12px;
-  margin-left: -10px;
+  /*margin-top: 0px;*/
+  margin-left: -20px;
 
   /*background-color: #E6E6E6;*/
 }
