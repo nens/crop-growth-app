@@ -118,6 +118,17 @@ class HarvestBarChart extends Component {
 
     return (
       <div className={styles.TheBarChartContainer}>
+        <div className={styles.BarChartLegend}>
+          <div className={styles.BarChartLegendLeftPart}>
+            <div className={styles.BarChartLegendColor} />
+            <div className={styles.BarChartLegendText}>{legendLabels[0]}</div>
+          </div>
+
+          <div className={styles.BarChartLegendRightPart}>
+            <div className={styles.BarChartLegendColorOld} />
+            <div className={styles.BarChartLegendTextOld}>{legendLabels[1]}</div>
+          </div>
+        </div>
         <BarChart
           width={320}
           height={410}
@@ -153,18 +164,6 @@ class HarvestBarChart extends Component {
             barSize={42}
           />
         </BarChart>
-
-        <div className={styles.BarChartLegend}>
-          <div className={styles.BarChartLegendLeftPart}>
-            <div className={styles.BarChartLegendColor} />
-            <div className={styles.BarChartLegendText}>{legendLabels[0]}</div>
-          </div>
-
-          <div className={styles.BarChartLegendRightPart}>
-            <div className={styles.BarChartLegendColorOld} />
-            <div className={styles.BarChartLegendTextOld}>{legendLabels[1]}</div>
-          </div>
-        </div>
       </div>
     );
   }
