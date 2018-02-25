@@ -81,15 +81,9 @@ class MonthVisLineChart extends Component {
         !(this.props.dataCurrentYear &&
           this.props.dataPreviousYear &&
           this.props.dataThreeYearAvg)) {
-      console.log("..but there's no *new* data to render!");
 
       if (!this.state.formattedData) {
-        console.log("..and no *old* data, too! Early return");
         return null;
-      } else {
-        console.log(
-          "..but we do still have the *old* data, let's " +
-          "render that instead!!1!");
       }
     }
 

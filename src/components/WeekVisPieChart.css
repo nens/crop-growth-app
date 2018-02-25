@@ -1,11 +1,11 @@
 .PieChartContainer {
   height: 150px;
-  margin-bottom: 30px
+  margin-bottom: 20px;
 }
 
 .ThePieChart {
   float: right;
-  background-color: #E6E6E6;
+  /*background-color: #E6E6E6;*/
   max-height: 150px;
 }
 

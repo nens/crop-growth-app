@@ -141,17 +141,17 @@ class WeekVisPieChart extends Component {
     return (
       <div className={styles.PieChartContainer}>
         <PieChart
-          width={390}
+          width={430}
           height={300}
           className={styles.ThePieChart}>
-          <text x={8} y={15} fill="#666" fontSize={11}>
-            {latestWeekSlug}
+          <text x={0} y={15} fill="#666" fontSize={11}>
+            {latestWeekSlug + ' growth stages'}
           </text>
           <Pie
             startAngle={180}
             endAngle={0}
             data={formattedData}
-            cx={195}
+            cx={240}
             cy={150}
             outerRadius={91}
             label={renderCustomizedLabel}

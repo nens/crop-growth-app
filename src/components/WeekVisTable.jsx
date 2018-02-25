@@ -121,7 +121,7 @@ class WeekTableHeader extends Component {
     return (
       <thead>
         <tr>
-          <th key={0} style={{'width': '100px', 'textAlign': 'center' }}>
+          <th key={0} style={{width: '100px', textAlign: 'center', fontWeight: 'normal'}}>
             6-days (ha.)
           </th>
           {

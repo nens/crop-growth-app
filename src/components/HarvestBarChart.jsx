@@ -64,7 +64,6 @@ class HarvestBarChart extends Component {
 
         let harvestArea;
 
-        // TODO: use other way of calculating this (ie. check lzd-client)
         try {
           harvestArea = find(rd.weekData.data, { 'label' : 'Harvest' }).data;
           harvestArea = Math.round(100 * PIXEL_SIZE * harvestArea) / 100;
@@ -122,7 +121,7 @@ class HarvestBarChart extends Component {
     return (
       <div className={styles.TheBarChartContainer}>
         <BarChart
-          width={240}
+          width={320}
           height={390}
           data={formattedData}
           className={styles.TheBarChart}>
@@ -146,7 +145,6 @@ class HarvestBarChart extends Component {
             dataKey="dataActual"
             fill={isFetching ?  "#666666" : GROWTH_STAGE_COLORS.Harvest }
             stroke="#666"
-            barSize={42}
           />
 
           <Bar
