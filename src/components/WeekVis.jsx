@@ -24,13 +24,11 @@ class WeekVis extends Component {
   constructor () {
     super();
 
-    const DEV_MODE = true;
-
     ///////////////////////////////////////////////////////////////////////////
     // Three types of timestamps:
 
     // 1) ms since 01-01-1970
-    const unixTimestamps = getWeekVisUnixTimestamps(DEV_MODE).reverse();
+    const unixTimestamps = getWeekVisUnixTimestamps().reverse();
 
     // 2) UTC, used for API calls to raster-aggregates
     const utcTimestamps = unixTimestamps.map(convertTimestampToUTC);
@@ -124,6 +122,14 @@ class WeekVis extends Component {
         return (
           <div className={styles.WeekVisContent}>
             <div className={styles.WeekVisContentLeftSide}>
+              <HarvestBarChart
+                utcTimestampSlugs={this.state.utcTimestampSlugs}
+                data={null}
+                isFetching={true}
+                weeks={this.state.weeks}
+              />
+            </div>
+            <div className={styles.WeekVisContentRightSide}>
               <WeekVisPieChart
                 data={null}
                 isFetching={true}
@@ -137,27 +143,13 @@ class WeekVis extends Component {
                 weeks={this.state.weeks}
               />
             </div>
-           <div className={styles.WeekVisContentRightSide}>
-             <HarvestBarChart
-                utcTimestampSlugs={this.state.utcTimestampSlugs}
-                data={null}
-                isFetching={true}
-                weeks={this.state.weeks}
-              />
-            </div>
           </div>
         );
       } else {
         return (
           <div className={styles.WeekVisContent}>
             <div className={styles.WeekVisContentLeftSide}>
-              <WeekVisPieChart
-                rawData={cloneDeep(this.state.data)}
-                isFetching={false}
-                selectedRegionSlug={this.state.selectedRegionSlug}
-                latestWeek={this.state.weeks[0]}
-              />
-              <WeekVisTable
+              <HarvestBarChart
                 utcTimestampSlugs={this.state.utcTimestampSlugs}
                 data={this.state.data}
                 isFetching={false}
@@ -165,7 +157,13 @@ class WeekVis extends Component {
               />
             </div>
             <div className={styles.WeekVisContentRightSide}>
-              <HarvestBarChart
+              <WeekVisPieChart
+                rawData={cloneDeep(this.state.data)}
+                isFetching={false}
+                selectedRegionSlug={this.state.selectedRegionSlug}
+                latestWeek={this.state.weeks[0]}
+              />
+              <WeekVisTable
                 utcTimestampSlugs={this.state.utcTimestampSlugs}
                 data={this.state.data}
                 isFetching={false}
@@ -210,7 +208,7 @@ class WelcomeMessage extends Component {
         fontSize: "12px",
         color: "#666"
       }}>
-        Please select an area
+        Please select a region
       </div>
     );
   }
@@ -225,7 +223,7 @@ class Spinner extends Component {
           style={{
             position: "relative",
             top: "-23px",
-            left: "145px"
+            left: "135px"
           }}
         />
       </div>

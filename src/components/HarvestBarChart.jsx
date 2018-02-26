@@ -101,9 +101,9 @@ class HarvestBarChart extends Component {
   }
   getLegendLabels () {
     // We'll visualize the year in the legend e.g. not as 2018, but as '18:
-    const currentYear = getCurrentYear() % 2000;
+    const currentYear = getCurrentYear();
     const prevYear = currentYear - 1;
-    return ["harvest '" + currentYear, "harvest '" + prevYear];
+    return [currentYear, prevYear];
   }
 
   render () {
@@ -111,8 +111,8 @@ class HarvestBarChart extends Component {
     const { formattedData, isFetching } = this.state;
 
     const yAxisFormatter = isFetching
-      ? (_) => '... ha.'
-      : (x) => x + " ha."
+      ? (_) => '...'
+      : (x) => x
 
     const legendLabels = this.getLegendLabels();
 
@@ -129,9 +129,10 @@ class HarvestBarChart extends Component {
             <div className={styles.BarChartLegendTextOld}>{legendLabels[1]}</div>
           </div>
         </div>
+        <div className={styles.YAxisLabel}>harvest area (ha.)</div>
         <BarChart
           width={320}
-          height={410}
+          height={420}
           data={formattedData}
           className={styles.TheBarChart}>
           <XAxis
@@ -139,11 +140,11 @@ class HarvestBarChart extends Component {
             tickCount={6}
             dataKey="timestamp"
             tick={{ fontSize: "11px" }}
-            tickFormatter={isFetching ? () => '.........' : this.getFormattedTimestamp}
+            tickFormatter={this.getFormattedTimestamp}
           />
           <YAxis
             width={80}
-            tickCount={5}
+            tickCount={8}
             tick={{ fontSize: "11px" }}
             tickFormatter={yAxisFormatter}
           />

@@ -4,11 +4,11 @@
   /*width: 280px;*/
   /*height: 460px;*/
 
-  padding-top: 20px;
-  padding-left: 10px;
+/*  padding-top: 20px;
+  padding-left: 10px;*/
 
-  /*margin-top: 0px;*/
-  margin-left: -20px;
+  margin-top: -20px;
+  margin-left: 4px;
 
   /*background-color: #E6E6E6;*/
 }
@@ -16,18 +16,23 @@
 
 
 .TheBarChart {
-  margin-left: -20px;
+  position: relative;
+  top: 0px;
+  margin-left: -10px;
+  margin-top:  20px;
 }
 
 
 .BarChartLegend {
   position: relative;
+  top: 35px;
 
   width: 240px;
   height: 20px;
   margin-bottom: 16px;
-  margin-left: 70px;
-  margin-top: -10px;
+  margin-left: 74px;
+
+  /*background-color: #aaf;*/
 }
 
 .BarChartLegendLeftPart {
@@ -36,7 +41,7 @@
 
 .BarChartLegendRightPart {
   float: right;
-  width: 50%;
+  width: 60%;
   margin-top: -16px;
 }
 
@@ -83,4 +88,18 @@
 
 .BarOpacityDefault.BarOpacityInactive {
   opacity: 0;
+}
+
+.YAxisLabel {
+  transform: rotate(-90deg);
+  position: relative;
+
+  left: -36px;
+  top: 200px;
+
+  font-size: 11px;
+  color: #666;
+  width: 90px;
+
+  /*background-color: #aaf;*/
 }

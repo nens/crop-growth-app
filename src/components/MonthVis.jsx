@@ -306,7 +306,7 @@ class WelcomeMessage extends Component {
         fontSize: "12px",
         color: "#666"
       }}>
-        Please select an area
+        Please select a region
       </div>
     );
   }
