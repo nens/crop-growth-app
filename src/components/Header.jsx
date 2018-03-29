@@ -171,6 +171,7 @@ class Header extends Component {
             width={IMG_WIDTH}
             height={IMG_HEIGHT}
             className={styles.SmallMap}
+            onClick={window.print}
           />
         </div>
         <div className={`${styles.ContentWrapper}`}>

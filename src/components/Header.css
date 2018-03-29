@@ -12,12 +12,12 @@
 */
 
 .Header {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .GroeneBalkLinks {
   height: 100px;
-  width: 630px;
+  width: 800px;
   /*
   ACI-GREEN (fugly):
     background-color: #00A55D;
@@ -40,7 +40,7 @@
   position: relative;
   top: 30px;
   left: 20px;
-  width: 75%%;
+  width: 75%;
 
   color: white;
   font-size: 34px;
@@ -50,7 +50,8 @@
 .LogoAci,
 .LogoAciHidden {
   position: relative;
-  top: -30px;
+  left: -170px;
+  top: -28px;
   float: right;
 }
 
@@ -92,9 +93,11 @@
   position: absolute;
   right: 0;
   border: 9px solid rgb(166, 166, 166);
+  cursor: pointer;
 }
 
 .SelectedRegionSlug {
   font-weight: bold;
   cursor: pointer;
+  max-width: 200px;
 }
