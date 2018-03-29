@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 
 import find from 'lodash/find';
 import map from 'lodash/map';
+import reject from 'lodash/reject';
 import forEach from 'lodash/forEach';
 
 import {
@@ -36,13 +37,10 @@ class WeekVisTable extends Component {
     }
   }
   formatData (_allWeekData) {
+    const _allWeekDataActual = reject(_allWeekData, { isHistorical: true });
 
-    console.log('_allWeekData:', _allWeekData);
-    const allTimestamps = map(_allWeekData, 'weekTimestamp');
-    const allWeekData = map(_allWeekData, 'weekData');
-
-    console.log("allWeekData:", allWeekData);
-    console.log("allTimestamps:", allTimestamps);
+    const allTimestamps = map(_allWeekDataActual, 'weekTimestamp');
+    const allWeekData = map(_allWeekDataActual, 'weekData');
 
     let dataForSingleWeek,
         dataForGrowthStage,
@@ -56,12 +54,11 @@ class WeekVisTable extends Component {
 
       GROWTH_STAGES.forEach((growthStage) => {
         dataForGrowthStage = find(
-          dataForSingleWeek, { 'label': growthStage }
+          dataForSingleWeek, { label: growthStage }
         );
         dictForSingleWeek.data[growthStage] =
           dataForGrowthStage ? PIXEL_SIZE * dataForGrowthStage.data : 0;
       });
-      console.log("dataForSingleWeek:", dataForSingleWeek)
       dictPerWeekCollection.push(dictForSingleWeek);
     });
 
@@ -124,8 +121,8 @@ class WeekTableHeader extends Component {
     return (
       <thead>
         <tr>
-          <th key={0} style={{'width': '100px', 'textAlign': 'center' }}>
-            week (ha.)
+          <th key={0} className={styles.CornerLabel}>
+            <div>6-days (ha.)</div>
           </th>
           {
             NON_BARREN_GROWTH_STAGES.map(function (gs, i) {
@@ -156,7 +153,7 @@ class WeekTableRow extends Component {
     const { timestamp, weekData, rowIsEmpty, isFirstRow } = this.props;
 
     const parts = timestamp.split('-');
-    const tsEuro = parts[2] + '-' + parts[1] + '-' + parts[0];
+    const tsEuro = parts[1] + '-' + parts[0];
 
     return (
       <tr className={styles.TableRow}>

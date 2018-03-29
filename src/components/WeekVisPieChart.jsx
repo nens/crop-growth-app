@@ -13,6 +13,8 @@ import {
   NON_BARREN_GROWTH_STAGES
 } from "../constants.js";
 
+import { dateToSlug } from "../tools/utils-time.js";
+
 import styles from './WeekVisPieChart.css';
 
 class WeekVisPieChart extends Component {
@@ -33,24 +35,27 @@ class WeekVisPieChart extends Component {
     this.updateData(props);
   }
   updateData (props) {
-    const { isFetching, rawData } = props;
+    const { isFetching, rawData, selectedRegionSlug, latestWeek } = props;
     if (isFetching) {
       this.setState({
-        isFetching: true
+        isFetching: true,
+        selectedRegionSlug: selectedRegionSlug,
+        latestWeekSlug: latestWeek ? dateToSlug(latestWeek) : '...'
       });
     } else {
       this.setState({
         isFetching: false,
-        formattedData: this.getFormattedData(rawData)
+        formattedData: this.getFormattedData(rawData),
+        selectedRegionSlug: selectedRegionSlug,
+        latestWeekSlug: dateToSlug(latestWeek)
       });
     }
   }
-
   preprocessWeekData (weekData) {
     // We sort the week data by growthstage, filtering out barren growth-stages;
     // however, we'll add the amount of measured pixels for those two barren
     // stages to the "other" category.
-    const weekDataSorted = [];
+    let weekDataSorted = [];
 
     [...NON_BARREN_GROWTH_STAGES, -1].forEach((gs) => {
       const weekDataForGS = find(weekData, { label: gs });
@@ -69,6 +74,14 @@ class WeekVisPieChart extends Component {
       });
     }
 
+    if (weekDataSorted.length === 0) {
+      weekDataSorted.push({
+        class: -1,
+        color: '#ffffff',
+        data: 1,
+        label: "other"
+      })
+    }
     return weekDataSorted;
   }
 
@@ -101,7 +114,8 @@ class WeekVisPieChart extends Component {
   }
   render () {
 
-    let { formattedData, isFetching } = this.state;
+    let { formattedData, isFetching, selectedRegionSlug, latestWeekSlug }
+      = this.state;
 
     const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
       const MULTIPLIER = Math.PI / 180;
@@ -127,17 +141,17 @@ class WeekVisPieChart extends Component {
     return (
       <div className={styles.PieChartContainer}>
         <PieChart
-          width={364}
+          width={430}
           height={300}
           className={styles.ThePieChart}>
-          <text x={5} y={15} fill="#666" fontSize={11}>
-            OLA KANKGEROE
+          <text x={10} y={15} fill="#666" fontSize={11}>
+            {latestWeekSlug + ' growth stages'}
           </text>
           <Pie
             startAngle={180}
             endAngle={0}
             data={formattedData}
-            cx={182}
+            cx={230}
             cy={150}
             outerRadius={91}
             label={renderCustomizedLabel}

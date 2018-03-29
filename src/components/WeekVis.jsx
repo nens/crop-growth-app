@@ -4,13 +4,14 @@ import ReactDOM from "react-dom";
 import MDSpinner from "react-md-spinner";
 
 import cloneDeep from "lodash/cloneDeep";
+import forEach from 'lodash/forEach';
 
 import { fetchWeekDataForRegion } from "../tools/fetch-data-for-region.js";
 import { WeekVisTable } from "./WeekVisTable.jsx";
 import { HarvestBarChart } from "./HarvestBarChart.jsx";
 import { WeekVisPieChart } from "./WeekVisPieChart.jsx";
 
-import { growthStageIsAllowed } from "../tools/utils.js";
+import { growthStageIsAllowed, pixels2hectares } from "../tools/utils.js";
 
 import styles from './WeekVis.css';
 
@@ -23,13 +24,11 @@ class WeekVis extends Component {
   constructor () {
     super();
 
-    const DEV_MODE = true;
-
     ///////////////////////////////////////////////////////////////////////////
     // Three types of timestamps:
 
     // 1) ms since 01-01-1970
-    const unixTimestamps = getWeekVisUnixTimestamps(DEV_MODE).reverse();
+    const unixTimestamps = getWeekVisUnixTimestamps().reverse();
 
     // 2) UTC, used for API calls to raster-aggregates
     const utcTimestamps = unixTimestamps.map(convertTimestampToUTC);
@@ -43,22 +42,49 @@ class WeekVis extends Component {
       selectedRegionId: null,
       isFetching: false,
       data: "",
-      weeks: null
+      weeks: null,
+      totalArea: null
     };
+
+    this.convertWeekDataToHectares = this.convertWeekDataToHectares.bind(this);
+  }
+  convertWeekDataToHectares (response) {
+    const totalArea = this.state.totalArea;
+
+    forEach(response, (weekResponse) => {
+      forEach(weekResponse.weekData.data, (d) => {
+        const dataInHectares = pixels2hectares(
+          d.data,
+          d.total,
+          totalArea
+        );
+        d.data = dataInHectares;
+      })
+    });
+
+
+    return response;
   }
   componentWillReceiveProps (props) {
     this.setState({
       selectedRegionId: props.selectedRegionId,
+      selectedRegionSlug: props.selectedRegionSlug,
       isFetching: props.isFetching,
-      weeks: props.weeks
+      weeks: props.weeks,
+      totalArea: props.totalArea
     });
+
+    const convert = this.convertWeekDataToHectares;
 
     if (props.selectedRegionId) {
       this.setState({ isFetching: true });
       fetchWeekDataForRegion(props.selectedRegionId, props.weeks)
       .then(
         (response) => {
-          this.setState({ isFetching: false, data: this.preprocessWeekData(response) });
+          this.setState({
+            isFetching: false,
+            data: convert(response)
+          });
         },
         (error) => {
           this.setState({ isFetching: false, data: "" });
@@ -66,11 +92,6 @@ class WeekVis extends Component {
         }
       );
     }
-  }
-  preprocessWeekData (response) {
-    console.log("[F] preprocessWeekData; response =", response);
-
-    return response;
   }
   getInnerComponent () {
 
@@ -101,19 +122,21 @@ class WeekVis extends Component {
         return (
           <div className={styles.WeekVisContent}>
             <div className={styles.WeekVisContentLeftSide}>
-              <WeekVisPieChart
-                data={null}
-                isFetching={true}
-              />
-              <WeekVisTable
+              <HarvestBarChart
                 utcTimestampSlugs={this.state.utcTimestampSlugs}
                 data={null}
                 isFetching={true}
                 weeks={this.state.weeks}
               />
             </div>
-           <div className={styles.WeekVisContentRightSide}>
-             <HarvestBarChart
+            <div className={styles.WeekVisContentRightSide}>
+              <WeekVisPieChart
+                data={null}
+                isFetching={true}
+                selectedRegionSlug={'...'}
+                latestWeek={this.state.weeks[0]}
+              />
+              <WeekVisTable
                 utcTimestampSlugs={this.state.utcTimestampSlugs}
                 data={null}
                 isFetching={true}
@@ -126,20 +149,21 @@ class WeekVis extends Component {
         return (
           <div className={styles.WeekVisContent}>
             <div className={styles.WeekVisContentLeftSide}>
-              <WeekVisPieChart
-                rawData={cloneDeep(this.state.data)}
-                isFetching={false}
-              />
-              <WeekVisTable
+              <HarvestBarChart
                 utcTimestampSlugs={this.state.utcTimestampSlugs}
                 data={this.state.data}
                 isFetching={false}
                 weeks={this.state.weeks}
               />
             </div>
-
             <div className={styles.WeekVisContentRightSide}>
-              <HarvestBarChart
+              <WeekVisPieChart
+                rawData={cloneDeep(this.state.data)}
+                isFetching={false}
+                selectedRegionSlug={this.state.selectedRegionSlug}
+                latestWeek={this.state.weeks[0]}
+              />
+              <WeekVisTable
                 utcTimestampSlugs={this.state.utcTimestampSlugs}
                 data={this.state.data}
                 isFetching={false}
@@ -157,7 +181,7 @@ class WeekVis extends Component {
       <div>
         <div className={styles.GroeneBalk}>
           <div className={styles.GroeneBalkText}>
-            weekly
+            6-daily
           </div>
           {
             this.state.isFetching
@@ -176,10 +200,15 @@ class WelcomeMessage extends Component {
     return (
       <div style={{
         position: "relative",
-        top: "220px",
-        left: "330px"
+        top: "140px",
+        width: "160px",
+        textAlign: "center",
+        margin: "auto 50%",
+        left: "-80px",
+        fontSize: "12px",
+        color: "#666"
       }}>
-        Please select an area
+        Please select a region
       </div>
     );
   }
@@ -194,7 +223,7 @@ class Spinner extends Component {
           style={{
             position: "relative",
             top: "-23px",
-            left: "145px"
+            left: "135px"
           }}
         />
       </div>

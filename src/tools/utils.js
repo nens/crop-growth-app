@@ -1,7 +1,16 @@
 import reduce from "lodash/reduce";
 import forEach from 'lodash/forEach';
+import find from 'lodash/find';
 
-import { AMOUNT_OF_WEEKS } from '../constants.js';
+
+import {
+  AMOUNT_OF_WEEKS,
+  COUNTRY,
+  REGION_TYPE_1,
+  REGION_TYPE_2,
+  REGION_DATA_1,
+  REGION_DATA_2
+} from '../constants.js';
 
 export function getCurrentDate () {
   const d = new Date();
@@ -75,4 +84,32 @@ export function convertTimestampToUTC (msTimestamp) {
 // We do NOT use category -1 "other";
 export function growthStageIsAllowed (gsClass) {
   return gsClass >= 2 && gsClass <= 9;
+}
+
+export function getFeatureById (regionId) {
+
+  let feature;
+
+  // First, check whether the regionId if for a province (which are only present
+  // for Vietnam, not Bangladesh):
+  feature = find(REGION_DATA_1.results.features, { id: regionId });
+  if (!feature) {
+    // If not, we know it has to be a district:
+    feature = find(REGION_DATA_2.results.features, { id: regionId });
+  }
+
+  if (!feature) {
+    console.error('Feature not found');
+  } else {
+    return feature;
+  }
+}
+
+
+export function pixels2hectares (pixels, totalPixels, totalArea) {
+  if (!pixels || !totalPixels) {
+    return 0;
+  } else {
+    return Math.round((pixels / totalPixels) * totalArea);
+  }
 }

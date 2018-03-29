@@ -20,19 +20,20 @@
 }
 
 .MonthVisContent {
-  height: 370px;
-  min-height: 370px;
-  max-height: 370px;
-
+  height: 380px;
   width: 800px;
 }
 
 .LineChartContainer {
   display: inline-block;
   position: relative;
-  top: 16px;
-  left: -10px;
-  width: 600px;
+  width: 550px;
+
+  margin-left: 35px;
+}
+
+.LineChartContainer svg {
+  margin-top: -10px;
 }
 
 .LineOpacityDefault {
@@ -47,7 +48,8 @@
 .AreaTable {
   position: relative;
   display: inline-block;
-  margin-left: 35px;
+  top: -20px;
+  left: 50px;
   font-size: 11px;
   color: #666;
 }
@@ -56,6 +58,7 @@
   text-align: center;
   width: 60px;
   height: 20px;
+  font-weight: normal;
 }
 
 .AreaTable > thead > tr > th:first-child {
@@ -64,8 +67,9 @@
 
 .AreaTable > tbody > tr > td {
   text-align: center;
-  height: 16px;
+  height: 14px;
   background-color: #E6E6E6;
+  border: 1px solid white;
 }
 
 .AreaTable > tbody > tr > td:first-child {
@@ -76,28 +80,32 @@
   position: relative;
   display: inline-block;
 
-  margin-left: 55px;
+  margin-left: 100px;
   margin-top: 10px;
-  max-width: 500px;
-  min-width: 500px;
-  height: 20px;
-  min-height: 20px;
+  max-width: 480px;
+  min-width: 480px;
+  height: 30px;
 }
 
-.LegendLeftHalf {
+.LegendLeftPart {
   display: inline-block;
   float: left;
-
-  width: 15%;
-  height: 40px;
+  width: 20%;
+  height: 30px;
 }
 
-.LegendRightHalf {
+.LegendCenterPart {
   display: inline-block;
   float: left;
+  width: 20%;
+  height: 30px;
+}
 
-  width: 35%;
-  height: 40px;
+.LegendRightPart {
+  display: inline-block;
+  float: left;
+  width: 20%;
+  height: 30px;
 }
 
 .LegendColorIndicator {
@@ -107,10 +115,10 @@
   width: 40px;
   height: 3px;
 
-  margin-top: 18px;
-  margin-bottom: 18px;
+  margin-top: 14px;
+  margin-bottom: 12px;
 
-  background-color: #123456;
+  background-color: #123456; /* gets filled in dynamically by JS.. */
 }
 
 .LegendText {
@@ -121,5 +129,18 @@
   color: #666;
 
   margin-left: 5px;
-  line-height: 40px;
+  line-height: 30px;
+}
+
+.YAxisLabel {
+  position: relative;
+  left: -46px;
+  top: 100px;
+
+  font-size: 11px;
+  /*font-weight: bold;*/
+  color: #666;
+  width: 90px;
+
+  transform: rotate(-90deg);
 }

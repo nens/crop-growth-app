@@ -5,17 +5,28 @@ import MDSpinner from "react-md-spinner";
 
 import filter from "lodash/filter";
 import reject from "lodash/reject";
+import map from "lodash/map";
 
 import { MonthVisLineChart } from "./MonthVisLineChart";
 import { MonthVisTable} from "./MonthVisTable";
 import { fetchMonthDataForRegion } from "../tools/fetch-data-for-region.js";
-import { calculateAverage, growthStageIsAllowed } from "../tools/utils.js";
-import { PIXEL_SIZE, FIRST_YEAR, THE_YEAR, MONTH_NAMES } from "../constants.js";
+import { calculateAverage, growthStageIsAllowed, pixels2hectares }
+  from "../tools/utils.js";
+import { getCurrentYear } from "../tools/utils-time.js"
+
+import {
+  PIXEL_SIZE,
+  FIRST_YEAR,
+  THE_YEAR,
+  MONTH_NAMES,
+  LINE_COLOR_THIS_YEAR,
+  LINE_COLOR_PREV_YEAR,
+  LINE_COLOR_AVG
+} from "../constants.js";
+
+
 import styles from './MonthVis.css';
 
-const COLOR_DATA_ACTUAL     = "#E08724"; // "ACI green"
-const COLOR_DATA_HISTORICAL = "#666666";
-const COLOR_DATA_FETCHING   = "#CCCCCC";
 
 class MonthVis extends Component {
   constructor () {
@@ -28,11 +39,11 @@ class MonthVis extends Component {
     };
   }
   getTotalRicePerMonthActual (responseActualYear) {
-    console.log("[F] getTotalRicePerMonthActual");
     const result = [];
+    // const currentMonthIdx = (new Date()).getMonth();
     let totalRiceSingleMonth, monthData;
 
-    responseActualYear.forEach((monthDataObj) => {
+    responseActualYear.forEach((monthDataObj, idx) => {
       monthData = monthDataObj.monthData;
       totalRiceSingleMonth = 0;
       monthData.data.forEach((regionData) => {
@@ -40,9 +51,14 @@ class MonthVis extends Component {
           totalRiceSingleMonth += regionData.data;
         }
       });
+
       result.push(Math.round(totalRiceSingleMonth * PIXEL_SIZE));
     });
-    return result;
+
+    const totalArea = this.state.totalArea;
+    const totalPixels = responseActualYear[0].monthData.data[0].total;
+    const resultHa = map(result, (pxCount) => pixels2hectares(pxCount, totalPixels, totalArea));
+    return resultHa;
   }
   getTotalRicePerMonthHistorical (responsePreviousYears) {
     const result = [];
@@ -54,6 +70,10 @@ class MonthVis extends Component {
       result[j] = result[j] || [];
       totalRiceSingleMonth = 0;
       monthData.data.forEach((regionData) => {
+        if (regionData === null) {
+          console.error("[E] Oops! region data => NULL... average just became less reliable (time=" + monthDataObj.month + ")");
+          return;
+        }
         if (growthStageIsAllowed(regionData.class)) {
           totalRiceSingleMonth += regionData.data;
         }
@@ -66,36 +86,80 @@ class MonthVis extends Component {
       finalResult.push(PIXEL_SIZE * calculateAverage(monthValues, true));
     });
 
-    return finalResult;
+    const totalArea = this.state.totalArea;
+    const totalPixels = responsePreviousYears[0].monthData.data[0].total;
+
+    const finalResultHa =  map(finalResult,
+      (pxCount) => pixels2hectares(pxCount, totalPixels, totalArea));
+
+    return finalResultHa;
   }
   componentWillReceiveProps (props) {
     this.setState({
       selectedRegionId: props.selectedRegionId,
       isFetching: props.isFetching,
       months: props.months,
-      currentYear: props.currentYear
+      currentYear: props.currentYear,
+      totalArea: props.totalArea
     });
     const currentYear = props.months[0].getFullYear();
+
     if (props.months && props.selectedRegionId) {
       this.setState({ isFetching: true });
       fetchMonthDataForRegion(props.selectedRegionId, props.months)
       .then(
         (response) => {
-          // console.log("total responses:", response);
-          const responseActualYear = filter(response, { year: currentYear });
-          // console.log("responseActualYear:", responseActualYear);
-          const responsePreviousYears = reject(response, { year: currentYear });
-          // console.log("responsePreviousYears:", responsePreviousYears);
+
+          // YearN; e.g. 2018 (used "literally" to draw single line in chart)
+          const responseYearN = filter(response, { year: currentYear });
+          const dataYearN = this.getTotalRicePerMonthActual(responseYearN);
+
+          // YearN_1; e.g 2017 (used "literally" to draw single line in chart)
+          const responseYearN_1 = filter(response, { year: currentYear - 1});
+          const dataYearN_1 = this.getTotalRicePerMonthActual(responseYearN_1);
+
+          // YearN_2; e.g. 2016 (used only to calc. historical average)
+          const responseYearN_2 = filter(response, { year: currentYear - 2});
+          const dataYearN_2 = this.getTotalRicePerMonthActual(responseYearN_2);
+
+          const currentMonthIdx = (new Date()).getMonth();
+          const dataThreeYearAvg = [];
+
+          let monthValueN,
+              monthValueN_1,
+              monthValueN_2,
+              monthValueAvg,
+              threeYearAvg = [];
+
+          for (let i = 0; i < 12; i++) {
+
+            monthValueN_2 = dataYearN_2[i];
+            monthValueN_1 = dataYearN_1[i];
+
+            if (i <= currentMonthIdx) {
+              // We also use this month value for current year (for calculating
+              // the average): the month is not in the future
+              monthValueN = dataYearN[i];
+              monthValueAvg = Math.round(
+                (monthValueN + monthValueN_1 + monthValueN_2) / 3);
+            } else {
+              // We skip this month value for the current year (for calculating
+              // the average) because it is from the future:
+              monthValueAvg = Math.round((monthValueN_1 + monthValueN_2) / 2);
+            }
+
+            threeYearAvg.push(monthValueAvg);
+          }
 
           this.setState({
             isFetching: false,
             data: {
-              totalRicePerMonthActual:
-                this.getTotalRicePerMonthActual(responseActualYear),
-              totalRicePerMonthHistorical:
-                this.getTotalRicePerMonthHistorical(responsePreviousYears)
+              currentYear: dataYearN,
+              previousYear: dataYearN_1,
+              threeYearAvg: threeYearAvg
             }
           });
+
           this.render();
         },
         (error) => {
@@ -131,44 +195,35 @@ class MonthVis extends Component {
         return (
           <div className={styles.MonthVisContent}>
             <MonthVisLegend
-              actualDataColor={COLOR_DATA_ACTUAL}
-              historicalDataColor={COLOR_DATA_HISTORICAL}
               currentYear={this.state.currentYear || '...'}
             />
             <MonthVisLineChart
-              data={null}
-              actualDataColor={COLOR_DATA_ACTUAL}
-              fetchingDataColor={COLOR_DATA_FETCHING}
-              historicalDataColor={COLOR_DATA_HISTORICAL}
               isFetching={true}
+              dataCurrentYear={null}
+              dataPreviousYear={null}
+              dataThreeYearAvg={null}
             />
-            {
             <MonthVisTable
               data={null}
               isFetching={true}
               currentYear={this.state.currentYear || '...'}
             />
-            }
           </div>
         );
       } else {
         return (
           <div className={styles.MonthVisContent}>
             <MonthVisLegend
-              actualDataColor={COLOR_DATA_ACTUAL}
-              historicalDataColor={COLOR_DATA_HISTORICAL}
               currentYear={this.state.currentYear || '...'}
             />
             <MonthVisLineChart
-              actualData={this.state.data.totalRicePerMonthActual}
-              actualDataColor={COLOR_DATA_ACTUAL}
-              historicalData={this.state.data.totalRicePerMonthHistorical}
-              historicalDataColor={COLOR_DATA_HISTORICAL}
-              fetchingDataColor={COLOR_DATA_FETCHING}
               isFetching={false}
+              dataCurrentYear={this.state.data.currentYear}
+              dataPreviousYear={this.state.data.previousYear}
+              dataThreeYearAvg={this.state.data.threeYearAvg}
             />
             <MonthVisTable
-              data={this.state.data.totalRicePerMonthActual}
+              data={this.state.data.currentYear}
               isFetching={false}
               currentYear={this.state.currentYear || '...'}
             />
@@ -179,6 +234,7 @@ class MonthVis extends Component {
   }
   render () {
     const { isFetchingMonthData } = this.props;
+
     return (
       <div className={styles.MonthVisContent}>
         <div className={styles.GroeneBalk}>
@@ -203,24 +259,35 @@ class MonthVisLegend extends Component {
     return (
       <div className={styles.LegendContainer}>
 
-        <div className={styles.LegendLeftHalf}>
+        <div className={styles.LegendLeftPart}>
           <div
             className={styles.LegendColorIndicator}
-            style={{ backgroundColor: COLOR_DATA_ACTUAL }}>
+            style={{ backgroundColor: LINE_COLOR_THIS_YEAR }}>
           </div>
-          <div className={styles.LegendText}>{currentYear}</div>
+          <div className={styles.LegendText}>
+            {currentYear}
+          </div>
+        </div>
+
+        <div className={styles.LegendCenterPart}>
+          <div
+            className={styles.LegendColorIndicator}
+            style={{ backgroundColor: LINE_COLOR_PREV_YEAR }}>
+          </div>
+          <div className={styles.LegendText}>
+            {currentYear - 1}
+          </div>
         </div>
 
         <div className={styles.LegendRightHalf}>
           <div
             className={styles.LegendColorIndicator}
-            style={{ backgroundColor: COLOR_DATA_HISTORICAL }}>
+            style={{ backgroundColor: LINE_COLOR_AVG }}>
           </div>
           <div className={styles.LegendText}>
-            {(currentYear - 2) + "-" + (currentYear - 1) + " (average)"}
+            average
           </div>
         </div>
-
       </div>
     );
   }
@@ -231,10 +298,15 @@ class WelcomeMessage extends Component {
     return (
       <div style={{
         position: "relative",
-        top: "220px",
-        left: "330px"
+        top: "140px",
+        width: "160px",
+        textAlign: "center",
+        margin: "auto 50%",
+        left: "-80px",
+        fontSize: "12px",
+        color: "#666"
       }}>
-        Please select an area
+        Please select a region
       </div>
     );
   }

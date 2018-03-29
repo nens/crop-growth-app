@@ -26,9 +26,34 @@ export function getMonths (currentYear) {
 export function getWeeks (nowUnixTime) {
   // Return js date objects for 6 weeks; the current date, plus 5 weeks earlier.
   const WEEK_IN_MS = 604800000;
+
+  //  Update 08/02/18: we need 6 day intervals
+  const WEEK_MINUS_DAY = 604800000 - 604800000 / 7;
+
+  // console.log('week minus day:', WEEK_MINUS_DAY);
   const dateObjects = [];
   for (let i = 0; i < AMOUNT_OF_WEEKS; i++) {
-    dateObjects.push(new Date(nowUnixTime - i * WEEK_IN_MS));
+    dateObjects.push(new Date(nowUnixTime - i * WEEK_MINUS_DAY));
   }
   return dateObjects;
+}
+
+
+// This functions pads a given number with a leading zero if necessary, i.e:
+//
+// 0::int   => '00'::str
+// 10::int  => '10'::str
+//
+export function pad (num) {
+
+  const numInt = parseInt(num);
+
+  if (numInt < 10) {
+    return '0' + numInt;
+  } else if (numInt > 99) {
+    console.error("[E] tried to pad n > 99; we\'ll use n\'s string rep")
+    return '' + numInt
+  } else {
+    return '' + numInt;
+  }
 }

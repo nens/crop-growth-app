@@ -8,11 +8,14 @@ import {
   getWeeks
 } from "../tools/utils-time.js";
 
+import { getFeatureById } from "../tools/utils.js";
+
 import { Header } from "./Header.jsx";
 import { MonthVis } from "./MonthVis.jsx";
 import { WeekVis } from "./WeekVis.jsx";
 
 import styles from "./AppPrivate.css";
+
 
 class AppPrivate extends Component {
   constructor () {
@@ -23,6 +26,7 @@ class AppPrivate extends Component {
 
     this.state = {
       selectedRegionId: "",
+      selectedRegionSlug: "",
       isFetchingMonthData: false,
       isFetchingWeekData: false,
       currentYear: currentYear,
@@ -41,8 +45,16 @@ class AppPrivate extends Component {
       this.handleFetchWeekDataSuccces.bind(this);
   }
   handleRegionSelected (e) {
+    const regionId = parseInt(e.target.value);
+    const feature = getFeatureById(regionId);
+
     this.setState({
-      selectedRegionId: parseInt(e.target.value),
+      selectedRegionId: regionId,
+
+      // Can be used for *displaying* the selected region's total area; it is
+      // not used for calculations.
+      selectedRegionArea: feature.properties.area / 10000,
+      selectedRegionSlug: feature.properties.name,
       isFetchingMonthData: true,
       isFetchingWeekData: true
     });
@@ -68,12 +80,15 @@ class AppPrivate extends Component {
           isFetching={this.state.isFetchingMonthData}
           currentYear={this.state.currentYear}
           months={this.state.dates.months}
+          totalArea={this.state.selectedRegionArea}
         />
         <WeekVis
           selectedRegionId={this.state.selectedRegionId}
+          selectedRegionSlug={this.state.selectedRegionSlug}
           onFetchSuccess={this.handleFetchWeekDataSuccces}
           isFetching={this.state.isFetchingWeekData}
           weeks={this.state.dates.weeks}
+          totalArea={this.state.selectedRegionArea}
         />
       </div>
     );
