@@ -1,0 +1,14 @@
+{
+  "prompt": {
+    "src": {
+      "status": true
+    }
+  },
+  "github": {
+    "release": true,
+    "assets": "dist/crop-growth-app.zip"
+  },
+  "npm": {
+    "publish": false
+  }
+}
