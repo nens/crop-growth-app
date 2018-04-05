@@ -1,18 +1,17 @@
 {
   "name": "Crop-Growth-App",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Ola ola kinder cola",
   "private": true,
   "repository": {
     "type": "git",
-    "name": "nens/crop-growth-app",
-    "url": "https://github.com/nens/crop-growth-app"
+    "name": "TODO",
+    "url": "TODO"
   },
   "keywords": [
     "lizard",
-    "rice",
-    "crops",
-    "aggregation"
+    "api",
+    "water"
   ],
   "main": "src/index.js",
   "scripts": {
@@ -64,16 +63,6 @@
     "yargs": "",
     "release-it": "7.3.0"
   },
-  "repository": {
-    "type": "git",
-    "name": "TODO",
-    "url": "TODO"
-  },
-  "keywords": [
-    "lizard",
-    "api",
-    "water"
-  ],
   "author": "Dirk",
   "license": "GPL-3.0",
   "bugs": {
