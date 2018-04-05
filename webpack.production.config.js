@@ -1,7 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
-const OfflinePlugin = require("offline-plugin");
-const libraryName = "G4AWLizardClient";
+const libraryName = "CropGrowthApp";
 
 const definePlugin = new webpack.DefinePlugin({
   "process.env": {
@@ -58,26 +57,6 @@ const config = {
         keep_fnames: true
       },
       comments: false
-    }),
-
-    new OfflinePlugin({
-      events: true,
-      externals: [
-        "/",
-        "../leaflet/leaflet.css",
-        "../iconfont/material-icons.css",
-        "../iconfont/MaterialIcons-Regular.eot",
-        "../iconfont/MaterialIcons-Regular.ijmap",
-        "../iconfont/MaterialIcons-Regular.svg",
-        "../iconfont/MaterialIcons-Regular.ttf",
-        "../iconfont/MaterialIcons-Regular.woff",
-        "../iconfont/MaterialIcons-Regular.woff2",
-        "../iconfont/codepoints",
-        "../iconfont/material-icons.css"
-      ],
-      ServiceWorker: {
-        navigateFallbackURL: "/"
-      }
     }),
 
     new webpack.DefinePlugin({
