@@ -24,3 +24,7 @@ nano.save
 deploy/hosts
 deploy/production_hosts
 deploy/auth.json
+
+ha-conversion-check.txt
+opmerkingen-crop-growth.txt
+tm-data-checking.txt
