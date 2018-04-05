@@ -16,7 +16,7 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "build": "NODE_ENV=production webpack --config webpack.production.config.js -p && cp index.html dist/",
+    "build": "NODE_ENV=production webpack --config webpack.production.config.js -p && cp index.html build/",
     "precommit": "lint-staged",
     "release": "release-it --verbose",
     "start": "node server.js",
