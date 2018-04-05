@@ -13,7 +13,7 @@ const config = {
   entry: [__dirname + "/src/index.js"],
   devtool: false,
   output: {
-    path: __dirname + "/dist/scripts",
+    path: __dirname + "/build/",
     filename: libraryName + ".js",
     publicPath: "/scripts/",
     library: libraryName,

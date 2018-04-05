@@ -21,9 +21,10 @@ yarn-error.log*
 tmp
 nano.save
 
-deploy/hosts
-deploy/production_hosts
-deploy/auth.json
+deploy
+#deploy/hosts
+#deploy/production_hosts
+#deploy/auth.json
 
 ha-conversion-check.txt
 opmerkingen-crop-growth.txt
