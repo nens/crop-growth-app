@@ -54,14 +54,14 @@
     "postcss-loader": "",
     "prettier": "1.5.0",
     "react-hot-loader": "next",
+    "release-it": "7.3.0",
     "style-loader": "",
     "url-loader": "^0.5.8",
-    "webpack": "",
+    "webpack": "3.0.0",
     "webpack-dev-middleware": "",
     "webpack-dev-server": "",
     "webpack-hot-middleware": "",
-    "yargs": "",
-    "release-it": "7.3.0"
+    "yargs": ""
   },
   "author": "Dirk",
   "license": "GPL-3.0",
