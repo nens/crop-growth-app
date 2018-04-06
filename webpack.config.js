@@ -12,7 +12,7 @@ const config = {
   ],
   devtool: "inline-source-map",
   output: {
-    path: __dirname + "/build/",
+    path: __dirname + "/build/scripts/",
     filename: libraryName + ".js",
     publicPath: "/scripts/",
     library: libraryName,
