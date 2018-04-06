@@ -12,7 +12,7 @@ const config = {
   ],
   devtool: "inline-source-map",
   output: {
-    path: __dirname + "/dist/scripts",
+    path: __dirname + "/build/",
     filename: libraryName + ".js",
     publicPath: "/scripts/",
     library: libraryName,
@@ -51,7 +51,6 @@ const config = {
     ]
   },
   plugins: [
-
     new webpack.HotModuleReplacementPlugin(),
     // enable HMR globally
 
