@@ -2,11 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 
-import {
-  getCurrentYear,
-  getMonths,
-  getWeeks
-} from "../tools/utils-time.js";
+import { getCurrentYear, getMonths, getWeeks } from "../tools/utils-time.js";
 
 import { getFeatureById } from "../tools/utils.js";
 
@@ -16,9 +12,8 @@ import { WeekVis } from "./WeekVis.jsx";
 
 import styles from "./AppPrivate.css";
 
-
 class AppPrivate extends Component {
-  constructor () {
+  constructor() {
     super();
 
     const now = Date.now();
@@ -39,12 +34,12 @@ class AppPrivate extends Component {
       }
     };
 
-    this.handleRegionSelected =
-      this.handleRegionSelected.bind(this);
-    this.handleFetchWeekDataSuccces =
-      this.handleFetchWeekDataSuccces.bind(this);
+    this.handleRegionSelected = this.handleRegionSelected.bind(this);
+    this.handleFetchWeekDataSuccces = this.handleFetchWeekDataSuccces.bind(
+      this
+    );
   }
-  handleRegionSelected (e) {
+  handleRegionSelected(e) {
     const regionId = parseInt(e.target.value);
     const feature = getFeatureById(regionId);
 
@@ -59,13 +54,13 @@ class AppPrivate extends Component {
       isFetchingWeekData: true
     });
   }
-  handleFetchMonthDataSuccces () {
+  handleFetchMonthDataSuccces() {
     this.setState({ isFetchingMonthData: false });
   }
-  handleFetchWeekDataSuccces () {
+  handleFetchWeekDataSuccces() {
     this.setState({ isFetchingWeekData: false });
   }
-  render () {
+  render() {
     const { firstName } = this.props;
     return (
       <div className={styles.AppPrivateContainer}>
@@ -74,20 +69,20 @@ class AppPrivate extends Component {
           selectedRegionId={this.state.selectedRegionId}
           onRegionSelected={this.handleRegionSelected}
         />
-        <MonthVis
-          selectedRegionId={this.state.selectedRegionId}
-          onFetchSuccess={this.handleFetchMonthDataSuccces}
-          isFetching={this.state.isFetchingMonthData}
-          currentYear={this.state.currentYear}
-          months={this.state.dates.months}
-          totalArea={this.state.selectedRegionArea}
-        />
         <WeekVis
           selectedRegionId={this.state.selectedRegionId}
           selectedRegionSlug={this.state.selectedRegionSlug}
           onFetchSuccess={this.handleFetchWeekDataSuccces}
           isFetching={this.state.isFetchingWeekData}
           weeks={this.state.dates.weeks}
+          totalArea={this.state.selectedRegionArea}
+        />
+        <MonthVis
+          selectedRegionId={this.state.selectedRegionId}
+          onFetchSuccess={this.handleFetchMonthDataSuccces}
+          isFetching={this.state.isFetchingMonthData}
+          currentYear={this.state.currentYear}
+          months={this.state.dates.months}
           totalArea={this.state.selectedRegionArea}
         />
       </div>

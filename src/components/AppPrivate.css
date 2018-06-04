@@ -13,3 +13,11 @@
 
   max-width: 800px;
 }
+
+.WeekVisContainer {
+}
+
+.MonthVisContainer {
+  position: absolute;
+  top: 1000px ;
+}

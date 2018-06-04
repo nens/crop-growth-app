@@ -1,6 +1,5 @@
-
 ///////////////////////////////////////////////////////////////////////////////
-export const COUNTRY = 'BANGLADESH';
+export const COUNTRY = "BANGLADESH";
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -8,33 +7,34 @@ export const COUNTRY = 'BANGLADESH';
 ////////////////////////////////////////////////////////////////////////////////
 
 export const countryConfig = {
-
   BANGLADESH: {
     raster: "62bb4a86-2a13-414c-a111-486c1dd9b0af",
     pixelSize: 0.002,
-    uri: "/api/v3/raster-aggregates/?agg=counts&rasters=62bb4a8&srs=EPSG:4326&styles=GrowthStage_Rice_D",
-    regionTypes: ['UPAZILA', 'DISTRICT'],
+    uri:
+      "/api/v3/raster-aggregates/?agg=counts&rasters=62bb4a8&srs=EPSG:4326&styles=GrowthStage_Rice_D",
+    regionTypes: ["UPAZILA", "DISTRICT"],
     regionZoomLevels: { UPAZILA: 10, DISTRICT: 6 },
-    centroid : {
+    centroid: {
       lon: 90.5,
       lat: 23.5,
       zoom: 3.75
-    },
+    }
   },
 
   VIETNAM: {
     raster: "fc8065b4-b351-49c2-a4be-43136e979fbc",
     pixelSize: 0.025,
-    uri: '/api/v3/raster-aggregates/?agg=counts&rasters=fc8065b&srs=EPSG:4326&styles=GrowthStage_Rice_D',
-    regionTypes: ['DISTRICT', 'PROVINCE'],
+    uri:
+      "/api/v3/raster-aggregates/?agg=counts&rasters=fc8065b&srs=EPSG:4326&styles=GrowthStage_Rice_D",
+    regionTypes: ["DISTRICT", "PROVINCE"],
     regionZoomLevels: { DISTRICT: 7, PROVINCE: 6 },
-    centroid : {
-      lon: 105.3420,
-      lat: 10.5500,
+    centroid: {
+      lon: 105.342,
+      lat: 10.55,
       zoom: 4.5
     }
   }
-}
+};
 
 // via: https://bangladesh.lizard.net/api/v3/regions/?page_size=500&in_bbox=85.18798828125,30.021543509740027,96.7236328125,19.94236918954201&z=10&format=json
 countryConfig.BANGLADESH.UPAZILA = JSON.parse(
@@ -57,44 +57,42 @@ export const CENTROID = countryConfig[COUNTRY].centroid;
 
 export const REGION_TYPES = countryConfig[COUNTRY].regionTypes;
 
-export const REGION_TYPE_1 = REGION_TYPES[0]
-export const REGION_TYPE_2 = REGION_TYPES[1]
+export const REGION_TYPE_1 = REGION_TYPES[0];
+export const REGION_TYPE_2 = REGION_TYPES[1];
 
-export const REGION_DATA_1 = countryConfig[COUNTRY][REGION_TYPE_1]
-export const REGION_DATA_2 = countryConfig[COUNTRY][REGION_TYPE_2]
+export const REGION_DATA_1 = countryConfig[COUNTRY][REGION_TYPE_1];
+export const REGION_DATA_2 = countryConfig[COUNTRY][REGION_TYPE_2];
 
 export const PROVINCES = countryConfig[COUNTRY].provinces;
 
 export const DISTRICTS = countryConfig[COUNTRY].districts;
 
-export const PIXEL_SIZE = 1 //countryConfig[COUNTRY].pixelSize;
+export const PIXEL_SIZE = 1; //countryConfig[COUNTRY].pixelSize;
 
 export const RASTER_URL = countryConfig[COUNTRY].uri;
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // country-independent settings ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-
 
 // YEAR_IN_MS = ;
 
 // The abbreviated monthnames to be used in x-axis scales. These are completely
 // the same as in the design document.
 export const MONTH_NAMES = [
-  'Jan.',
-  'Feb.',
-  'Mar.',
-  'Apr.',
-  'May',
-  'June',
-  'July',
-  'Aug.',
-  'Sept.',
-  'Oct.',
-  'Nov.',
-  'Dec.'
-]
+  "Jan.",
+  "Feb.",
+  "Mar.",
+  "Apr.",
+  "May",
+  "June",
+  "July",
+  "Aug.",
+  "Sept.",
+  "Oct.",
+  "Nov.",
+  "Dec."
+];
 
 // This is the year we use for retrieving monthdata; i.e, when setting the value
 // to 2016, we'll retrieve 12x monthdata for eahcmonth of 2016, and for the
@@ -110,47 +108,44 @@ export const MONTH_NAMES = [
 export const AMOUNT_OF_WEEKS = 6;
 
 export const GROWTH_STAGES = [
-  'Fallow',
-  'Bare field',
-  'Seedling',
-  'Tillering',
-  'Booting',
-  'Flowering',
-  'Milking',
-  'Ripening',
-  'Harvest'
+  "Fallow",
+  "Bare field",
+  "Seedling",
+  "Tillering",
+  "Booting",
+  "Flowering",
+  "Milking",
+  "Ripening",
+  "Harvest"
 ];
 
-export const BARREN_GROWTH_STAGES = [
-  'Fallow',
-  'Bare field'
-];
+export const BARREN_GROWTH_STAGES = ["Fallow", "Bare field"];
 
 export const NON_BARREN_GROWTH_STAGES = [
-  'Seedling',
-  'Tillering',
-  'Booting',
-  'Flowering',
-  'Milking',
-  'Ripening',
-  'Harvest'
+  "Seedling",
+  "Tillering",
+  "Booting",
+  "Flowering",
+  "Milking",
+  "Ripening",
+  "Harvest"
 ];
 
 export const GROWTH_STAGE_COLORS = {
-  'Fallow'      : '#aab3b6',
-  'Bare field'  : '#6e7476',
-  'Seedling'    : '#0093d3',
-  'Tillering'   : '#459b00',
-  'Booting'     : '#34c300',
-  'Flowering'   : '#253a20',
-  'Milking'     : '#ffc306',
-  'Ripening'    : '#ff7813',
-  'Harvest'     : '#e84506'
+  Fallow: "#aab3b6",
+  "Bare field": "#6e7476",
+  Seedling: "#0093d3",
+  Tillering: "#459b00",
+  Booting: "#34c300",
+  Flowering: "#253a20",
+  Milking: "#ffc306",
+  Ripening: "#ff7813",
+  Harvest: "#e84506"
 };
 
 // e641990d-9990-4778-b167-56f42e78b135
 
 export const LINE_COLOR_THIS_YEAR = "#FF0080";
 export const LINE_COLOR_PREV_YEAR = "#FFA2FF";
-export const LINE_COLOR_AVG       = "#666666";
-export const FETCHING_DATA_COLOR  = "#CCCCCC";
+export const LINE_COLOR_AVG = "#333333";
+export const FETCHING_DATA_COLOR = "#CCCCCC";

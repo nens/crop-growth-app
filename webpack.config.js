@@ -37,7 +37,18 @@ const config = {
     loaders: [
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader?modules", "postcss-loader"]
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              importLoaders: 1,
+              modules: true,
+              localIdentName: "[name]__[local]"
+            }
+          },
+          "postcss-loader"
+        ]
       },
       {
         test: /(\.jsx|\.js)$/,
@@ -48,6 +59,18 @@ const config = {
         test: /\.(png|jpg|svg|woff|eot|ttf|otf)$/,
         loader: "url-loader?limit=100000"
       }
+
+      //     use: [
+      // require.resolve('style-loader'),
+      // {
+      //   loader: require.resolve('css-loader'),
+      //   options: {
+      //     importLoaders: 1,
+      //     modules: true,
+      //     localIdentName: "[name]__[local]___[hash:base64:5]"
+      //   },
+      // },
+      // {
     ]
   },
   plugins: [

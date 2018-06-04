@@ -8,11 +8,14 @@ import reject from "lodash/reject";
 import map from "lodash/map";
 
 import { MonthVisLineChart } from "./MonthVisLineChart";
-import { MonthVisTable} from "./MonthVisTable";
+import { MonthVisTable } from "./MonthVisTable";
 import { fetchMonthDataForRegion } from "../tools/fetch-data-for-region.js";
-import { calculateAverage, growthStageIsAllowed, pixels2hectares }
-  from "../tools/utils.js";
-import { getCurrentYear } from "../tools/utils-time.js"
+import {
+  calculateAverage,
+  growthStageIsAllowed,
+  pixels2hectares
+} from "../tools/utils.js";
+import { getCurrentYear } from "../tools/utils-time.js";
 
 import {
   PIXEL_SIZE,
@@ -24,12 +27,10 @@ import {
   LINE_COLOR_AVG
 } from "../constants.js";
 
-
-import styles from './MonthVis.css';
-
+import styles from "./MonthVis.css";
 
 class MonthVis extends Component {
-  constructor () {
+  constructor() {
     super();
     this.state = {
       selectedRegionId: null,
@@ -38,7 +39,7 @@ class MonthVis extends Component {
       data: ""
     };
   }
-  getTotalRicePerMonthActual (responseActualYear) {
+  getTotalRicePerMonth(responseActualYear) {
     const result = [];
     // const currentMonthIdx = (new Date()).getMonth();
     let totalRiceSingleMonth, monthData;
@@ -46,55 +47,32 @@ class MonthVis extends Component {
     responseActualYear.forEach((monthDataObj, idx) => {
       monthData = monthDataObj.monthData;
       totalRiceSingleMonth = 0;
-      monthData.data.forEach((regionData) => {
+
+      monthData.data.forEach(regionData => {
         if (growthStageIsAllowed(regionData.class)) {
           totalRiceSingleMonth += regionData.data;
         }
       });
+      if (totalRiceSingleMonth === 0) {
+        console.log(
+          "[-] monthData did not have any pixels for valid categories: monthData =",
+          monthData
+        );
+      } else {
+        console.log("[+] monthData can be used; monthData =", monthData);
+      }
 
       result.push(Math.round(totalRiceSingleMonth * PIXEL_SIZE));
     });
 
     const totalArea = this.state.totalArea;
     const totalPixels = responseActualYear[0].monthData.data[0].total;
-    const resultHa = map(result, (pxCount) => pixels2hectares(pxCount, totalPixels, totalArea));
+    const resultHa = map(result, pxCount =>
+      pixels2hectares(pxCount, totalPixels, totalArea)
+    );
     return resultHa;
   }
-  getTotalRicePerMonthHistorical (responsePreviousYears) {
-    const result = [];
-    let j, monthData, totalRiceSingleMonth;
-
-    responsePreviousYears.forEach((monthDataObj, i) => {
-      monthData = monthDataObj.monthData;
-      j = i % 12;
-      result[j] = result[j] || [];
-      totalRiceSingleMonth = 0;
-      monthData.data.forEach((regionData) => {
-        if (regionData === null) {
-          console.error("[E] Oops! region data => NULL... average just became less reliable (time=" + monthDataObj.month + ")");
-          return;
-        }
-        if (growthStageIsAllowed(regionData.class)) {
-          totalRiceSingleMonth += regionData.data;
-        }
-      });
-      result[j].push(Math.round(totalRiceSingleMonth));
-    });
-
-    const finalResult = [];
-    result.forEach((monthValues, i) => {
-      finalResult.push(PIXEL_SIZE * calculateAverage(monthValues, true));
-    });
-
-    const totalArea = this.state.totalArea;
-    const totalPixels = responsePreviousYears[0].monthData.data[0].total;
-
-    const finalResultHa =  map(finalResult,
-      (pxCount) => pixels2hectares(pxCount, totalPixels, totalArea));
-
-    return finalResultHa;
-  }
-  componentWillReceiveProps (props) {
+  componentWillReceiveProps(props) {
     this.setState({
       selectedRegionId: props.selectedRegionId,
       isFetching: props.isFetching,
@@ -106,46 +84,59 @@ class MonthVis extends Component {
 
     if (props.months && props.selectedRegionId) {
       this.setState({ isFetching: true });
-      fetchMonthDataForRegion(props.selectedRegionId, props.months)
-      .then(
-        (response) => {
-
+      fetchMonthDataForRegion(props.selectedRegionId, props.months).then(
+        response => {
           // YearN; e.g. 2018 (used "literally" to draw single line in chart)
           const responseYearN = filter(response, { year: currentYear });
-          const dataYearN = this.getTotalRicePerMonthActual(responseYearN);
+          const dataYearN = this.getTotalRicePerMonth(responseYearN);
 
           // YearN_1; e.g 2017 (used "literally" to draw single line in chart)
-          const responseYearN_1 = filter(response, { year: currentYear - 1});
-          const dataYearN_1 = this.getTotalRicePerMonthActual(responseYearN_1);
+          const responseYearN_1 = filter(response, { year: currentYear - 1 });
+          const dataYearN_1 = this.getTotalRicePerMonth(responseYearN_1);
 
           // YearN_2; e.g. 2016 (used only to calc. historical average)
-          const responseYearN_2 = filter(response, { year: currentYear - 2});
-          const dataYearN_2 = this.getTotalRicePerMonthActual(responseYearN_2);
+          const responseYearN_2 = filter(response, { year: currentYear - 2 });
+          const dataYearN_2 = this.getTotalRicePerMonth(responseYearN_2);
 
-          const currentMonthIdx = (new Date()).getMonth();
-          const dataThreeYearAvg = [];
+          const currentMonthIdx = new Date().getMonth();
 
           let monthValueN,
-              monthValueN_1,
-              monthValueN_2,
-              monthValueAvg,
-              threeYearAvg = [];
+            monthValueN_1,
+            monthValueN_2,
+            monthValueAvg,
+            threeYearAvg = [],
+            validYearCount;
 
           for (let i = 0; i < 12; i++) {
+            validYearCount = 0;
 
             monthValueN_2 = dataYearN_2[i];
+            if (monthValueN_2 !== null) {
+              validYearCount++;
+            }
+
             monthValueN_1 = dataYearN_1[i];
+            if (monthValueN_1 !== null) {
+              validYearCount++;
+            }
 
             if (i <= currentMonthIdx) {
               // We also use this month value for current year (for calculating
               // the average): the month is not in the future
               monthValueN = dataYearN[i];
+              if (monthValueN !== null) {
+                validYearCount++;
+              }
+
               monthValueAvg = Math.round(
-                (monthValueN + monthValueN_1 + monthValueN_2) / 3);
+                (monthValueN + monthValueN_1 + monthValueN_2) / validYearCount
+              );
             } else {
               // We skip this month value for the current year (for calculating
               // the average) because it is from the future:
-              monthValueAvg = Math.round((monthValueN_1 + monthValueN_2) / 2);
+              monthValueAvg = Math.round(
+                (monthValueN_1 + monthValueN_2) / validYearCount
+              );
             }
 
             threeYearAvg.push(monthValueAvg);
@@ -162,14 +153,14 @@ class MonthVis extends Component {
 
           this.render();
         },
-        (error) => {
+        error => {
           console.error("[E] Promises didn't resolve properly:", error);
           this.setState({ isFetching: false });
         }
       );
     }
   }
-  getInnerComponent () {
+  getInnerComponent() {
     ///////////////////////////////////////////////////////////////////////////
     // There are 3 different "states" for this MonthVis part/component:
     //
@@ -194,9 +185,7 @@ class MonthVis extends Component {
       if (this.state.isFetching) {
         return (
           <div className={styles.MonthVisContent}>
-            <MonthVisLegend
-              currentYear={this.state.currentYear || '...'}
-            />
+            <MonthVisLegend currentYear={this.state.currentYear || "..."} />
             <MonthVisLineChart
               isFetching={true}
               dataCurrentYear={null}
@@ -206,16 +195,14 @@ class MonthVis extends Component {
             <MonthVisTable
               data={null}
               isFetching={true}
-              currentYear={this.state.currentYear || '...'}
+              currentYear={this.state.currentYear || "..."}
             />
           </div>
         );
       } else {
         return (
           <div className={styles.MonthVisContent}>
-            <MonthVisLegend
-              currentYear={this.state.currentYear || '...'}
-            />
+            <MonthVisLegend currentYear={this.state.currentYear || "..."} />
             <MonthVisLineChart
               isFetching={false}
               dataCurrentYear={this.state.data.currentYear}
@@ -225,45 +212,42 @@ class MonthVis extends Component {
             <MonthVisTable
               data={this.state.data.currentYear}
               isFetching={false}
-              currentYear={this.state.currentYear || '...'}
+              currentYear={this.state.currentYear || "..."}
             />
           </div>
         );
       }
     }
   }
-  render () {
+  render() {
     const { isFetchingMonthData } = this.props;
 
     return (
-      <div className={styles.MonthVisContent}>
+      <div className={styles.MonthVisContainer}>
         <div className={styles.GroeneBalk}>
-          <div className={styles.GroeneBalkText}>
-            monthly
-          </div>
-          {
-            this.state.isFetching
-              ? <Spinner />
-              : null
-          }
+          <div className={styles.GroeneBalkText}>monthly</div>
+          {this.state.isFetching ? <Spinner /> : null}
         </div>
-        { this.getInnerComponent() }
+        {this.getInnerComponent()}
       </div>
     );
   }
 }
 
 class MonthVisLegend extends Component {
-  render () {
+  render() {
     const { currentYear } = this.props;
     return (
       <div className={styles.LegendContainer}>
-
         <div className={styles.LegendLeftPart}>
           <div
             className={styles.LegendColorIndicator}
-            style={{ backgroundColor: LINE_COLOR_THIS_YEAR }}>
-          </div>
+            style={{
+              backgroundColor: LINE_COLOR_THIS_YEAR,
+              height: "5px",
+              marginTop: "13px"
+            }}
+          />
           <div className={styles.LegendText}>
             {currentYear}
           </div>
@@ -272,8 +256,12 @@ class MonthVisLegend extends Component {
         <div className={styles.LegendCenterPart}>
           <div
             className={styles.LegendColorIndicator}
-            style={{ backgroundColor: LINE_COLOR_PREV_YEAR }}>
-          </div>
+            style={{
+              backgroundColor: LINE_COLOR_PREV_YEAR,
+              height: "5px",
+              marginTop: "13px"
+            }}
+          />
           <div className={styles.LegendText}>
             {currentYear - 1}
           </div>
@@ -282,11 +270,9 @@ class MonthVisLegend extends Component {
         <div className={styles.LegendRightHalf}>
           <div
             className={styles.LegendColorIndicator}
-            style={{ backgroundColor: LINE_COLOR_AVG }}>
-          </div>
-          <div className={styles.LegendText}>
-            average
-          </div>
+            style={{ backgroundColor: LINE_COLOR_AVG }}
+          />
+          <div className={styles.LegendText}>average</div>
         </div>
       </div>
     );
@@ -294,18 +280,20 @@ class MonthVisLegend extends Component {
 }
 
 class WelcomeMessage extends Component {
-  render () {
+  render() {
     return (
-      <div style={{
-        position: "relative",
-        top: "140px",
-        width: "160px",
-        textAlign: "center",
-        margin: "auto 50%",
-        left: "-80px",
-        fontSize: "12px",
-        color: "#666"
-      }}>
+      <div
+        style={{
+          position: "relative",
+          top: "140px",
+          width: "160px",
+          textAlign: "center",
+          margin: "auto 50%",
+          left: "-80px",
+          fontSize: "12px",
+          color: "#666"
+        }}
+      >
         Please select a region
       </div>
     );
@@ -313,7 +301,7 @@ class WelcomeMessage extends Component {
 }
 
 class Spinner extends Component {
-  render () {
+  render() {
     return (
       <div>
         <MDSpinner
@@ -330,4 +318,3 @@ class Spinner extends Component {
 }
 
 export { MonthVis };
-
