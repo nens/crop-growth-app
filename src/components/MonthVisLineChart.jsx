@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid } from "recharts";
 
 import {
   MONTH_NAMES,
@@ -11,27 +11,27 @@ import {
   FETCHING_DATA_COLOR
 } from "../constants.js";
 
-import styles from './MonthVis.css';
+import styles from "./MonthVis.css";
 
-import includes from 'lodash/includes';
+import includes from "lodash/includes";
 
 // const LINE_COLOR_THIS_YEAR = "#FF0080";
 // const LINE_COLOR_PREV_YEAR = "#FFA2FF";
 // const LINE_COLOR_AVG = "#666666";
 
 class MonthVisLineChart extends Component {
-  constructor () {
+  constructor() {
     super();
     this.state = { formattedData: "" };
     this.formatData = this.formatData.bind(this);
   }
-  componentWillMount () {
+  componentWillMount() {
     this.updateData(this.props);
   }
-  componentWillReceiveProps (props) {
+  componentWillReceiveProps(props) {
     this.updateData(props);
   }
-  updateData (props) {
+  updateData(props) {
     if (!props.isFetching) {
       this.setState({
         formattedData: this.formatData(
@@ -42,7 +42,7 @@ class MonthVisLineChart extends Component {
       });
     }
   }
-  formatData (dataCurrentYear, dataPreviousYear, dataThreeYearAvg) {
+  formatData(dataCurrentYear, dataPreviousYear, dataThreeYearAvg) {
     if (includes(arguments, null)) {
       console.log(
         "[!] Cannot exec formatData since data ain't sufficiently rich!"
@@ -50,34 +50,35 @@ class MonthVisLineChart extends Component {
       return this.state.formattedData;
     }
 
-    const currentMonthIdx = (new Date()).getMonth()
+    const currentMonthIdx = new Date().getMonth();
 
     return MONTH_NAMES.map((monthName, i) => {
       return {
         monthName,
-        dataCurrentYear:  i <= currentMonthIdx ? dataCurrentYear[i] : null,
+        dataCurrentYear: i <= currentMonthIdx ? dataCurrentYear[i] : null,
         dataPreviousYear: dataPreviousYear[i],
         dataThreeYearAvg: dataThreeYearAvg[i]
       };
     });
   }
 
-  render () {
+  render() {
     const isFetching = this.props.isFetching;
 
-    if (!isFetching &&
-        !(this.props.dataCurrentYear &&
-          this.props.dataPreviousYear &&
-          this.props.dataThreeYearAvg)) {
-
+    if (
+      !isFetching &&
+      !(
+        this.props.dataCurrentYear &&
+        this.props.dataPreviousYear &&
+        this.props.dataThreeYearAvg
+      )
+    ) {
       if (!this.state.formattedData) {
         return null;
       }
     }
 
-    const yAxisFormatter = isFetching
-      ? (_) => '...'
-      : (x) => x + "";
+    const yAxisFormatter = isFetching ? _ => "..." : x => x + "";
 
     const {
       dataCurrentYear,
@@ -92,34 +93,37 @@ class MonthVisLineChart extends Component {
           width={600}
           height={260}
           data={this.state.formattedData}
-          styles={styles.YAxisLabel}>
-
+          styles={styles.YAxisLabel}
+        >
           <Line
             type="monotone"
             dot={false}
-            className={`${styles.LineOpacityDefault} ${isFetching ? styles.LineOpacityInactive : ""}`}
+            className={`${styles.LineOpacityDefault} ${isFetching
+              ? styles.LineOpacityInactive
+              : ""}`}
             dataKey="dataCurrentYear"
-
-            stroke={ isFetching ? FETCHING_DATA_COLOR : LINE_COLOR_THIS_YEAR }
-            strokeWidth={2}
+            stroke={isFetching ? FETCHING_DATA_COLOR : LINE_COLOR_THIS_YEAR}
+            strokeWidth={5}
           />
           <Line
             type="monotone"
             dot={false}
-            className={`${styles.LineOpacityDefault} ${isFetching ? styles.LineOpacityInactive : ""}`}
+            className={`${styles.LineOpacityDefault} ${isFetching
+              ? styles.LineOpacityInactive
+              : ""}`}
             dataKey="dataPreviousYear"
-
-            stroke={ isFetching ? FETCHING_DATA_COLOR : LINE_COLOR_PREV_YEAR }
-            strokeWidth={2}
+            stroke={isFetching ? FETCHING_DATA_COLOR : LINE_COLOR_PREV_YEAR}
+            strokeWidth={5}
           />
           <Line
             type="monotone"
             dot={false}
-            className={`${styles.LineOpacityDefault} ${isFetching ? styles.LineOpacityInactive : ""}`}
+            className={`${styles.LineOpacityDefault} ${isFetching
+              ? styles.LineOpacityInactive
+              : ""}`}
             dataKey="dataThreeYearAvg"
-
-            stroke={ isFetching ? FETCHING_DATA_COLOR : LINE_COLOR_AVG }
-            strokeWidth={2}
+            stroke={isFetching ? FETCHING_DATA_COLOR : LINE_COLOR_AVG}
+            strokeWidth={1}
           />
 
           <XAxis
@@ -139,4 +143,4 @@ class MonthVisLineChart extends Component {
   }
 }
 
-export { MonthVisLineChart }
+export { MonthVisLineChart };

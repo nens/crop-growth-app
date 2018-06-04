@@ -1,7 +1,6 @@
 import reduce from "lodash/reduce";
-import forEach from 'lodash/forEach';
-import find from 'lodash/find';
-
+import forEach from "lodash/forEach";
+import find from "lodash/find";
 
 import {
   AMOUNT_OF_WEEKS,
@@ -10,42 +9,44 @@ import {
   REGION_TYPE_2,
   REGION_DATA_1,
   REGION_DATA_2
-} from '../constants.js';
+} from "../constants.js";
 
-export function getCurrentDate () {
+export function getCurrentDate() {
   const d = new Date();
   const year = d.getFullYear();
 
   let month = d.getMonth() + 1; // Starts at: 0
-  let date = d.getDate();       // Starts at: 1
+  let date = d.getDate(); // Starts at: 1
 
-  if (month < 10) { month = '0' + month }
-  if ( date < 10) {  date = '0' +  date }
+  if (month < 10) {
+    month = "0" + month;
+  }
+  if (date < 10) {
+    date = "0" + date;
+  }
 
-  return year + '-' + month + '-' + date;
+  return year + "-" + month + "-" + date;
 }
 
-export function calculateAverage (ls, mustRoundResult) {
+export function calculateAverage(ls, mustRoundResult) {
   const avg = reduce(ls, (a, b) => a + b) / ls.length;
-  return mustRoundResult
-    ? Math.round(avg)
-    : avg;
+  return mustRoundResult ? Math.round(avg) : avg;
 }
 
 // NB! This doesn't give any guarantees about order of the output.
-export function objToTuples (obj) {
+export function objToTuples(obj) {
   const result = [];
-  forEach(obj, (subObj) => {
+  forEach(obj, subObj => {
     result.push([subObj.timestamp, subObj.data]);
   });
   return result;
 }
 
-export function getWeekVisUnixTimestamps (dbg = false) {
+export function getWeekVisUnixTimestamps(dbg = false) {
   const WEEK_IN_MS = 604800000;
   if (dbg) {
     // We're in dev-mode: we select weeks that have actual data
-    const firstTimestamp = Date.parse('15 Sep 2017 00:00:00 GMT');
+    const firstTimestamp = Date.parse("15 Sep 2017 00:00:00 GMT");
     const allTimestamps = [firstTimestamp];
     for (let i = 1; i < AMOUNT_OF_WEEKS; i++) {
       allTimestamps.push(firstTimestamp + i * WEEK_IN_MS);
@@ -62,18 +63,18 @@ export function getWeekVisUnixTimestamps (dbg = false) {
     let futureTimestamps = [];
 
     for (let i = HALF_AMOUNT_OF_WEEKS; i > 0; i--) {
-      pastTimestamps.push(oneYearAgo - (i * WEEK_IN_MS));
+      pastTimestamps.push(oneYearAgo - i * WEEK_IN_MS);
     }
 
     for (let i = 1; i < HALF_AMOUNT_OF_WEEKS; i++) {
-      futureTimestamps.push(oneYearAgo + (i * WEEK_IN_MS));
+      futureTimestamps.push(oneYearAgo + i * WEEK_IN_MS);
     }
 
     return pastTimestamps.concat([oneYearAgo], futureTimestamps);
   }
 }
 
-export function convertTimestampToUTC (msTimestamp) {
+export function convertTimestampToUTC(msTimestamp) {
   let d = new Date(msTimestamp);
   let isoDate = d.toISOString();
   return isoDate;
@@ -82,12 +83,11 @@ export function convertTimestampToUTC (msTimestamp) {
 // We do NOT use barren growth-stages;
 // we do NOT use no-data;
 // We do NOT use category -1 "other";
-export function growthStageIsAllowed (gsClass) {
+export function growthStageIsAllowed(gsClass) {
   return gsClass >= 2 && gsClass <= 9;
 }
 
-export function getFeatureById (regionId) {
-
+export function getFeatureById(regionId) {
   let feature;
 
   // First, check whether the regionId if for a province (which are only present
@@ -99,17 +99,16 @@ export function getFeatureById (regionId) {
   }
 
   if (!feature) {
-    console.error('Feature not found');
+    console.error("Feature not found");
   } else {
     return feature;
   }
 }
 
-
-export function pixels2hectares (pixels, totalPixels, totalArea) {
+export function pixels2hectares(pixels, totalPixels, totalArea) {
   if (!pixels || !totalPixels) {
-    return 0;
+    return null;
   } else {
-    return Math.round((pixels / totalPixels) * totalArea);
+    return Math.round(pixels / totalPixels * totalArea);
   }
 }

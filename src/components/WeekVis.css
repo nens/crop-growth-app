@@ -19,12 +19,10 @@
   font-size: 34px;
 }
 
-.ChartContainer {
-}
-
 .WeekVisContent {
   position: relative;
   height: 470px;
+  min-height: 470px;
   width: 800px;
   max-width: 800px;
 }
@@ -35,6 +33,7 @@
   margin-left: 20px;
   width: 330px;
   height: 470px;
+  min-height: 470px;
 }
 
 .WeekVisContentRightSide {
