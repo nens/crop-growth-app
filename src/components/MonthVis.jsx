@@ -41,7 +41,6 @@ class MonthVis extends Component {
   }
   getTotalRicePerMonth(responseActualYear) {
     const result = [];
-    // const currentMonthIdx = (new Date()).getMonth();
     let totalRiceSingleMonth, monthData;
 
     responseActualYear.forEach((monthDataObj, idx) => {
@@ -53,15 +52,6 @@ class MonthVis extends Component {
           totalRiceSingleMonth += regionData.data;
         }
       });
-      if (totalRiceSingleMonth === 0) {
-        console.log(
-          "[-] monthData did not have any pixels for valid categories: monthData =",
-          monthData
-        );
-      } else {
-        console.log("[+] monthData can be used; monthData =", monthData);
-      }
-
       result.push(Math.round(totalRiceSingleMonth * PIXEL_SIZE));
     });
 
