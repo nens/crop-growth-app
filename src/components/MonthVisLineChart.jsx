@@ -15,10 +15,6 @@ import styles from "./MonthVis.css";
 
 import includes from "lodash/includes";
 
-// const LINE_COLOR_THIS_YEAR = "#FF0080";
-// const LINE_COLOR_PREV_YEAR = "#FFA2FF";
-// const LINE_COLOR_AVG = "#666666";
-
 class MonthVisLineChart extends Component {
   constructor() {
     super();
