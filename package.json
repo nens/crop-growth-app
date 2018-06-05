@@ -19,7 +19,8 @@
     "precommit": "lint-staged",
     "release": "release-it --verbose",
     "start": "node server.js",
-    "staging-deploy": "read -p 'Version? (see above) ' V && test $V && ansible-playbook -i deploy/hosts -K deploy/deploy.yml --limit=staging --extra-vars=\"sitename=staging.nxt.lizard.net version=$V\""
+    "staging-deploy": "read -p 'Version? (see above) ' V && test $V && ansible-playbook -i deploy/hosts -K deploy/deploy.yml --limit=staging --extra-vars=\"sitename=staging.nxt.lizard.net version=$V\"",
+    "production-deploy": "read -p 'Version? (see above) ' V && test $V && ansible-playbook -i deploy/hosts -K deploy/deploy.yml --limit=production --extra-vars=\"sitename=nxt.lizard.net version=$V\""
   },
   "lint-staged": {
     "*.js": [
