@@ -108,39 +108,39 @@ export const MONTH_NAMES = [
 export const AMOUNT_OF_WEEKS = 6;
 
 export const GROWTH_STAGES = [
-  "Fallow",
+  "Turnaround",
   "Bare field",
   "Seedling",
   "Tillering",
   "Booting",
   "Flowering",
-  "Milking",
   "Ripening",
-  "Harvest"
+  "Ready to harvest",
+  "Harvested"
 ];
 
-export const BARREN_GROWTH_STAGES = ["Fallow", "Bare field"];
+export const BARREN_GROWTH_STAGES = ["Turnaround", "Bare field"];
 
 export const NON_BARREN_GROWTH_STAGES = [
   "Seedling",
   "Tillering",
   "Booting",
   "Flowering",
-  "Milking",
   "Ripening",
-  "Harvest"
+  "Ready to harvest",
+  "Harvested"
 ];
 
 export const GROWTH_STAGE_COLORS = {
-  Fallow: "#aab3b6",
+  Turnaround: "#aab3b6",
   "Bare field": "#6e7476",
   Seedling: "#0093d3",
   Tillering: "#459b00",
   Booting: "#34c300",
   Flowering: "#253a20",
-  Milking: "#ffc306",
-  Ripening: "#ff7813",
-  Harvest: "#e84506"
+  Ripening: "#ffc306",
+  "Ready to harvest": "#ff7813",
+  Harvested: "#e84506"
 };
 
 // e641990d-9990-4778-b167-56f42e78b135

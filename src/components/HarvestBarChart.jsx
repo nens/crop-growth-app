@@ -65,7 +65,7 @@ class HarvestBarChart extends Component {
         let harvestArea;
 
         try {
-          harvestArea = find(rd.weekData.data, { 'label' : 'Harvest' }).data;
+          harvestArea = find(rd.weekData.data, { 'label' : 'Harvested' }).data;
           harvestArea = Math.round(100 * PIXEL_SIZE * harvestArea) / 100;
         } catch (e) {
           harvestArea = 0
@@ -84,7 +84,7 @@ class HarvestBarChart extends Component {
         let harvestArea;
 
         try {
-          harvestArea = find(rd.weekData.data, { 'label' : 'Harvest' }).data;
+          harvestArea = find(rd.weekData.data, { 'label' : 'Harvested' }).data;
           harvestArea = Math.round(100 * PIXEL_SIZE * harvestArea) / 100;
         } catch (e) {
           harvestArea = 0
@@ -153,7 +153,7 @@ class HarvestBarChart extends Component {
           <Bar
             className={`${styles.BarOpacityDefault} ${isFetching ? styles.BarOpacityInactive : ""}`}
             dataKey="dataActual"
-            fill={isFetching ?  "#666666" : GROWTH_STAGE_COLORS.Harvest }
+            fill={isFetching ?  "#666666" : GROWTH_STAGE_COLORS.Harvested }
             stroke="#666"
           />
 
