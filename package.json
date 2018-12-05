@@ -60,7 +60,7 @@
     "style-loader": "",
     "url-loader": "^0.5.8",
     "webpack": "3.0.0",
-    "webpack-dev-middleware": "",
+    "webpack-dev-middleware": "2.0.6",
     "webpack-dev-server": "",
     "webpack-hot-middleware": "",
     "yargs": ""
@@ -72,6 +72,7 @@
   },
   "homepage": "TODO",
   "dependencies": {
+    "babel-loader": "^7.1.5",
     "es6-promise": "^4.0.5",
     "lodash": "^4.17.3",
     "moment": "^2.18.1",
