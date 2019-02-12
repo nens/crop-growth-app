@@ -11,7 +11,7 @@ export const countryConfig = {
     raster: "9f46fbb8-5b4b-46dc-97f6-06c515a858c1",
     pixelSize: 0.002,
     uri:
-      "/api/v3/raster-aggregates/?agg=counts&rasters=62bb4a8&srs=EPSG:4326&styles=GrowthStage_Rice_D",
+      "/api/v3/raster-aggregates/?agg=counts&rasters=9f46fbb&srs=EPSG:4326&styles=GrowthStage_Rice_D",
     regionTypes: ["UPAZILA", "DISTRICT"],
     regionZoomLevels: { UPAZILA: 10, DISTRICT: 6 },
     centroid: {
