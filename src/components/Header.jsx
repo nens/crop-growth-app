@@ -26,7 +26,7 @@ const IMG_HEIGHT = 80;
 const MAPBOX_STYLE_ID = "light-v9";
 
 const MAPBOX_TOKEN =
-  "pk.eyJ1IjoibmVsZW5zY2h1dXJtYW5zIiwiYSI6ImhkXzhTdXcifQ.3k2-KAxQdyl5bILh_FioCw";
+  "pk.eyJ1IjoibmVsZW5zY2h1dXJtYW5zIiwiYSI6ImNrZWlnbHdycjFqNHMyem95cWFqNzhkc3IifQ.ymzd92iqviR5RZ-dd-xRIg";
 
 const getMapboxUrl = (lat, lon, zoom = 6) => `
   https://api.mapbox.com/styles/v1/mapbox/${MAPBOX_STYLE_ID}/static/${lon},${lat},${zoom},0,0/${IMG_WIDTH}x${IMG_HEIGHT}?access_token=${MAPBOX_TOKEN}`;
