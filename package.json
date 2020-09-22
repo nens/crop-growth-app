@@ -74,7 +74,7 @@
   "dependencies": {
     "babel-loader": "^7.1.5",
     "es6-promise": "^4.0.5",
-    "lodash": "^4.17.3",
+    "lodash": "^4.17.19",
     "moment": "^2.18.1",
     "prop-types": "^15.5.9",
     "react": "",
